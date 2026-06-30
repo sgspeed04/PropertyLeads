@@ -84,10 +84,17 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .apt-banner.last .t1{color:#c2410c}
 .apt-banner.no .t1{color:#666}
 
-/* 단계 표시 */
-.stage-row{display:flex;gap:3px;margin-bottom:4px}
-.stage-seg{flex:1;height:4px;border-radius:2px;background:#eee}
-.stage-cur{font-size:11px;color:#888;margin-bottom:14px}
+/* 단계 흐름 */
+.stage-flow{display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding-bottom:4px;margin-bottom:10px;-webkit-overflow-scrolling:touch}
+.sf-step{display:flex;flex-direction:column;align-items:center;min-width:52px;opacity:.35}
+.sf-step.done{opacity:.7}
+.sf-step.current{opacity:1}
+.sf-icon{font-size:18px;line-height:1;margin-bottom:3px}
+.sf-name{font-size:10px;font-weight:600;text-align:center;line-height:1.2;white-space:nowrap}
+.sf-now{font-size:9px;color:#f97316;font-weight:700;margin-top:2px;white-space:nowrap}
+.sf-arrow{font-size:14px;color:#ccc;padding:8px 2px 0;flex-shrink:0}
+.stage-explain{background:#f8f7f5;border-radius:10px;padding:11px 13px;font-size:12px;color:#444;line-height:1.6;margin-bottom:14px}
+.stage-explain b{color:#1a1a1a}
 
 /* 정보 */
 .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
@@ -158,8 +165,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
       </div>
     </div>
 
-    <div class="stage-row" id="stageRow"></div>
-    <div class="stage-cur" id="stageCur"></div>
+    <div class="stage-flow" id="stageFlow"></div>
+    <div class="stage-explain" id="stageExplain"></div>
 
     <div class="info-grid" id="infoGrid"></div>
     <div class="sheet-note" id="sheetNote" style="display:none"></div>
@@ -176,12 +183,18 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 <script>
 // 단계 설정 (stage_idx 0~5)
 const STAGES = [
-  { label:'구역지정',  emoji:'🔴', color:'#ef4444', apt:null },
-  { label:'조합설립',  emoji:'🔴', color:'#f87171', apt:null },
-  { label:'사업시행',  emoji:'🟡', color:'#ca8a04', apt:'ok' },
-  { label:'관리처분',  emoji:'🔑', color:'#f97316', apt:'last' },
-  { label:'착공중',   emoji:'🏗️', color:'#6366f1', apt:'no' },
-  { label:'준공완료',  emoji:'🏠', color:'#22c55e', apt:'no' },
+  { label:'구역지정', emoji:'🔴', color:'#ef4444', apt:null,
+    desc:'시에서 이 지역을 재개발·재건축 구역으로 공식 지정한 단계입니다. 아직 사업 초기로 변수가 많습니다.' },
+  { label:'조합설립', emoji:'🔴', color:'#f87171', apt:null,
+    desc:'주민들이 <b>조합</b>을 결성해 본격적인 사업을 준비하는 단계입니다. 아직 불확실성이 높습니다.' },
+  { label:'사업시행', emoji:'🟡', color:'#ca8a04', apt:'ok',
+    desc:'어떻게 개발할지 계획을 시에서 <b>승인</b>받은 단계입니다. ✅ 지금 매수하면 새 아파트 <b>입주권</b>을 받을 수 있습니다.' },
+  { label:'관리처분', emoji:'🔑', color:'#f97316', apt:'last',
+    desc:'조합원마다 새 아파트를 <b>어떻게 배분할지 확정</b>하는 단계입니다. ⚠️ 이 단계 이후엔 입주권 취득이 <b>불가</b>합니다.' },
+  { label:'착공중',  emoji:'🏗️', color:'#6366f1', apt:'no',
+    desc:'주민 이주 후 기존 건물을 철거하고 <b>새 아파트를 짓는 중</b>입니다. 입주권 취득은 이미 불가합니다.' },
+  { label:'준공완료', emoji:'🏠', color:'#22c55e', apt:'no',
+    desc:'새 아파트 건설이 <b>완료</b>된 상태입니다. 일반 아파트와 동일하게 매매됩니다.' },
 ];
 
 const APT_INFO = {
@@ -278,18 +291,25 @@ function openSheet(id) {
   document.getElementById('aptT1').textContent = apt.t1;
   document.getElementById('aptT2').textContent = apt.t2;
 
-  // 단계 바
-  document.getElementById('stageRow').innerHTML = STAGES.map((s,i) =>
-    `<div class="stage-seg" style="background:${i<=p.stage_idx?s.color:'#eee'}"></div>`
-  ).join('');
-  document.getElementById('stageCur').textContent = `현재: ${st.emoji} ${p.stage}${p.stage_date ? ' · '+p.stage_date : ''}`;
+  // 단계 흐름
+  document.getElementById('stageFlow').innerHTML = STAGES.map((s,i) => {
+    const done = i < p.stage_idx;
+    const current = i === p.stage_idx;
+    const cls = current ? 'current' : done ? 'done' : '';
+    const icon = done ? '✅' : s.emoji;
+    const arrow = i < STAGES.length-1 ? '<div class="sf-arrow">›</div>' : '';
+    return `<div class="sf-step ${cls}">
+      <span class="sf-icon">${icon}</span>
+      <span class="sf-name">${s.label}</span>
+      ${current ? `<span class="sf-now">← 지금</span>` : ''}
+    </div>${arrow}`;
+  }).join('');
+  document.getElementById('stageExplain').innerHTML = st.desc + (p.stage_date ? `<br><span style="color:#aaa;font-size:11px">최근 단계 승인: ${p.stage_date}</span>` : '');
 
   // 정보
   const items = [
-    ['세대수', p.units ? p.units.toLocaleString()+'세대' : '-'],
-    ['면적', p.area_m2 ? (p.area_m2/10000).toFixed(1)+'만㎡' : '-'],
-    ['시공사', p.contractor || '-'],
-    ['단계 일자', p.stage_date || '-'],
+    ['새 아파트 세대수', p.units ? p.units.toLocaleString()+'세대' : '-'],
+    ['시공사', p.contractor || '미정'],
   ];
   document.getElementById('infoGrid').innerHTML = items.map(([l,v]) =>
     `<div class="info-box"><div class="info-lbl">${l}</div><div class="info-val">${v}</div></div>`
