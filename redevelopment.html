@@ -133,6 +133,9 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .btn-hogang{background:#ff6b00;color:#fff}
 .btn-fav{background:#f0ede8;color:#333;border:none;border-radius:10px;padding:11px 13px;font-size:16px;cursor:pointer;flex-shrink:0}
 .btn-cmp{background:#1a1a1a;color:#fff;border:none;border-radius:10px;padding:11px 13px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap}
+.btn-dotjeong{background:#0057b8;color:#fff;margin-top:6px;width:100%;border-radius:10px;padding:11px 6px;font-size:12px;font-weight:700;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:5px}
+.consent-box{margin-top:8px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:8px 11px;font-size:11px;color:#0369a1;line-height:1.6}
+.consent-box b{color:#075985}
 </style>
 </head>
 <body>
@@ -221,6 +224,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
       <button class="btn-fav" id="btnFav">♡</button>
       <button class="btn-cmp" id="btnCompare">+ 비교</button>
     </div>
+    <a class="btn-dotjeong" id="btnDotjeong" href="https://cleanup.seoul.go.kr/" target="_blank" rel="noopener">🏛️ 도정정보몽땅 — 서울시 공식 정비사업 현황</a>
   </div>
 </div>
 
@@ -228,17 +232,23 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 <script>
 const STAGES = [
   { label:'구역지정', emoji:'🔴', color:'#ef4444', apt:'early',
-    desc:'시에서 이 지역을 재개발·재건축 구역으로 공식 지정한 단계입니다. 아직 사업 초기로 변수가 많습니다.' },
+    desc:'시에서 이 지역을 재개발·재건축 구역으로 공식 지정한 단계입니다. 아직 사업 초기로 변수가 많습니다.',
+    consent:'다음 단계까지: 추진위원회 구성을 위해 <b>토지등소유자 50%+</b> 동의 필요' },
   { label:'조합설립', emoji:'🔴', color:'#f87171', apt:'early',
-    desc:'주민들이 <b>조합</b>을 결성해 사업을 준비하는 단계입니다. 아직 불확실성이 높습니다.' },
+    desc:'주민들이 <b>조합</b>을 결성해 사업을 준비하는 단계입니다. 아직 불확실성이 높습니다.',
+    consent:'✅ 통과: <b>토지등소유자 75%+</b> 동의 확보 (재건축은 동별 2/3 + 전체 3/4) — 가장 어려운 관문' },
   { label:'사업시행', emoji:'🟡', color:'#ca8a04', apt:'ok',
-    desc:'어떻게 개발할지 계획을 시에서 <b>승인</b>받은 단계입니다. ✅ 지금 매수하면 새 아파트 <b>입주권</b>을 받을 수 있습니다.' },
+    desc:'어떻게 개발할지 계획을 시에서 <b>승인</b>받은 단계입니다. ✅ 지금 매수하면 새 아파트 <b>입주권</b>을 받을 수 있습니다.',
+    consent:'✅ 통과: <b>조합원 과반(50%+) 동의</b> 확보 완료' },
   { label:'관리처분', emoji:'🔑', color:'#f97316', apt:'last',
-    desc:'조합원마다 새 아파트를 <b>어떻게 배분할지 확정</b>하는 단계입니다. ⚠️ 이 단계 이후엔 입주권 취득이 <b>불가</b>합니다.' },
+    desc:'조합원마다 새 아파트를 <b>어떻게 배분할지 확정</b>하는 단계입니다. ⚠️ 이 단계 이후엔 입주권 취득이 <b>불가</b>합니다.',
+    consent:'✅ 통과: <b>조합원 과반(50%+) 동의</b> 확보 완료 — 입주권 배분 확정' },
   { label:'착공중',  emoji:'🏗️', color:'#6366f1', apt:'no',
-    desc:'주민 이주 후 기존 건물을 철거하고 <b>새 아파트를 짓는 중</b>입니다. 입주권 취득은 이미 불가합니다.' },
+    desc:'주민 이주 후 기존 건물을 철거하고 <b>새 아파트를 짓는 중</b>입니다. 입주권 취득은 이미 불가합니다.',
+    consent:'✅ 모든 동의 절차 완료 — 이주·철거·착공 진행 중' },
   { label:'준공완료', emoji:'🏠', color:'#22c55e', apt:'no',
-    desc:'새 아파트 건설이 <b>완료</b>된 상태입니다. 일반 아파트와 동일하게 매매됩니다.' },
+    desc:'새 아파트 건설이 <b>완료</b>된 상태입니다. 일반 아파트와 동일하게 매매됩니다.',
+    consent:'✅ 모든 동의 절차 완료 — 사업 종결' },
 ];
 
 const APT_INFO = {
@@ -444,7 +454,9 @@ function openSheet(id) {
     const done=i<p.stage_idx, current=i===p.stage_idx, cls=current?'current':done?'done':'';
     return `<div class="sf-step ${cls}"><span class="sf-icon">${done?'✅':s.emoji}</span><span class="sf-name">${s.label}</span>${current?'<span class="sf-now">← 지금</span>':''}</div>${i<STAGES.length-1?'<div class="sf-arrow">›</div>':''}`;
   }).join('');
-  document.getElementById('stageExplain').innerHTML=st.desc+(p.stage_date?`<br><span style="color:#aaa;font-size:11px">최근 단계 승인: ${p.stage_date}</span>`:'');
+  document.getElementById('stageExplain').innerHTML=st.desc
+    +(st.consent?`<div class="consent-box">📋 <b>주민 동의 현황</b><br>${st.consent}</div>`:'')
+    +(p.stage_date?`<br><span style="color:#aaa;font-size:11px">최근 단계 승인: ${p.stage_date}</span>`:'');
 
   // 입지
   document.getElementById('locationCards').innerHTML=`
@@ -472,6 +484,7 @@ function openSheet(id) {
   document.getElementById('btnNaver').href=`https://land.naver.com/search/search.naver?query=${encodeURIComponent(p.district+' '+p.dong+' '+p.type)}`;
   document.getElementById('btnJikbang').href=`https://www.zigbang.com/home/apt/map?q=${q}`;
   document.getElementById('btnHogang').href=`https://hogangnono.com/map/${p.lat},${p.lng}`;
+  document.getElementById('btnDotjeong').href=`https://cleanup.seoul.go.kr/search/search.do?searchWord=${encodeURIComponent(p.name)}`;
 
   // 비교 버튼
   document.getElementById('btnCompare').textContent=compareList.includes(id)?'✓ 담김':'+ 비교';
