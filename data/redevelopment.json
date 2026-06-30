@@ -37,6 +37,10 @@
     {"id":"wangshipri","name":"왕십리2구역","district":"성동구","dong":"하왕십리동","type":"재개발","stage":"준공완료","stage_idx":5,"lat":37.5617,"lng":127.0299,"area_m2":112000,"units":4000,"contractor":"현대건설","stage_date":"2016-11","notes":"왕십리뉴타운 완료"},
     {"id":"heukseok2","name":"흑석2구역","district":"동작구","dong":"흑석동","type":"재개발","stage":"이주/착공","stage_idx":4,"lat":37.5099,"lng":126.9659,"area_m2":54000,"units":880,"contractor":"롯데건설","stage_date":"2021-05","notes":"아크로 리버하임 입주 완료 근접"},
     {"id":"sinjeong1","name":"신정1구역","district":"양천구","dong":"신정동","type":"재개발","stage":"조합설립인가","stage_idx":1,"lat":37.5311,"lng":126.8625,"area_m2":45000,"units":650,"contractor":"","stage_date":"2022-09","notes":"신정뉴타운"},
-    {"id":"noryangjin5","name":"노량진5구역","district":"동작구","dong":"노량진동","type":"재개발","stage":"조합설립인가","stage_idx":1,"lat":37.5108,"lng":126.9451,"area_m2":29000,"units":415,"contractor":"","stage_date":"2023-02","notes":""}
+    {"id":"noryangjin5","name":"노량진5구역","district":"동작구","dong":"노량진동","type":"재개발","stage":"조합설립인가","stage_idx":1,"lat":37.5108,"lng":126.9451,"area_m2":29000,"units":415,"contractor":"","stage_date":"2023-02","notes":""},
+    {"id":"jayang4","name":"자양4구역","district":"광진구","dong":"자양동","type":"재개발","stage":"준공완료","stage_idx":5,"lat":37.5338,"lng":127.0921,"area_m2":52000,"units":1935,"contractor":"현대건설","stage_date":"2020-08","notes":"힐스테이트 자양 강변 준공"},
+    {"id":"jayang1","name":"자양1구역","district":"광진구","dong":"자양동","type":"재개발","stage":"관리처분인가","stage_idx":3,"lat":37.5352,"lng":127.0947,"area_m2":37000,"units":612,"contractor":"","stage_date":"2024-05","notes":""},
+    {"id":"guui3","name":"구의3구역","district":"광진구","dong":"구의동","type":"재개발","stage":"사업시행인가","stage_idx":2,"lat":37.5418,"lng":127.0882,"area_m2":44000,"units":687,"contractor":"","stage_date":"2023-09","notes":""},
+    {"id":"hwayan","name":"화양연립재개발","district":"광진구","dong":"화양동","type":"재개발","stage":"조합설립인가","stage_idx":1,"lat":37.5431,"lng":127.0681,"area_m2":28000,"units":410,"contractor":"","stage_date":"2022-11","notes":""}
   ]
 }
