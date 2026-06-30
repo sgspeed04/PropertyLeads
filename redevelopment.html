@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>서울 재개발·재건축</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',sans-serif}
+#map{width:100%;height:100vh}
+
+/* 상단 플로팅 바 */
+.top-bar{
+  position:fixed;top:14px;left:50%;transform:translateX(-50%);
+  z-index:1000;background:#fff;border-radius:14px;
+  padding:10px 14px;box-shadow:0 4px 20px rgba(0,0,0,.18);
+  display:flex;align-items:center;gap:8px;
+  min-width:280px;max-width:calc(100vw - 28px)
+}
+.top-title{font-size:14px;font-weight:700;white-space:nowrap}
+.top-bar select{
+  font-size:12px;padding:5px 20px 5px 8px;border:1px solid #e0ddd8;
+  border-radius:8px;background:#f8f7f5;outline:none;cursor:pointer;
+  appearance:none;-webkit-appearance:none;flex:1;min-width:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23888'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 6px center
+}
+.top-count{font-size:11px;color:#aaa;white-space:nowrap}
+
+/* 범례 */
+.legend{
+  position:fixed;bottom:20px;left:14px;z-index:1000;
+  background:rgba(255,255,255,.97);border-radius:12px;
+  padding:12px 14px;box-shadow:0 2px 12px rgba(0,0,0,.13);
+  min-width:190px
+}
+.legend-title{font-size:10px;font-weight:700;color:#aaa;margin-bottom:8px;letter-spacing:.5px}
+.leg-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}
+.leg-left{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500}
+.leg-emoji{font-size:14px;line-height:1;width:18px;text-align:center}
+.leg-apt{font-size:10px;padding:2px 6px;border-radius:6px;font-weight:600;white-space:nowrap}
+.apt-ok{background:#dcfce7;color:#16a34a}
+.apt-last{background:#fff7ed;color:#ea580c}
+.apt-no{background:#f5f5f5;color:#aaa}
+
+/* 업데이트 배지 */
+.update-badge{
+  position:fixed;bottom:20px;right:14px;z-index:1000;
+  background:rgba(255,255,255,.92);border-radius:8px;
+  padding:5px 10px;font-size:10px;color:#aaa;
+  box-shadow:0 2px 8px rgba(0,0,0,.1)
+}
+
+/* 하단 시트 */
+.sheet{
+  position:fixed;bottom:0;left:0;right:0;z-index:2000;
+  background:#fff;border-radius:20px 20px 0 0;
+  box-shadow:0 -4px 24px rgba(0,0,0,.15);
+  transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+  max-height:72vh;overflow-y:auto
+}
+.sheet.show{transform:translateY(0)}
+.sheet-handle{width:36px;height:4px;background:#e8e5e0;border-radius:2px;margin:12px auto 0}
+.sheet-body{padding:16px 20px 36px}
+
+.sheet-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
+.sheet-name{font-size:19px;font-weight:700;line-height:1.3}
+.sheet-close{background:none;border:none;font-size:22px;color:#bbb;cursor:pointer;line-height:1;padding:0 0 0 8px;flex-shrink:0}
+.sheet-sub{font-size:12px;color:#888;margin-bottom:12px}
+
+/* 입주권 상태 배너 */
+.apt-banner{
+  display:flex;align-items:center;gap:10px;
+  border-radius:10px;padding:11px 13px;margin-bottom:14px
+}
+.apt-banner.ok{background:#f0fdf4;border:1px solid #bbf7d0}
+.apt-banner.last{background:#fff7ed;border:1px solid #fed7aa}
+.apt-banner.no{background:#f5f5f5;border:1px solid #e5e5e5}
+.apt-banner-emoji{font-size:22px;flex-shrink:0}
+.apt-banner-text .t1{font-size:13px;font-weight:700}
+.apt-banner-text .t2{font-size:11px;color:#888;margin-top:1px}
+.apt-banner.ok .t1{color:#15803d}
+.apt-banner.last .t1{color:#c2410c}
+.apt-banner.no .t1{color:#666}
+
+/* 단계 표시 */
+.stage-row{display:flex;gap:3px;margin-bottom:4px}
+.stage-seg{flex:1;height:4px;border-radius:2px;background:#eee}
+.stage-cur{font-size:11px;color:#888;margin-bottom:14px}
+
+/* 정보 */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.info-box{background:#f8f7f5;border-radius:10px;padding:10px 12px}
+.info-lbl{font-size:10px;color:#aaa;margin-bottom:2px}
+.info-val{font-size:14px;font-weight:600}
+.sheet-note{background:#fffbee;border:1px solid #f0e090;border-radius:8px;padding:9px 12px;font-size:12px;color:#7a5c00;margin-bottom:16px}
+
+/* 버튼 */
+.sheet-actions{display:flex;gap:8px}
+.btn-naver{flex:1;background:#03c75a;color:#fff;border:none;border-radius:10px;padding:13px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center}
+.btn-kakao{flex:1;background:#fee500;color:#1a1a1a;border:none;border-radius:10px;padding:13px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center}
+.btn-fav{background:#f0ede8;border:none;border-radius:10px;padding:13px 15px;font-size:18px;cursor:pointer;transition:background .15s}
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div class="top-bar">
+  <span class="top-title">재개발·재건축</span>
+  <select id="filterDistrict"><option value="">전체 구</option></select>
+  <select id="filterType">
+    <option value="">전체</option>
+    <option value="재개발">재개발</option>
+    <option value="재건축">재건축</option>
+  </select>
+  <span class="top-count" id="topCount"></span>
+</div>
+
+<div class="legend">
+  <div class="legend-title">단계 · 입주권</div>
+  <div class="leg-row">
+    <div class="leg-left"><span class="leg-emoji">🔴</span>초기 (구역지정·조합)</div>
+  </div>
+  <div class="leg-row">
+    <div class="leg-left"><span class="leg-emoji">🟡</span>사업시행인가</div>
+    <span class="leg-apt apt-ok">취득가능 ✅</span>
+  </div>
+  <div class="leg-row">
+    <div class="leg-left"><span class="leg-emoji">🔑</span>관리처분인가</div>
+    <span class="leg-apt apt-last">마지막! ⚠️</span>
+  </div>
+  <div class="leg-row">
+    <div class="leg-left"><span class="leg-emoji">🏗️</span>착공중</div>
+    <span class="leg-apt apt-no">불가 ❌</span>
+  </div>
+  <div class="leg-row">
+    <div class="leg-left"><span class="leg-emoji">🏠</span>준공완료</div>
+  </div>
+</div>
+
+<div class="update-badge" id="updateBadge">로딩 중...</div>
+
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-body">
+    <div class="sheet-top">
+      <div class="sheet-name" id="sheetName"></div>
+      <button class="sheet-close" id="sheetClose">×</button>
+    </div>
+    <div class="sheet-sub" id="sheetSub"></div>
+
+    <div class="apt-banner" id="aptBanner">
+      <span class="apt-banner-emoji" id="aptEmoji"></span>
+      <div class="apt-banner-text">
+        <div class="t1" id="aptT1"></div>
+        <div class="t2" id="aptT2"></div>
+      </div>
+    </div>
+
+    <div class="stage-row" id="stageRow"></div>
+    <div class="stage-cur" id="stageCur"></div>
+
+    <div class="info-grid" id="infoGrid"></div>
+    <div class="sheet-note" id="sheetNote" style="display:none"></div>
+
+    <div class="sheet-actions">
+      <a class="btn-naver" id="btnNaver" target="_blank" rel="noopener">N 네이버 부동산</a>
+      <a class="btn-kakao" id="btnKakao" target="_blank" rel="noopener">K 카카오지도</a>
+      <button class="btn-fav" id="btnFav">♡</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// 단계 설정 (stage_idx 0~5)
+const STAGES = [
+  { label:'구역지정',  emoji:'🔴', color:'#ef4444', apt:null },
+  { label:'조합설립',  emoji:'🔴', color:'#f87171', apt:null },
+  { label:'사업시행',  emoji:'🟡', color:'#ca8a04', apt:'ok' },
+  { label:'관리처분',  emoji:'🔑', color:'#f97316', apt:'last' },
+  { label:'착공중',   emoji:'🏗️', color:'#6366f1', apt:'no' },
+  { label:'준공완료',  emoji:'🏠', color:'#22c55e', apt:'no' },
+];
+
+const APT_INFO = {
+  ok:   { cls:'ok',   emoji:'✅', t1:'입주권 취득 가능 단계', t2:'지금 매수 시 새 아파트 입주권 인정됩니다' },
+  last: { cls:'last', emoji:'⚠️', t1:'입주권 마지막 기회!',   t2:'관리처분인가 전까지만 입주권 취득 가능합니다' },
+  no:   { cls:'no',   emoji:'❌', t1:'입주권 취득 불가',      t2:'이 단계 이후 매수는 분양권으로만 거래됩니다' },
+  null: { cls:'no',   emoji:'📋', t1:'초기 단계',            t2:'아직 사업 초기로 불확실성이 높습니다' },
+};
+
+let allProjects = [], filtered = [], markers = {}, map;
+let activeId = null;
+
+// 즐겨찾기
+const getFavs = () => { try { return JSON.parse(localStorage.getItem('rdev_favs')||'[]'); } catch{return[];} };
+const saveFavs = f => localStorage.setItem('rdev_favs', JSON.stringify(f));
+function toggleFav(id) {
+  let f = getFavs();
+  saveFavs(f.includes(id) ? f.filter(x=>x!==id) : [...f,id]);
+  updateFavBtn();
+}
+function updateFavBtn() {
+  const f = getFavs().includes(activeId);
+  const btn = document.getElementById('btnFav');
+  btn.textContent = f ? '♥' : '♡';
+  btn.style.color = f ? '#e24b4a' : '#666';
+}
+
+// 지도
+function initMap() {
+  map = L.map('map', { zoomControl:false }).setView([37.554, 126.994], 11);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution:'© OpenStreetMap', maxZoom:18
+  }).addTo(map);
+  L.control.zoom({ position:'bottomright' }).addTo(map);
+  map.on('click', closeSheet);
+}
+
+function markerIcon(p, active=false) {
+  const st = STAGES[p.stage_idx] || STAGES[0];
+  const sz = active ? 32 : 22;
+  return L.divIcon({
+    html:`<div style="font-size:${sz}px;line-height:1;filter:drop-shadow(0 ${active?3:1}px ${active?6:3}px rgba(0,0,0,.${active?4:25}))">${st.emoji}</div>`,
+    iconSize:[sz,sz], iconAnchor:[sz/2,sz/2], className:''
+  });
+}
+
+function renderMarkers() {
+  Object.values(markers).forEach(m => m.remove());
+  markers = {};
+  filtered.forEach(p => {
+    const m = L.marker([p.lat, p.lng], { icon: markerIcon(p) });
+    const st = STAGES[p.stage_idx] || STAGES[0];
+    m.bindTooltip(`<b>${p.name}</b><br>${st.emoji} ${p.stage}`, {
+      direction:'top', offset:[0,-4], className:'leaflet-tooltip'
+    });
+    m.on('click', e => { L.DomEvent.stopPropagation(e); openSheet(p.id); });
+    m.addTo(map);
+    markers[p.id] = m;
+  });
+  document.getElementById('topCount').textContent = `${filtered.length}개`;
+}
+
+function applyFilter() {
+  const d = document.getElementById('filterDistrict').value;
+  const t = document.getElementById('filterType').value;
+  filtered = allProjects.filter(p => (!d || p.district===d) && (!t || p.type===t));
+  renderMarkers();
+  if (activeId && !filtered.find(p => p.id===activeId)) closeSheet();
+}
+
+function openSheet(id) {
+  const p = allProjects.find(x=>x.id===id);
+  if (!p) return;
+  activeId = id;
+
+  Object.entries(markers).forEach(([pid,m]) => {
+    const pp = allProjects.find(x=>x.id===pid);
+    if (pp) { m.setIcon(markerIcon(pp, pid===id)); m.setZIndexOffset(pid===id?1000:0); }
+  });
+  map.panTo([p.lat, p.lng], { animate:true });
+
+  const st = STAGES[p.stage_idx] || STAGES[0];
+
+  // 이름·서브
+  document.getElementById('sheetName').textContent = p.name;
+  document.getElementById('sheetSub').textContent = `${p.district} ${p.dong} · ${p.type}`;
+
+  // 입주권 배너
+  const aptKey = st.apt === undefined ? null : st.apt;
+  const apt = APT_INFO[aptKey] || APT_INFO[null];
+  const banner = document.getElementById('aptBanner');
+  banner.className = 'apt-banner ' + apt.cls;
+  document.getElementById('aptEmoji').textContent = apt.emoji;
+  document.getElementById('aptT1').textContent = apt.t1;
+  document.getElementById('aptT2').textContent = apt.t2;
+
+  // 단계 바
+  document.getElementById('stageRow').innerHTML = STAGES.map((s,i) =>
+    `<div class="stage-seg" style="background:${i<=p.stage_idx?s.color:'#eee'}"></div>`
+  ).join('');
+  document.getElementById('stageCur').textContent = `현재: ${st.emoji} ${p.stage}${p.stage_date ? ' · '+p.stage_date : ''}`;
+
+  // 정보
+  const items = [
+    ['세대수', p.units ? p.units.toLocaleString()+'세대' : '-'],
+    ['면적', p.area_m2 ? (p.area_m2/10000).toFixed(1)+'만㎡' : '-'],
+    ['시공사', p.contractor || '-'],
+    ['단계 일자', p.stage_date || '-'],
+  ];
+  document.getElementById('infoGrid').innerHTML = items.map(([l,v]) =>
+    `<div class="info-box"><div class="info-lbl">${l}</div><div class="info-val">${v}</div></div>`
+  ).join('');
+
+  const noteEl = document.getElementById('sheetNote');
+  if (p.notes) { noteEl.textContent = '📌 ' + p.notes; noteEl.style.display='block'; }
+  else noteEl.style.display = 'none';
+
+  document.getElementById('btnNaver').href =
+    `https://land.naver.com/search/search.naver?query=${encodeURIComponent(p.district+' '+p.dong+' '+p.type)}`;
+  document.getElementById('btnKakao').href =
+    `https://map.kakao.com/?q=${encodeURIComponent(p.name)}`;
+
+  updateFavBtn();
+  document.getElementById('sheet').classList.add('show');
+}
+
+function closeSheet() {
+  document.getElementById('sheet').classList.remove('show');
+  if (activeId) {
+    const p = allProjects.find(x=>x.id===activeId);
+    if (p && markers[activeId]) { markers[activeId].setIcon(markerIcon(p,false)); markers[activeId].setZIndexOffset(0); }
+    activeId = null;
+  }
+}
+
+document.getElementById('sheetClose').addEventListener('click', closeSheet);
+document.getElementById('btnFav').addEventListener('click', () => { if(activeId) toggleFav(activeId); });
+['filterDistrict','filterType'].forEach(id =>
+  document.getElementById(id).addEventListener('change', applyFilter)
+);
+
+async function loadData() {
+  try {
+    const res = await fetch('data/redevelopment.json?t='+Date.now());
+    const data = await res.json();
+    allProjects = data.projects || [];
+
+    const badge = document.getElementById('updateBadge');
+    badge.textContent = (data.source==='sample' ? '샘플 · ' : '✓ 실데이터 · ') + (data.updated_at||'');
+    badge.style.color = data.source==='sample' ? '#d97706' : '#16a34a';
+
+    const sel = document.getElementById('filterDistrict');
+    [...new Set(allProjects.map(p=>p.district))].sort().forEach(d => {
+      const o=document.createElement('option'); o.value=d; o.textContent=d; sel.appendChild(o);
+    });
+    applyFilter();
+  } catch(e) {
+    document.getElementById('updateBadge').textContent = '로드 실패';
+  }
+}
+
+initMap();
+loadData();
+</script>
+</body>
+</html>
