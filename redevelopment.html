@@ -15,6 +15,24 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .top-title{font-size:14px;font-weight:700;white-space:nowrap}
 .top-bar select{font-size:12px;padding:5px 20px 5px 8px;border:1px solid #e0ddd8;border-radius:8px;background:#f8f7f5;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;min-width:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center}
 .top-count{font-size:11px;color:#aaa;white-space:nowrap}
+.btn-search{background:none;border:none;cursor:pointer;font-size:17px;padding:2px 4px;line-height:1;flex-shrink:0}
+
+/* 검색 오버레이 */
+.search-overlay{position:fixed;inset:0;z-index:3500;display:none;flex-direction:column;background:rgba(0,0,0,.45)}
+.search-overlay.show{display:flex}
+.search-box{background:#fff;padding:14px 14px 0;box-shadow:0 4px 24px rgba(0,0,0,.18)}
+.search-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.search-input{flex:1;font-size:15px;padding:10px 14px;border:1.5px solid #e0ddd8;border-radius:10px;outline:none;background:#f8f7f5}
+.search-input:focus{border-color:#1a1a1a;background:#fff}
+.search-cancel{background:none;border:none;font-size:13px;color:#888;cursor:pointer;white-space:nowrap;padding:0 4px}
+.search-results{max-height:55vh;overflow-y:auto;padding-bottom:8px}
+.search-item{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;border-radius:0}
+.search-item:hover,.search-item:active{background:#f5f4f0}
+.search-item-emoji{font-size:18px;flex-shrink:0}
+.search-item-info{flex:1;min-width:0}
+.search-item-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.search-item-sub{font-size:11px;color:#aaa;margin-top:1px}
+.search-empty{padding:32px 14px;text-align:center;color:#bbb;font-size:13px}
 
 /* 구 멀티 선택 */
 .district-picker{position:relative}
@@ -143,6 +161,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 
 <div class="top-bar">
   <span class="top-title">재개발·재건축</span>
+  <button class="btn-search" id="btnSearchOpen" title="검색">🔍</button>
   <div class="district-picker" id="districtPicker">
     <button class="district-btn" id="districtBtn">전체 구 ▾</button>
     <div class="district-panel" id="districtPanel">
@@ -164,6 +183,17 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 </div>
 
 <div class="update-badge" id="updateBadge">로딩 중...</div>
+
+<!-- 검색 오버레이 -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <div class="search-row">
+      <input class="search-input" id="searchInput" type="text" placeholder="구역명, 동 이름으로 검색..." autocomplete="off">
+      <button class="search-cancel" id="searchCancel">취소</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
 
 <!-- 비교 바 -->
 <div class="compare-bar" id="compareBar">
@@ -497,6 +527,47 @@ function closeSheet() {
   document.getElementById('sheet').classList.remove('show');
   if(activeId){const p=allProjects.find(x=>x.id===activeId);if(p&&markers[activeId]){markers[activeId].setIcon(markerIcon(p,false));markers[activeId].setZIndexOffset(0);}activeId=null;}
 }
+
+// 검색
+function openSearch() {
+  document.getElementById('searchOverlay').classList.add('show');
+  const inp = document.getElementById('searchInput');
+  inp.value='';
+  renderSearchResults('');
+  setTimeout(()=>inp.focus(),80);
+}
+function closeSearch() {
+  document.getElementById('searchOverlay').classList.remove('show');
+}
+function renderSearchResults(q) {
+  const container=document.getElementById('searchResults');
+  const kw=q.trim().toLowerCase();
+  const results=kw
+    ? allProjects.filter(p=>(p.name||'').toLowerCase().includes(kw)||(p.dong||'').toLowerCase().includes(kw)||(p.district||'').toLowerCase().includes(kw))
+    : allProjects.slice(0,30);
+  if(results.length===0){container.innerHTML='<div class="search-empty">검색 결과가 없습니다</div>';return;}
+  container.innerHTML=results.map(p=>{
+    const st=STAGES[p.stage_idx]||STAGES[0];
+    return `<div class="search-item" onclick="selectSearchResult('${p.id}')">
+      <span class="search-item-emoji">${st.emoji}</span>
+      <div class="search-item-info">
+        <div class="search-item-name">${p.name}</div>
+        <div class="search-item-sub">${p.district} ${p.dong} · ${p.stage}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function selectSearchResult(id) {
+  closeSearch();
+  const p=allProjects.find(x=>x.id===id); if(!p) return;
+  map.flyTo([p.lat,p.lng],15,{duration:0.8});
+  setTimeout(()=>openSheet(id),400);
+}
+document.getElementById('btnSearchOpen').addEventListener('click',openSearch);
+document.getElementById('searchCancel').addEventListener('click',closeSearch);
+document.getElementById('searchInput').addEventListener('input',e=>renderSearchResults(e.target.value));
+document.getElementById('searchOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('searchOverlay'))closeSearch();});
+document.getElementById('searchInput').addEventListener('keydown',e=>{if(e.key==='Escape')closeSearch();});
 
 // 이벤트
 document.getElementById('sheetClose').addEventListener('click',closeSheet);
