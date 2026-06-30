@@ -11,10 +11,21 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 #map{width:100%;height:100vh}
 
 /* 상단 바 */
-.top-bar{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:1000;background:#fff;border-radius:14px;padding:10px 14px;box-shadow:0 4px 20px rgba(0,0,0,.18);display:flex;align-items:center;gap:8px;min-width:280px;max-width:calc(100vw - 28px)}
+.top-bar{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:1100;background:#fff;border-radius:14px;padding:10px 14px;box-shadow:0 4px 20px rgba(0,0,0,.18);display:flex;align-items:center;gap:8px;min-width:280px;max-width:calc(100vw - 28px)}
 .top-title{font-size:14px;font-weight:700;white-space:nowrap}
-.top-bar select{font-size:12px;padding:5px 20px 5px 8px;border:1px solid #e0ddd8;border-radius:8px;background:#f8f7f5;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;flex:1;min-width:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center}
+.top-bar select{font-size:12px;padding:5px 20px 5px 8px;border:1px solid #e0ddd8;border-radius:8px;background:#f8f7f5;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;min-width:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center}
 .top-count{font-size:11px;color:#aaa;white-space:nowrap}
+
+/* 구 멀티 선택 */
+.district-picker{position:relative}
+.district-btn{font-size:12px;padding:5px 10px;border:1px solid #e0ddd8;border-radius:8px;background:#f8f7f5;outline:none;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px}
+.district-btn.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.district-panel{position:absolute;top:calc(100% + 6px);left:0;background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:8px;min-width:160px;display:none;z-index:2100;max-height:280px;overflow-y:auto}
+.district-panel.show{display:block}
+.dp-all{display:flex;align-items:center;gap:8px;padding:7px 8px 10px;border-bottom:1px solid #f0ede8;margin-bottom:4px;cursor:pointer;font-size:13px;font-weight:600}
+.dp-opt{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer;font-size:13px}
+.dp-opt:hover,.dp-all:hover{background:#f5f4f0}
+.dp-opt input,.dp-all input{width:16px;height:16px;cursor:pointer;accent-color:#1a1a1a;flex-shrink:0}
 
 /* 범례 */
 .legend{position:fixed;bottom:20px;left:14px;z-index:1000;background:rgba(255,255,255,.97);border-radius:12px;padding:12px 14px;box-shadow:0 2px 12px rgba(0,0,0,.13);min-width:190px}
@@ -129,7 +140,13 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 
 <div class="top-bar">
   <span class="top-title">재개발·재건축</span>
-  <select id="filterDistrict"><option value="">전체 구</option></select>
+  <div class="district-picker" id="districtPicker">
+    <button class="district-btn" id="districtBtn">전체 구 ▾</button>
+    <div class="district-panel" id="districtPanel">
+      <div class="dp-all"><input type="checkbox" id="dpAll" checked><label for="dpAll" style="cursor:pointer">전체 선택</label></div>
+      <div id="dpOptions"></div>
+    </div>
+  </div>
   <select id="filterType"><option value="">전체</option><option value="재개발">재개발</option><option value="재건축">재건축</option></select>
   <span class="top-count" id="topCount"></span>
 </div>
@@ -233,7 +250,21 @@ const APT_INFO = {
 
 let allProjects = [], filtered = [], markers = {}, map;
 let activeId = null;
-let compareList = []; // 비교 목록 (최대 3개)
+let compareList = [];
+let selectedDistricts = new Set(); // 비어있으면 전체
+
+// 구별 지도 중심 좌표
+const DISTRICT_COORDS = {
+  '강남구':[37.5173,127.0473],'강동구':[37.5301,127.1238],'강북구':[37.6396,127.0258],
+  '강서구':[37.5509,126.8496],'관악구':[37.4784,126.9516],'광진구':[37.5385,127.0823],
+  '구로구':[37.4954,126.8874],'금천구':[37.4569,126.8956],'노원구':[37.6541,127.0568],
+  '도봉구':[37.6688,127.0471],'동대문구':[37.5744,127.0397],'동작구':[37.5124,126.9393],
+  '마포구':[37.5663,126.9014],'서대문구':[37.5791,126.9368],'서초구':[37.4837,127.0324],
+  '성동구':[37.5635,127.0369],'성북구':[37.6066,127.0226],'송파구':[37.5145,127.1059],
+  '양천구':[37.5170,126.8667],'영등포구':[37.5264,126.8963],'용산구':[37.5384,126.9654],
+  '은평구':[37.6176,126.9227],'종로구':[37.5730,126.9795],'중구':[37.5641,126.9979],
+  '중랑구':[37.6067,127.0927],
+};
 
 // 즐겨찾기
 const getFavs = () => { try { return JSON.parse(localStorage.getItem('rdev_favs')||'[]'); } catch{return[];} };
@@ -335,11 +366,59 @@ function renderMarkers() {
 }
 
 function applyFilter() {
-  const d=document.getElementById('filterDistrict').value;
   const t=document.getElementById('filterType').value;
-  filtered=allProjects.filter(p=>(!d||p.district===d)&&(!t||p.type===t));
+  filtered=allProjects.filter(p=>(selectedDistricts.size===0||selectedDistricts.has(p.district))&&(!t||p.type===t));
   renderMarkers();
   if(activeId && !filtered.find(p=>p.id===activeId)) closeSheet();
+}
+
+function updateDistrictBtn() {
+  const btn=document.getElementById('districtBtn');
+  if(selectedDistricts.size===0){
+    btn.textContent='전체 구 ▾'; btn.classList.remove('active');
+  } else if(selectedDistricts.size===1){
+    btn.textContent=[...selectedDistricts][0]+' ▾'; btn.classList.add('active');
+  } else {
+    btn.textContent=`${selectedDistricts.size}개 구 ▾`; btn.classList.add('active');
+  }
+  // 전체 체크박스 상태
+  const allBox=document.getElementById('dpAll');
+  if(allBox) allBox.checked=selectedDistricts.size===0;
+}
+
+function toggleDistrict(d, checked) {
+  if(checked) selectedDistricts.add(d);
+  else selectedDistricts.delete(d);
+  updateDistrictBtn();
+  applyFilter();
+  // 1개만 선택 시 해당 구 중심으로 이동
+  if(selectedDistricts.size===1){
+    const coords=DISTRICT_COORDS[[...selectedDistricts][0]];
+    if(coords) map.flyTo(coords, 13, {duration:0.9});
+  } else if(selectedDistricts.size===0){
+    map.flyTo([37.554,126.994], 11, {duration:0.8});
+  }
+}
+
+function buildDistrictOptions() {
+  const districts=[...new Set(allProjects.map(p=>p.district))].sort();
+  const container=document.getElementById('dpOptions');
+  container.innerHTML=districts.map(d=>`
+    <div class="dp-opt">
+      <input type="checkbox" id="dp_${d}" value="${d}">
+      <label for="dp_${d}" style="cursor:pointer;flex:1">${d}</label>
+    </div>`).join('');
+  container.querySelectorAll('input').forEach(cb=>{
+    cb.addEventListener('change',()=>toggleDistrict(cb.value, cb.checked));
+  });
+  document.getElementById('dpAll').addEventListener('change', e=>{
+    if(e.target.checked){
+      selectedDistricts.clear();
+      container.querySelectorAll('input').forEach(cb=>cb.checked=false);
+    }
+    updateDistrictBtn(); applyFilter();
+    map.flyTo([37.554,126.994], 11, {duration:0.8});
+  });
 }
 
 function openSheet(id) {
@@ -413,7 +492,17 @@ document.getElementById('btnCompare').addEventListener('click',()=>{if(activeId)
 document.getElementById('btnOpenCompare').addEventListener('click',openCompareModal);
 document.getElementById('compareClose').addEventListener('click',()=>document.getElementById('compareModal').classList.remove('show'));
 document.getElementById('compareModal').addEventListener('click',e=>{if(e.target===document.getElementById('compareModal'))document.getElementById('compareModal').classList.remove('show');});
-['filterDistrict','filterType'].forEach(id=>document.getElementById(id).addEventListener('change',applyFilter));
+document.getElementById('filterType').addEventListener('change',applyFilter);
+
+// 구 피커 열기/닫기
+document.getElementById('districtBtn').addEventListener('click', e=>{
+  e.stopPropagation();
+  document.getElementById('districtPanel').classList.toggle('show');
+});
+document.addEventListener('click', e=>{
+  if(!document.getElementById('districtPicker').contains(e.target))
+    document.getElementById('districtPanel').classList.remove('show');
+});
 
 async function loadData() {
   try {
@@ -423,8 +512,7 @@ async function loadData() {
     const badge=document.getElementById('updateBadge');
     badge.textContent=(data.source==='sample'?'샘플 · ':'✓ 실데이터 · ')+(data.updated_at||'');
     badge.style.color=data.source==='sample'?'#d97706':'#16a34a';
-    const sel=document.getElementById('filterDistrict');
-    [...new Set(allProjects.map(p=>p.district))].sort().forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;sel.appendChild(o);});
+    buildDistrictOptions();
     applyFilter();
   } catch(e){document.getElementById('updateBadge').textContent='로드 실패';}
 }
