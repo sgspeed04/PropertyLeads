@@ -10,31 +10,14 @@
 html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',sans-serif}
 #map{width:100%;height:100vh}
 
-/* 상단 플로팅 바 */
-.top-bar{
-  position:fixed;top:14px;left:50%;transform:translateX(-50%);
-  z-index:1000;background:#fff;border-radius:14px;
-  padding:10px 14px;box-shadow:0 4px 20px rgba(0,0,0,.18);
-  display:flex;align-items:center;gap:8px;
-  min-width:280px;max-width:calc(100vw - 28px)
-}
+/* 상단 바 */
+.top-bar{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:1000;background:#fff;border-radius:14px;padding:10px 14px;box-shadow:0 4px 20px rgba(0,0,0,.18);display:flex;align-items:center;gap:8px;min-width:280px;max-width:calc(100vw - 28px)}
 .top-title{font-size:14px;font-weight:700;white-space:nowrap}
-.top-bar select{
-  font-size:12px;padding:5px 20px 5px 8px;border:1px solid #e0ddd8;
-  border-radius:8px;background:#f8f7f5;outline:none;cursor:pointer;
-  appearance:none;-webkit-appearance:none;flex:1;min-width:0;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23888'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 6px center
-}
+.top-bar select{font-size:12px;padding:5px 20px 5px 8px;border:1px solid #e0ddd8;border-radius:8px;background:#f8f7f5;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;flex:1;min-width:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%23888'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center}
 .top-count{font-size:11px;color:#aaa;white-space:nowrap}
 
 /* 범례 */
-.legend{
-  position:fixed;bottom:20px;left:14px;z-index:1000;
-  background:rgba(255,255,255,.97);border-radius:12px;
-  padding:12px 14px;box-shadow:0 2px 12px rgba(0,0,0,.13);
-  min-width:190px
-}
+.legend{position:fixed;bottom:20px;left:14px;z-index:1000;background:rgba(255,255,255,.97);border-radius:12px;padding:12px 14px;box-shadow:0 2px 12px rgba(0,0,0,.13);min-width:190px}
 .legend-title{font-size:10px;font-weight:700;color:#aaa;margin-bottom:8px;letter-spacing:.5px}
 .leg-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}
 .leg-left{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500}
@@ -45,69 +28,100 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .apt-no{background:#f5f5f5;color:#aaa}
 
 /* 업데이트 배지 */
-.update-badge{
-  position:fixed;bottom:20px;right:14px;z-index:1000;
-  background:rgba(255,255,255,.92);border-radius:8px;
-  padding:5px 10px;font-size:10px;color:#aaa;
-  box-shadow:0 2px 8px rgba(0,0,0,.1)
-}
+.update-badge{position:fixed;bottom:20px;right:14px;z-index:1000;background:rgba(255,255,255,.92);border-radius:8px;padding:5px 10px;font-size:10px;color:#aaa;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+
+/* 비교 바 (하단 고정) */
+.compare-bar{position:fixed;bottom:0;left:0;right:0;z-index:1500;background:#1a1a1a;color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px;transform:translateY(100%);transition:transform .25s ease}
+.compare-bar.show{transform:translateY(0)}
+.compare-chips{display:flex;gap:6px;flex:1;overflow-x:auto}
+.compare-chip{background:#333;border-radius:8px;padding:5px 10px;font-size:12px;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.compare-chip .rm{background:none;border:none;color:#aaa;cursor:pointer;font-size:14px;padding:0;line-height:1}
+.btn-compare{background:#fff;color:#1a1a1a;border:none;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
+
+/* 비교 모달 */
+.compare-modal{position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.6);display:none;align-items:flex-end}
+.compare-modal.show{display:flex}
+.compare-sheet{background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:85vh;overflow-y:auto}
+.compare-handle{width:36px;height:4px;background:#e8e5e0;border-radius:2px;margin:12px auto 0}
+.compare-body{padding:16px 16px 36px}
+.compare-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.compare-title{font-size:16px;font-weight:700}
+.compare-close{background:none;border:none;font-size:22px;color:#bbb;cursor:pointer}
+.compare-grid{display:grid;gap:8px}
+.compare-row{display:grid;gap:8px;margin-bottom:2px}
+.compare-label{font-size:11px;color:#888;font-weight:600;padding:8px 10px;background:#f5f5f5;border-radius:8px;display:flex;align-items:center}
+.compare-cell{background:#f8f7f5;border-radius:8px;padding:10px;font-size:12px;line-height:1.5;min-height:48px}
+.compare-cell.highlight{background:#fff7ed;border:1px solid #fed7aa}
 
 /* 하단 시트 */
-.sheet{
-  position:fixed;bottom:0;left:0;right:0;z-index:2000;
-  background:#fff;border-radius:20px 20px 0 0;
-  box-shadow:0 -4px 24px rgba(0,0,0,.15);
-  transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
-  max-height:72vh;overflow-y:auto
-}
+.sheet{position:fixed;bottom:0;left:0;right:0;z-index:2000;background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -4px 24px rgba(0,0,0,.15);transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);max-height:80vh;overflow-y:auto}
 .sheet.show{transform:translateY(0)}
+.sheet.lifted{transform:translateY(-60px)}
 .sheet-handle{width:36px;height:4px;background:#e8e5e0;border-radius:2px;margin:12px auto 0}
 .sheet-body{padding:16px 20px 36px}
 
-.sheet-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
+.sheet-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px}
 .sheet-name{font-size:19px;font-weight:700;line-height:1.3}
 .sheet-close{background:none;border:none;font-size:22px;color:#bbb;cursor:pointer;line-height:1;padding:0 0 0 8px;flex-shrink:0}
 .sheet-sub{font-size:12px;color:#888;margin-bottom:12px}
 
-/* 입주권 상태 배너 */
-.apt-banner{
-  display:flex;align-items:center;gap:10px;
-  border-radius:10px;padding:11px 13px;margin-bottom:14px
-}
+/* 입주권 배너 */
+.apt-banner{display:flex;align-items:center;gap:10px;border-radius:10px;padding:11px 13px;margin-bottom:14px}
 .apt-banner.ok{background:#f0fdf4;border:1px solid #bbf7d0}
 .apt-banner.last{background:#fff7ed;border:1px solid #fed7aa}
 .apt-banner.no{background:#f5f5f5;border:1px solid #e5e5e5}
+.apt-banner.early{background:#fef2f2;border:1px solid #fecaca}
 .apt-banner-emoji{font-size:22px;flex-shrink:0}
 .apt-banner-text .t1{font-size:13px;font-weight:700}
 .apt-banner-text .t2{font-size:11px;color:#888;margin-top:1px}
 .apt-banner.ok .t1{color:#15803d}
 .apt-banner.last .t1{color:#c2410c}
 .apt-banner.no .t1{color:#666}
+.apt-banner.early .t1{color:#b91c1c}
 
 /* 단계 흐름 */
 .stage-flow{display:flex;align-items:flex-start;gap:0;overflow-x:auto;padding-bottom:4px;margin-bottom:10px;-webkit-overflow-scrolling:touch}
-.sf-step{display:flex;flex-direction:column;align-items:center;min-width:52px;opacity:.35}
-.sf-step.done{opacity:.7}
+.sf-step{display:flex;flex-direction:column;align-items:center;min-width:52px;opacity:.3}
+.sf-step.done{opacity:.65}
 .sf-step.current{opacity:1}
 .sf-icon{font-size:18px;line-height:1;margin-bottom:3px}
 .sf-name{font-size:10px;font-weight:600;text-align:center;line-height:1.2;white-space:nowrap}
 .sf-now{font-size:9px;color:#f97316;font-weight:700;margin-top:2px;white-space:nowrap}
 .sf-arrow{font-size:14px;color:#ccc;padding:8px 2px 0;flex-shrink:0}
 .stage-explain{background:#f8f7f5;border-radius:10px;padding:11px 13px;font-size:12px;color:#444;line-height:1.6;margin-bottom:14px}
-.stage-explain b{color:#1a1a1a}
 
-/* 정보 */
-.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+/* 섹션 구분 */
+.section-title{font-size:11px;font-weight:700;color:#aaa;margin-bottom:8px;letter-spacing:.5px;text-transform:uppercase}
+
+/* 입지 카드들 */
+.location-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.loc-card{background:#f8f7f5;border-radius:10px;padding:10px 12px}
+.loc-icon{font-size:16px;margin-bottom:3px}
+.loc-label{font-size:10px;color:#aaa;margin-bottom:2px}
+.loc-value{font-size:13px;font-weight:600;line-height:1.3}
+.loc-card.hangang-yes{background:#eff6ff;border:1px solid #bfdbfe}
+.loc-card.hangang-yes .loc-value{color:#1d4ed8}
+
+/* 시세 참고 */
+.ref-box{background:#fffbee;border:1px solid #fde68a;border-radius:10px;padding:11px 13px;font-size:12px;color:#92400e;line-height:1.6;margin-bottom:14px}
+.ref-box b{color:#78350f}
+
+/* 정보 그리드 */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
 .info-box{background:#f8f7f5;border-radius:10px;padding:10px 12px}
 .info-lbl{font-size:10px;color:#aaa;margin-bottom:2px}
 .info-val{font-size:14px;font-weight:600}
-.sheet-note{background:#fffbee;border:1px solid #f0e090;border-radius:8px;padding:9px 12px;font-size:12px;color:#7a5c00;margin-bottom:16px}
+
+.sheet-note{background:#fffbee;border:1px solid #f0e090;border-radius:8px;padding:9px 12px;font-size:12px;color:#7a5c00;margin-bottom:14px}
 
 /* 버튼 */
-.sheet-actions{display:flex;gap:8px}
-.btn-naver{flex:1;background:#03c75a;color:#fff;border:none;border-radius:10px;padding:13px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center}
-.btn-kakao{flex:1;background:#fee500;color:#1a1a1a;border:none;border-radius:10px;padding:13px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center}
-.btn-fav{background:#f0ede8;border:none;border-radius:10px;padding:13px 15px;font-size:18px;cursor:pointer;transition:background .15s}
+.sheet-actions{display:flex;gap:6px;flex-wrap:wrap}
+.btn-link{flex:1;min-width:0;border:none;border-radius:10px;padding:11px 6px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap}
+.btn-naver{background:#03c75a;color:#fff}
+.btn-jikbang{background:#fc5230;color:#fff}
+.btn-hogang{background:#ff6b00;color:#fff}
+.btn-fav{background:#f0ede8;color:#333;border:none;border-radius:10px;padding:11px 13px;font-size:16px;cursor:pointer;flex-shrink:0}
+.btn-cmp{background:#1a1a1a;color:#fff;border:none;border-radius:10px;padding:11px 13px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -116,38 +130,42 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 <div class="top-bar">
   <span class="top-title">재개발·재건축</span>
   <select id="filterDistrict"><option value="">전체 구</option></select>
-  <select id="filterType">
-    <option value="">전체</option>
-    <option value="재개발">재개발</option>
-    <option value="재건축">재건축</option>
-  </select>
+  <select id="filterType"><option value="">전체</option><option value="재개발">재개발</option><option value="재건축">재건축</option></select>
   <span class="top-count" id="topCount"></span>
 </div>
 
 <div class="legend">
   <div class="legend-title">단계 · 입주권</div>
-  <div class="leg-row">
-    <div class="leg-left"><span class="leg-emoji">🔴</span>초기 (구역지정·조합)</div>
-  </div>
-  <div class="leg-row">
-    <div class="leg-left"><span class="leg-emoji">🟡</span>사업시행인가</div>
-    <span class="leg-apt apt-ok">취득가능 ✅</span>
-  </div>
-  <div class="leg-row">
-    <div class="leg-left"><span class="leg-emoji">🔑</span>관리처분인가</div>
-    <span class="leg-apt apt-last">마지막! ⚠️</span>
-  </div>
-  <div class="leg-row">
-    <div class="leg-left"><span class="leg-emoji">🏗️</span>착공중</div>
-    <span class="leg-apt apt-no">불가 ❌</span>
-  </div>
-  <div class="leg-row">
-    <div class="leg-left"><span class="leg-emoji">🏠</span>준공완료</div>
-  </div>
+  <div class="leg-row"><div class="leg-left"><span class="leg-emoji">🔴</span>초기 (구역지정·조합)</div></div>
+  <div class="leg-row"><div class="leg-left"><span class="leg-emoji">🟡</span>사업시행인가</div><span class="leg-apt apt-ok">취득가능 ✅</span></div>
+  <div class="leg-row"><div class="leg-left"><span class="leg-emoji">🔑</span>관리처분인가</div><span class="leg-apt apt-last">마지막! ⚠️</span></div>
+  <div class="leg-row"><div class="leg-left"><span class="leg-emoji">🏗️</span>착공중</div><span class="leg-apt apt-no">불가 ❌</span></div>
+  <div class="leg-row"><div class="leg-left"><span class="leg-emoji">🏠</span>준공완료</div></div>
 </div>
 
 <div class="update-badge" id="updateBadge">로딩 중...</div>
 
+<!-- 비교 바 -->
+<div class="compare-bar" id="compareBar">
+  <div class="compare-chips" id="compareChips"></div>
+  <button class="btn-compare" id="btnOpenCompare">비교 보기 →</button>
+</div>
+
+<!-- 비교 모달 -->
+<div class="compare-modal" id="compareModal">
+  <div class="compare-sheet">
+    <div class="compare-handle"></div>
+    <div class="compare-body">
+      <div class="compare-header">
+        <span class="compare-title">구역 비교</span>
+        <button class="compare-close" id="compareClose">×</button>
+      </div>
+      <div id="compareContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 상세 시트 -->
 <div class="sheet" id="sheet">
   <div class="sheet-handle"></div>
   <div class="sheet-body">
@@ -168,25 +186,34 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
     <div class="stage-flow" id="stageFlow"></div>
     <div class="stage-explain" id="stageExplain"></div>
 
+    <div class="section-title">입지</div>
+    <div class="location-cards" id="locationCards"></div>
+
+    <div class="ref-box" id="refBox" style="display:none"></div>
+
+    <div class="section-title">규모</div>
     <div class="info-grid" id="infoGrid"></div>
+
     <div class="sheet-note" id="sheetNote" style="display:none"></div>
 
+    <div class="section-title" style="margin-bottom:8px">매물·시세 확인</div>
     <div class="sheet-actions">
-      <a class="btn-naver" id="btnNaver" target="_blank" rel="noopener">N 네이버 부동산</a>
-      <a class="btn-kakao" id="btnKakao" target="_blank" rel="noopener">K 카카오지도</a>
+      <a class="btn-link btn-naver" id="btnNaver" target="_blank" rel="noopener">N 네이버</a>
+      <a class="btn-link btn-jikbang" id="btnJikbang" target="_blank" rel="noopener">직방</a>
+      <a class="btn-link btn-hogang" id="btnHogang" target="_blank" rel="noopener">호갱노노</a>
       <button class="btn-fav" id="btnFav">♡</button>
+      <button class="btn-cmp" id="btnCompare">+ 비교</button>
     </div>
   </div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// 단계 설정 (stage_idx 0~5)
 const STAGES = [
-  { label:'구역지정', emoji:'🔴', color:'#ef4444', apt:null,
+  { label:'구역지정', emoji:'🔴', color:'#ef4444', apt:'early',
     desc:'시에서 이 지역을 재개발·재건축 구역으로 공식 지정한 단계입니다. 아직 사업 초기로 변수가 많습니다.' },
-  { label:'조합설립', emoji:'🔴', color:'#f87171', apt:null,
-    desc:'주민들이 <b>조합</b>을 결성해 본격적인 사업을 준비하는 단계입니다. 아직 불확실성이 높습니다.' },
+  { label:'조합설립', emoji:'🔴', color:'#f87171', apt:'early',
+    desc:'주민들이 <b>조합</b>을 결성해 사업을 준비하는 단계입니다. 아직 불확실성이 높습니다.' },
   { label:'사업시행', emoji:'🟡', color:'#ca8a04', apt:'ok',
     desc:'어떻게 개발할지 계획을 시에서 <b>승인</b>받은 단계입니다. ✅ 지금 매수하면 새 아파트 <b>입주권</b>을 받을 수 있습니다.' },
   { label:'관리처분', emoji:'🔑', color:'#f97316', apt:'last',
@@ -198,42 +225,96 @@ const STAGES = [
 ];
 
 const APT_INFO = {
-  ok:   { cls:'ok',   emoji:'✅', t1:'입주권 취득 가능 단계', t2:'지금 매수 시 새 아파트 입주권 인정됩니다' },
-  last: { cls:'last', emoji:'⚠️', t1:'입주권 마지막 기회!',   t2:'관리처분인가 전까지만 입주권 취득 가능합니다' },
-  no:   { cls:'no',   emoji:'❌', t1:'입주권 취득 불가',      t2:'이 단계 이후 매수는 분양권으로만 거래됩니다' },
-  null: { cls:'no',   emoji:'📋', t1:'초기 단계',            t2:'아직 사업 초기로 불확실성이 높습니다' },
+  ok:    { cls:'ok',    emoji:'✅', t1:'입주권 취득 가능 단계',   t2:'지금 매수 시 새 아파트 입주권 인정됩니다' },
+  last:  { cls:'last',  emoji:'⚠️', t1:'입주권 마지막 기회!',    t2:'관리처분인가 전까지만 입주권 취득 가능합니다' },
+  no:    { cls:'no',    emoji:'❌', t1:'입주권 취득 불가',       t2:'이 단계 이후 매수는 분양권으로만 거래됩니다' },
+  early: { cls:'early', emoji:'📋', t1:'초기 단계 — 장기 투자',  t2:'불확실성이 높지만 초기 진입 가격 낮을 수 있습니다' },
 };
 
 let allProjects = [], filtered = [], markers = {}, map;
 let activeId = null;
+let compareList = []; // 비교 목록 (최대 3개)
 
 // 즐겨찾기
 const getFavs = () => { try { return JSON.parse(localStorage.getItem('rdev_favs')||'[]'); } catch{return[];} };
 const saveFavs = f => localStorage.setItem('rdev_favs', JSON.stringify(f));
-function toggleFav(id) {
-  let f = getFavs();
-  saveFavs(f.includes(id) ? f.filter(x=>x!==id) : [...f,id]);
-  updateFavBtn();
-}
+function toggleFav(id) { let f=getFavs(); saveFavs(f.includes(id)?f.filter(x=>x!==id):[...f,id]); updateFavBtn(); }
 function updateFavBtn() {
-  const f = getFavs().includes(activeId);
-  const btn = document.getElementById('btnFav');
-  btn.textContent = f ? '♥' : '♡';
-  btn.style.color = f ? '#e24b4a' : '#666';
+  const f=getFavs().includes(activeId);
+  const btn=document.getElementById('btnFav');
+  btn.textContent=f?'♥':'♡'; btn.style.color=f?'#e24b4a':'#666';
+}
+
+// 비교 기능
+function addToCompare(id) {
+  if (compareList.includes(id)) return;
+  if (compareList.length >= 3) { alert('최대 3개까지 비교할 수 있습니다'); return; }
+  compareList.push(id);
+  renderCompareBar();
+}
+function removeFromCompare(id) {
+  compareList = compareList.filter(x=>x!==id);
+  renderCompareBar();
+}
+function renderCompareBar() {
+  const bar = document.getElementById('compareBar');
+  const chips = document.getElementById('compareChips');
+  const sheet = document.getElementById('sheet');
+  if (compareList.length === 0) {
+    bar.classList.remove('show');
+    sheet.classList.remove('lifted');
+    return;
+  }
+  bar.classList.add('show');
+  sheet.classList.add('lifted');
+  chips.innerHTML = compareList.map(id => {
+    const p = allProjects.find(x=>x.id===id);
+    const st = STAGES[p.stage_idx]||STAGES[0];
+    return `<div class="compare-chip">${st.emoji} ${p.name}<button class="rm" onclick="removeFromCompare('${id}')">×</button></div>`;
+  }).join('');
+  // 비교 버튼 텍스트 업데이트
+  const btn = document.getElementById('btnCompare');
+  if (btn) btn.textContent = compareList.includes(activeId) ? '✓ 담김' : '+ 비교';
+}
+
+function openCompareModal() {
+  const projects = compareList.map(id => allProjects.find(x=>x.id===id)).filter(Boolean);
+  if (projects.length < 2) { alert('비교할 구역을 2개 이상 선택하세요'); return; }
+
+  const cols = projects.length;
+  const gridStyle = `grid-template-columns: 80px repeat(${cols}, 1fr)`;
+
+  const rows = [
+    ['단계', p => `${STAGES[p.stage_idx]?.emoji||''} ${p.stage}`],
+    ['입주권', p => { const a=APT_INFO[STAGES[p.stage_idx]?.apt||'early']; return `${a.emoji} ${a.t1.split(' ')[0]}`; }],
+    ['역세권', p => p.subway || '-'],
+    ['한강뷰', p => p.hangang ? '🌊 가능' : '❌ 없음'],
+    ['예상 입주', p => p.completion_est || '-'],
+    ['새 세대수', p => p.units ? p.units.toLocaleString()+'세대' : '-'],
+    ['시공사', p => p.contractor || '미정'],
+    ['시세 참고', p => p.ref_note || '-'],
+  ];
+
+  document.getElementById('compareContent').innerHTML = rows.map(([label, fn]) =>
+    `<div class="compare-row" style="${gridStyle};display:grid;margin-bottom:6px">
+      <div class="compare-label">${label}</div>
+      ${projects.map(p => `<div class="compare-cell${label==='시세 참고'?' highlight':''}">${fn(p)}</div>`).join('')}
+    </div>`
+  ).join('');
+
+  document.getElementById('compareModal').classList.add('show');
 }
 
 // 지도
 function initMap() {
   map = L.map('map', { zoomControl:false }).setView([37.554, 126.994], 11);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution:'© OpenStreetMap', maxZoom:18
-  }).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'© OpenStreetMap', maxZoom:18 }).addTo(map);
   L.control.zoom({ position:'bottomright' }).addTo(map);
   map.on('click', closeSheet);
 }
 
 function markerIcon(p, active=false) {
-  const st = STAGES[p.stage_idx] || STAGES[0];
+  const st = STAGES[p.stage_idx]||STAGES[0];
   const sz = active ? 32 : 22;
   return L.divIcon({
     html:`<div style="font-size:${sz}px;line-height:1;filter:drop-shadow(0 ${active?3:1}px ${active?6:3}px rgba(0,0,0,.${active?4:25}))">${st.emoji}</div>`,
@@ -242,87 +323,79 @@ function markerIcon(p, active=false) {
 }
 
 function renderMarkers() {
-  Object.values(markers).forEach(m => m.remove());
-  markers = {};
+  Object.values(markers).forEach(m=>m.remove()); markers={};
   filtered.forEach(p => {
-    const m = L.marker([p.lat, p.lng], { icon: markerIcon(p) });
-    const st = STAGES[p.stage_idx] || STAGES[0];
-    m.bindTooltip(`<b>${p.name}</b><br>${st.emoji} ${p.stage}`, {
-      direction:'top', offset:[0,-4], className:'leaflet-tooltip'
-    });
+    const m = L.marker([p.lat, p.lng], { icon:markerIcon(p) });
+    const st = STAGES[p.stage_idx]||STAGES[0];
+    m.bindTooltip(`<b>${p.name}</b><br>${st.emoji} ${p.stage}${p.subway?'<br>🚇 '+p.subway:''}`, { direction:'top', offset:[0,-4] });
     m.on('click', e => { L.DomEvent.stopPropagation(e); openSheet(p.id); });
-    m.addTo(map);
-    markers[p.id] = m;
+    m.addTo(map); markers[p.id]=m;
   });
   document.getElementById('topCount').textContent = `${filtered.length}개`;
 }
 
 function applyFilter() {
-  const d = document.getElementById('filterDistrict').value;
-  const t = document.getElementById('filterType').value;
-  filtered = allProjects.filter(p => (!d || p.district===d) && (!t || p.type===t));
+  const d=document.getElementById('filterDistrict').value;
+  const t=document.getElementById('filterType').value;
+  filtered=allProjects.filter(p=>(!d||p.district===d)&&(!t||p.type===t));
   renderMarkers();
-  if (activeId && !filtered.find(p => p.id===activeId)) closeSheet();
+  if(activeId && !filtered.find(p=>p.id===activeId)) closeSheet();
 }
 
 function openSheet(id) {
-  const p = allProjects.find(x=>x.id===id);
-  if (!p) return;
-  activeId = id;
+  const p = allProjects.find(x=>x.id===id); if(!p) return;
+  activeId=id;
+  Object.entries(markers).forEach(([pid,m])=>{ const pp=allProjects.find(x=>x.id===pid); if(pp){m.setIcon(markerIcon(pp,pid===id));m.setZIndexOffset(pid===id?1000:0);}});
+  map.panTo([p.lat,p.lng],{animate:true});
 
-  Object.entries(markers).forEach(([pid,m]) => {
-    const pp = allProjects.find(x=>x.id===pid);
-    if (pp) { m.setIcon(markerIcon(pp, pid===id)); m.setZIndexOffset(pid===id?1000:0); }
-  });
-  map.panTo([p.lat, p.lng], { animate:true });
-
-  const st = STAGES[p.stage_idx] || STAGES[0];
-
-  // 이름·서브
-  document.getElementById('sheetName').textContent = p.name;
-  document.getElementById('sheetSub').textContent = `${p.district} ${p.dong} · ${p.type}`;
+  const st = STAGES[p.stage_idx]||STAGES[0];
+  document.getElementById('sheetName').textContent=p.name;
+  document.getElementById('sheetSub').textContent=`${p.district} ${p.dong} · ${p.type}`;
 
   // 입주권 배너
-  const aptKey = st.apt === undefined ? null : st.apt;
-  const apt = APT_INFO[aptKey] || APT_INFO[null];
-  const banner = document.getElementById('aptBanner');
-  banner.className = 'apt-banner ' + apt.cls;
-  document.getElementById('aptEmoji').textContent = apt.emoji;
-  document.getElementById('aptT1').textContent = apt.t1;
-  document.getElementById('aptT2').textContent = apt.t2;
+  const apt=APT_INFO[st.apt||'early'];
+  const banner=document.getElementById('aptBanner');
+  banner.className='apt-banner '+apt.cls;
+  document.getElementById('aptEmoji').textContent=apt.emoji;
+  document.getElementById('aptT1').textContent=apt.t1;
+  document.getElementById('aptT2').textContent=apt.t2;
 
   // 단계 흐름
-  document.getElementById('stageFlow').innerHTML = STAGES.map((s,i) => {
-    const done = i < p.stage_idx;
-    const current = i === p.stage_idx;
-    const cls = current ? 'current' : done ? 'done' : '';
-    const icon = done ? '✅' : s.emoji;
-    const arrow = i < STAGES.length-1 ? '<div class="sf-arrow">›</div>' : '';
-    return `<div class="sf-step ${cls}">
-      <span class="sf-icon">${icon}</span>
-      <span class="sf-name">${s.label}</span>
-      ${current ? `<span class="sf-now">← 지금</span>` : ''}
-    </div>${arrow}`;
+  document.getElementById('stageFlow').innerHTML=STAGES.map((s,i)=>{
+    const done=i<p.stage_idx, current=i===p.stage_idx, cls=current?'current':done?'done':'';
+    return `<div class="sf-step ${cls}"><span class="sf-icon">${done?'✅':s.emoji}</span><span class="sf-name">${s.label}</span>${current?'<span class="sf-now">← 지금</span>':''}</div>${i<STAGES.length-1?'<div class="sf-arrow">›</div>':''}`;
   }).join('');
-  document.getElementById('stageExplain').innerHTML = st.desc + (p.stage_date ? `<br><span style="color:#aaa;font-size:11px">최근 단계 승인: ${p.stage_date}</span>` : '');
+  document.getElementById('stageExplain').innerHTML=st.desc+(p.stage_date?`<br><span style="color:#aaa;font-size:11px">최근 단계 승인: ${p.stage_date}</span>`:'');
 
-  // 정보
-  const items = [
-    ['새 아파트 세대수', p.units ? p.units.toLocaleString()+'세대' : '-'],
-    ['시공사', p.contractor || '미정'],
-  ];
-  document.getElementById('infoGrid').innerHTML = items.map(([l,v]) =>
-    `<div class="info-box"><div class="info-lbl">${l}</div><div class="info-val">${v}</div></div>`
-  ).join('');
+  // 입지
+  document.getElementById('locationCards').innerHTML=`
+    <div class="loc-card"><div class="loc-icon">🚇</div><div class="loc-label">가장 가까운 역</div><div class="loc-value">${p.subway||'정보 없음'}</div></div>
+    <div class="loc-card${p.hangang?' hangang-yes':''}"><div class="loc-icon">${p.hangang?'🌊':'🏙️'}</div><div class="loc-label">한강뷰</div><div class="loc-value">${p.hangang?'한강뷰 가능':'해당 없음'}</div></div>
+    <div class="loc-card"><div class="loc-icon">📅</div><div class="loc-label">예상 입주</div><div class="loc-value">${p.completion_est||'미정'}</div></div>
+    <div class="loc-card"><div class="loc-icon">${p.type==='재개발'?'🏘️':'🏢'}</div><div class="loc-label">사업 유형</div><div class="loc-value">${p.type}</div></div>`;
 
-  const noteEl = document.getElementById('sheetNote');
-  if (p.notes) { noteEl.textContent = '📌 ' + p.notes; noteEl.style.display='block'; }
-  else noteEl.style.display = 'none';
+  // 시세 참고
+  const refBox=document.getElementById('refBox');
+  if(p.ref_note){refBox.innerHTML=`💰 <b>시세 참고</b><br>${p.ref_note}`;refBox.style.display='block';}
+  else refBox.style.display='none';
 
-  document.getElementById('btnNaver').href =
-    `https://land.naver.com/search/search.naver?query=${encodeURIComponent(p.district+' '+p.dong+' '+p.type)}`;
-  document.getElementById('btnKakao').href =
-    `https://map.kakao.com/?q=${encodeURIComponent(p.name)}`;
+  // 규모
+  document.getElementById('infoGrid').innerHTML=[
+    ['새 아파트 세대수',p.units?p.units.toLocaleString()+'세대':'-'],
+    ['시공사',p.contractor||'미정'],
+  ].map(([l,v])=>`<div class="info-box"><div class="info-lbl">${l}</div><div class="info-val">${v}</div></div>`).join('');
+
+  const noteEl=document.getElementById('sheetNote');
+  if(p.notes){noteEl.textContent='📌 '+p.notes;noteEl.style.display='block';}else noteEl.style.display='none';
+
+  // 링크
+  const q=encodeURIComponent(p.dong);
+  document.getElementById('btnNaver').href=`https://land.naver.com/search/search.naver?query=${encodeURIComponent(p.district+' '+p.dong+' '+p.type)}`;
+  document.getElementById('btnJikbang').href=`https://www.zigbang.com/home/apt/map?q=${q}`;
+  document.getElementById('btnHogang').href=`https://hogangnono.com/map/${p.lat},${p.lng}`;
+
+  // 비교 버튼
+  document.getElementById('btnCompare').textContent=compareList.includes(id)?'✓ 담김':'+ 비교';
 
   updateFavBtn();
   document.getElementById('sheet').classList.add('show');
@@ -330,41 +403,33 @@ function openSheet(id) {
 
 function closeSheet() {
   document.getElementById('sheet').classList.remove('show');
-  if (activeId) {
-    const p = allProjects.find(x=>x.id===activeId);
-    if (p && markers[activeId]) { markers[activeId].setIcon(markerIcon(p,false)); markers[activeId].setZIndexOffset(0); }
-    activeId = null;
-  }
+  if(activeId){const p=allProjects.find(x=>x.id===activeId);if(p&&markers[activeId]){markers[activeId].setIcon(markerIcon(p,false));markers[activeId].setZIndexOffset(0);}activeId=null;}
 }
 
-document.getElementById('sheetClose').addEventListener('click', closeSheet);
-document.getElementById('btnFav').addEventListener('click', () => { if(activeId) toggleFav(activeId); });
-['filterDistrict','filterType'].forEach(id =>
-  document.getElementById(id).addEventListener('change', applyFilter)
-);
+// 이벤트
+document.getElementById('sheetClose').addEventListener('click',closeSheet);
+document.getElementById('btnFav').addEventListener('click',()=>{if(activeId)toggleFav(activeId);});
+document.getElementById('btnCompare').addEventListener('click',()=>{if(activeId){addToCompare(activeId);document.getElementById('btnCompare').textContent='✓ 담김';}});
+document.getElementById('btnOpenCompare').addEventListener('click',openCompareModal);
+document.getElementById('compareClose').addEventListener('click',()=>document.getElementById('compareModal').classList.remove('show'));
+document.getElementById('compareModal').addEventListener('click',e=>{if(e.target===document.getElementById('compareModal'))document.getElementById('compareModal').classList.remove('show');});
+['filterDistrict','filterType'].forEach(id=>document.getElementById(id).addEventListener('change',applyFilter));
 
 async function loadData() {
   try {
-    const res = await fetch('data/redevelopment.json?t='+Date.now());
-    const data = await res.json();
-    allProjects = data.projects || [];
-
-    const badge = document.getElementById('updateBadge');
-    badge.textContent = (data.source==='sample' ? '샘플 · ' : '✓ 실데이터 · ') + (data.updated_at||'');
-    badge.style.color = data.source==='sample' ? '#d97706' : '#16a34a';
-
-    const sel = document.getElementById('filterDistrict');
-    [...new Set(allProjects.map(p=>p.district))].sort().forEach(d => {
-      const o=document.createElement('option'); o.value=d; o.textContent=d; sel.appendChild(o);
-    });
+    const res=await fetch('data/redevelopment.json?t='+Date.now());
+    const data=await res.json();
+    allProjects=data.projects||[];
+    const badge=document.getElementById('updateBadge');
+    badge.textContent=(data.source==='sample'?'샘플 · ':'✓ 실데이터 · ')+(data.updated_at||'');
+    badge.style.color=data.source==='sample'?'#d97706':'#16a34a';
+    const sel=document.getElementById('filterDistrict');
+    [...new Set(allProjects.map(p=>p.district))].sort().forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;sel.appendChild(o);});
     applyFilter();
-  } catch(e) {
-    document.getElementById('updateBadge').textContent = '로드 실패';
-  }
+  } catch(e){document.getElementById('updateBadge').textContent='로드 실패';}
 }
 
-initMap();
-loadData();
+initMap(); loadData();
 </script>
 </body>
 </html>
