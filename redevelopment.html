@@ -478,7 +478,7 @@ function toggleDistrict(d, checked) {
   else selectedDistricts.delete(d);
   updateDistrictBtn();
   applyFilter();
-  // 1개만 선택 시 해당 구 중심으로 이동
+  document.getElementById('districtPanel').classList.remove('show'); // 선택 즉시 닫힘
   if(selectedDistricts.size===1){
     const coords=DISTRICT_COORDS[[...selectedDistricts][0]];
     if(coords) map.flyTo(coords, 13, {duration:0.9});
