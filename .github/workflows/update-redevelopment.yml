@@ -2,7 +2,8 @@ name: 재개발 데이터 자동 업데이트
 
 on:
   schedule:
-    - cron: '0 15 * * *'   # 매일 00:00 KST (UTC 15:00)
+    - cron: '0 15 * * *'   # 매일 00:00 KST (UTC 15:00) — 정비사업 현황
+    - cron: '0 0 1 1 *'    # 매년 1월 1일 09:00 KST — 노후도 연간 갱신
   workflow_dispatch:         # 수동 실행 버튼
 
 jobs:
@@ -20,16 +21,22 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Fetch & Update Data
+      - name: Fetch & Update 정비사업 현황
         env:
           SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
           DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
         run: node scripts/fetch-redevelopment.js
 
+      - name: Fetch & Update 노후도 (연 1회)
+        if: github.event.schedule == '0 0 1 1 *' || github.event_name == 'workflow_dispatch'
+        env:
+          DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
+        run: node scripts/fetch-nohuodo.js
+
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/redevelopment.json
+          git add data/redevelopment.json data/nohuodo.json
           git diff --staged --quiet || git commit -m "chore: 재개발 데이터 자동 업데이트 $(date +'%Y-%m-%d')"
           git push

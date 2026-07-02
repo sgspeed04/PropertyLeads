@@ -55,6 +55,18 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .apt-ok{background:#dcfce7;color:#16a34a}
 .apt-last{background:#fff7ed;color:#ea580c}
 .apt-no{background:#f5f5f5;color:#aaa}
+.apt-watch{background:#eff6ff;color:#1d4ed8}
+
+/* 노후도 오버레이 토글 */
+.nohuodo-toggle{display:flex;align-items:center;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid #f0ede8;cursor:pointer;user-select:none}
+.nohuodo-label{font-size:11px;font-weight:600;color:#555;flex:1}
+.nohuodo-sw{width:30px;height:17px;background:#ddd;border-radius:9px;position:relative;transition:background .2s;flex-shrink:0}
+.nohuodo-sw.on{background:#f97316}
+.nohuodo-sw::after{content:'';position:absolute;top:2px;left:2px;width:13px;height:13px;background:#fff;border-radius:50%;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.nohuodo-sw.on::after{left:15px}
+.nohuodo-scale{display:flex;align-items:center;gap:4px;margin-top:6px;font-size:9px;color:#aaa}
+.nh-bar{display:flex;gap:1px;flex:1;height:6px}
+.nh-seg{flex:1;border-radius:1px}
 
 /* 업데이트 배지 */
 .update-badge{position:fixed;bottom:20px;right:14px;z-index:1000;background:rgba(255,255,255,.92);border-radius:8px;padding:5px 10px;font-size:10px;color:#aaa;box-shadow:0 2px 8px rgba(0,0,0,.1)}
@@ -100,6 +112,8 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .apt-banner.last{background:#fff7ed;border:1px solid #fed7aa}
 .apt-banner.no{background:#f5f5f5;border:1px solid #e5e5e5}
 .apt-banner.early{background:#fef2f2;border:1px solid #fecaca}
+.apt-banner.watch{background:#eff6ff;border:1px solid #bfdbfe}
+.apt-banner.watch .t1{color:#1d4ed8}
 .apt-banner-emoji{font-size:22px;flex-shrink:0}
 .apt-banner-text .t1{font-size:13px;font-weight:700}
 .apt-banner-text .t2{font-size:11px;color:#888;margin-top:1px}
@@ -175,11 +189,28 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 
 <div class="legend">
   <div class="legend-title">단계 · 입주권</div>
+  <div class="leg-row"><div class="leg-left"><span class="leg-emoji">⚪</span>정비예정</div><span class="leg-apt apt-watch">모니터링</span></div>
+  <div class="leg-row"><div class="leg-left"><span class="leg-emoji">🔵</span>준비위결성</div><span class="leg-apt apt-watch">관심</span></div>
   <div class="leg-row"><div class="leg-left"><span class="leg-emoji">🔴</span>초기 (구역지정·조합)</div></div>
   <div class="leg-row"><div class="leg-left"><span class="leg-emoji">🟡</span>사업시행인가</div><span class="leg-apt apt-ok">취득가능 ✅</span></div>
   <div class="leg-row"><div class="leg-left"><span class="leg-emoji">🔑</span>관리처분인가</div><span class="leg-apt apt-last">마지막! ⚠️</span></div>
   <div class="leg-row"><div class="leg-left"><span class="leg-emoji">🏗️</span>착공중</div><span class="leg-apt apt-no">불가 ❌</span></div>
   <div class="leg-row"><div class="leg-left"><span class="leg-emoji">🏠</span>준공완료</div></div>
+  <div class="nohuodo-toggle" id="nohuodoToggle">
+    <span class="nohuodo-label">🏚️ 노후도 오버레이</span>
+    <div class="nohuodo-sw" id="nohuodoSw"></div>
+  </div>
+  <div class="nohuodo-scale" id="nohuodoScale" style="display:none">
+    <span>낮음</span>
+    <div class="nh-bar">
+      <div class="nh-seg" style="background:#22c55e"></div>
+      <div class="nh-seg" style="background:#84cc16"></div>
+      <div class="nh-seg" style="background:#eab308"></div>
+      <div class="nh-seg" style="background:#f97316"></div>
+      <div class="nh-seg" style="background:#ef4444"></div>
+    </div>
+    <span>높음</span>
+  </div>
 </div>
 
 <div class="update-badge" id="updateBadge">로딩 중...</div>
@@ -260,6 +291,15 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
+const PRE_STAGES = [
+  { label:'정비예정',  emoji:'⚪', color:'#94a3b8', apt:'watch',
+    desc:'노후 건축물이 밀집해 정비예정구역 지정이 검토되거나 주민 관심이 높아지고 있는 지역입니다.',
+    consent:'아직 공식 절차 없음 — 구청·도정정보몽땅에서 정비예정구역 공고를 확인하세요' },
+  { label:'준비위결성', emoji:'🔵', color:'#3b82f6', apt:'watch',
+    desc:'주민들이 <b>추진준비위원회</b>를 자율 결성해 정비구역 지정을 추진 중인 단계입니다.',
+    consent:'다음 단계: 구역지정 신청을 위해 <b>토지등소유자 30%+</b> 동의 필요' },
+];
+
 const STAGES = [
   { label:'구역지정', emoji:'🔴', color:'#ef4444', apt:'early',
     desc:'시에서 이 지역을 재개발·재건축 구역으로 공식 지정한 단계입니다. 아직 사업 초기로 변수가 많습니다.',
@@ -286,7 +326,14 @@ const APT_INFO = {
   last:  { cls:'last',  emoji:'⚠️', t1:'입주권 마지막 기회!',    t2:'관리처분인가 전까지만 입주권 취득 가능합니다' },
   no:    { cls:'no',    emoji:'❌', t1:'입주권 취득 불가',       t2:'이 단계 이후 매수는 분양권으로만 거래됩니다' },
   early: { cls:'early', emoji:'📋', t1:'초기 단계 — 장기 투자',  t2:'불확실성이 높지만 초기 진입 가격 낮을 수 있습니다' },
+  watch: { cls:'watch', emoji:'👀', t1:'관심 지역 — 사전 모니터링', t2:'아직 공식 정비사업 시작 전 단계입니다' },
 };
+
+function getStage(idx) {
+  if (idx < 0) return PRE_STAGES[idx + 2] || PRE_STAGES[0];
+  return STAGES[idx] || STAGES[0];
+}
+const ALL_STAGES = [...PRE_STAGES, ...STAGES];
 
 let allProjects = [], filtered = [], markers = {}, map;
 let activeId = null;
@@ -340,7 +387,7 @@ function renderCompareBar() {
   sheet.classList.add('lifted');
   chips.innerHTML = compareList.map(id => {
     const p = allProjects.find(x=>x.id===id);
-    const st = STAGES[p.stage_idx]||STAGES[0];
+    const st = getStage(p.stage_idx);
     return `<div class="compare-chip">${st.emoji} ${p.name}<button class="rm" onclick="removeFromCompare('${id}')">×</button></div>`;
   }).join('');
   // 비교 버튼 텍스트 업데이트
@@ -356,8 +403,8 @@ function openCompareModal() {
   const gridStyle = `grid-template-columns: 80px repeat(${cols}, 1fr)`;
 
   const rows = [
-    ['단계', p => `${STAGES[p.stage_idx]?.emoji||''} ${p.stage}`],
-    ['입주권', p => { const a=APT_INFO[STAGES[p.stage_idx]?.apt||'early']; return `${a.emoji} ${a.t1.split(' ')[0]}`; }],
+    ['단계', p => `${getStage(p.stage_idx)?.emoji||''} ${p.stage}`],
+    ['입주권', p => { const a=APT_INFO[getStage(p.stage_idx)?.apt||'early']; return `${a.emoji} ${a.t1.split(' ')[0]}`; }],
     ['역세권', p => p.subway || '-'],
     ['한강뷰', p => p.hangang ? '🌊 가능' : '❌ 없음'],
     ['예상 입주', p => p.completion_est || '-'],
@@ -385,7 +432,7 @@ function initMap() {
 }
 
 function markerIcon(p, active=false) {
-  const st = STAGES[p.stage_idx]||STAGES[0];
+  const st = getStage(p.stage_idx);
   const sz = active ? 32 : 22;
   return L.divIcon({
     html:`<div style="font-size:${sz}px;line-height:1;filter:drop-shadow(0 ${active?3:1}px ${active?6:3}px rgba(0,0,0,.${active?4:25}))">${st.emoji}</div>`,
@@ -397,7 +444,7 @@ function renderMarkers() {
   Object.values(markers).forEach(m=>m.remove()); markers={};
   filtered.forEach(p => {
     const m = L.marker([p.lat, p.lng], { icon:markerIcon(p) });
-    const st = STAGES[p.stage_idx]||STAGES[0];
+    const st = getStage(p.stage_idx);
     m.bindTooltip(`<b>${p.name}</b><br>${st.emoji} ${p.stage}${p.subway?'<br>🚇 '+p.subway:''}`, { direction:'top', offset:[0,-4] });
     m.on('click', e => { L.DomEvent.stopPropagation(e); openSheet(p.id); });
     m.addTo(map); markers[p.id]=m;
@@ -467,7 +514,7 @@ function openSheet(id) {
   Object.entries(markers).forEach(([pid,m])=>{ const pp=allProjects.find(x=>x.id===pid); if(pp){m.setIcon(markerIcon(pp,pid===id));m.setZIndexOffset(pid===id?1000:0);}});
   map.panTo([p.lat,p.lng],{animate:true});
 
-  const st = STAGES[p.stage_idx]||STAGES[0];
+  const st = getStage(p.stage_idx);
   document.getElementById('sheetName').textContent=p.name;
   document.getElementById('sheetSub').textContent=`${p.district} ${p.dong} · ${p.type}`;
 
@@ -479,10 +526,11 @@ function openSheet(id) {
   document.getElementById('aptT1').textContent=apt.t1;
   document.getElementById('aptT2').textContent=apt.t2;
 
-  // 단계 흐름
-  document.getElementById('stageFlow').innerHTML=STAGES.map((s,i)=>{
-    const done=i<p.stage_idx, current=i===p.stage_idx, cls=current?'current':done?'done':'';
-    return `<div class="sf-step ${cls}"><span class="sf-icon">${done?'✅':s.emoji}</span><span class="sf-name">${s.label}</span>${current?'<span class="sf-now">← 지금</span>':''}</div>${i<STAGES.length-1?'<div class="sf-arrow">›</div>':''}`;
+  // 단계 흐름 (pre-stage 포함)
+  const displayIdx = p.stage_idx + 2; // -2→0, -1→1, 0→2, ..., 5→7
+  document.getElementById('stageFlow').innerHTML=ALL_STAGES.map((s,i)=>{
+    const done=i<displayIdx, current=i===displayIdx, cls=current?'current':done?'done':'';
+    return `<div class="sf-step ${cls}"><span class="sf-icon">${done?'✅':s.emoji}</span><span class="sf-name">${s.label}</span>${current?'<span class="sf-now">← 지금</span>':''}</div>${i<ALL_STAGES.length-1?'<div class="sf-arrow">›</div>':''}`;
   }).join('');
   document.getElementById('stageExplain').innerHTML=st.desc
     +(st.consent?`<div class="consent-box">📋 <b>주민 동의 현황</b><br>${st.consent}</div>`:'')
@@ -501,10 +549,12 @@ function openSheet(id) {
   else refBox.style.display='none';
 
   // 규모
-  document.getElementById('infoGrid').innerHTML=[
-    ['새 아파트 세대수',p.units?p.units.toLocaleString()+'세대':'-'],
-    ['시공사',p.contractor||'미정'],
-  ].map(([l,v])=>`<div class="info-box"><div class="info-lbl">${l}</div><div class="info-val">${v}</div></div>`).join('');
+  const infoItems=[
+    ['새 아파트 세대수', p.units ? p.units.toLocaleString()+'세대' : '-'],
+    ['시공사', p.contractor || '미정'],
+  ];
+  if (p.nohuodo_pct) infoItems.unshift(['노후도 (30년+ 건물)', `${p.nohuodo_pct}% 🏚️`]);
+  document.getElementById('infoGrid').innerHTML=infoItems.map(([l,v])=>`<div class="info-box"><div class="info-lbl">${l}</div><div class="info-val">${v}</div></div>`).join('');
 
   const noteEl=document.getElementById('sheetNote');
   if(p.notes){noteEl.textContent='📌 '+p.notes;noteEl.style.display='block';}else noteEl.style.display='none';
@@ -527,6 +577,40 @@ function closeSheet() {
   document.getElementById('sheet').classList.remove('show');
   if(activeId){const p=allProjects.find(x=>x.id===activeId);if(p&&markers[activeId]){markers[activeId].setIcon(markerIcon(p,false));markers[activeId].setZIndexOffset(0);}activeId=null;}
 }
+
+// 노후도 오버레이
+let nohuodoLayer = null, nohuodoOn = false, nohuodoData = null;
+function nhColor(pct) {
+  if (pct >= 70) return '#ef4444';
+  if (pct >= 60) return '#f97316';
+  if (pct >= 50) return '#eab308';
+  if (pct >= 40) return '#84cc16';
+  return '#22c55e';
+}
+async function toggleNohuodo() {
+  nohuodoOn = !nohuodoOn;
+  document.getElementById('nohuodoSw').classList.toggle('on', nohuodoOn);
+  document.getElementById('nohuodoScale').style.display = nohuodoOn ? 'flex' : 'none';
+  if (nohuodoOn) {
+    if (!nohuodoData) {
+      try {
+        const res = await fetch('data/nohuodo.json?t='+Date.now());
+        nohuodoData = await res.json();
+      } catch(e) { console.error('노후도 데이터 로드 실패', e); nohuodoOn=false; return; }
+    }
+    nohuodoLayer = L.layerGroup().addTo(map);
+    nohuodoData.dongs.forEach(d => {
+      const color = nhColor(d.pct_30y);
+      L.circle([d.lat, d.lng], {
+        radius: 560, fillColor: color, fillOpacity: 0.28,
+        color: color, weight: 1, opacity: 0.5
+      }).bindTooltip(`<b>${d.dong}</b> (${d.district})<br>30년+ 건물: <b>${d.pct_30y}%</b> · 평균 ${d.avg_age_y}년`).addTo(nohuodoLayer);
+    });
+  } else {
+    if (nohuodoLayer) { nohuodoLayer.remove(); nohuodoLayer = null; }
+  }
+}
+document.getElementById('nohuodoToggle').addEventListener('click', toggleNohuodo);
 
 // 검색
 function openSearch() {
