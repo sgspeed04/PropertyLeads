@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>서울 재개발·재건축</title>
+<title>수도권 재개발·재건축</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -176,8 +176,9 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 <div class="top-bar">
   <span class="top-title">재개발·재건축</span>
   <button class="btn-search" id="btnSearchOpen" title="검색">🔍</button>
+  <select id="filterRegion"><option value="">전체</option><option value="서울">서울</option><option value="경기">경기</option></select>
   <div class="district-picker" id="districtPicker">
-    <button class="district-btn" id="districtBtn">전체 구 ▾</button>
+    <button class="district-btn" id="districtBtn">전체 구/시 ▾</button>
     <div class="district-panel" id="districtPanel">
       <div class="dp-all"><input type="checkbox" id="dpAll" checked><label for="dpAll" style="cursor:pointer">전체 선택</label></div>
       <div id="dpOptions"></div>
@@ -285,7 +286,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
       <button class="btn-fav" id="btnFav">♡</button>
       <button class="btn-cmp" id="btnCompare">+ 비교</button>
     </div>
-    <a class="btn-dotjeong" id="btnDotjeong" href="https://cleanup.seoul.go.kr/" target="_blank" rel="noopener">🏛️ 도정정보몽땅 — 서울시 공식 정비사업 현황</a>
+    <a class="btn-dotjeong" id="btnDotjeong" href="https://cleanup.seoul.go.kr/" target="_blank" rel="noopener">🏛️ 공식 정비사업 현황</a>
   </div>
 </div>
 
@@ -338,10 +339,12 @@ const ALL_STAGES = [...PRE_STAGES, ...STAGES];
 let allProjects = [], filtered = [], markers = {}, map;
 let activeId = null;
 let compareList = [];
-let selectedDistricts = new Set(); // 비어있으면 전체
+let selectedDistricts = new Set();
+let selectedRegion = '';
 
-// 구별 지도 중심 좌표
+// 구/시별 지도 중심 좌표 (서울 + 경기)
 const DISTRICT_COORDS = {
+  // 서울
   '강남구':[37.5173,127.0473],'강동구':[37.5301,127.1238],'강북구':[37.6396,127.0258],
   '강서구':[37.5509,126.8496],'관악구':[37.4784,126.9516],'광진구':[37.5385,127.0823],
   '구로구':[37.4954,126.8874],'금천구':[37.4569,126.8956],'노원구':[37.6541,127.0568],
@@ -351,6 +354,22 @@ const DISTRICT_COORDS = {
   '양천구':[37.5170,126.8667],'영등포구':[37.5264,126.8963],'용산구':[37.5384,126.9654],
   '은평구':[37.6176,126.9227],'종로구':[37.5730,126.9795],'중구':[37.5641,126.9979],
   '중랑구':[37.6067,127.0927],
+  // 경기도
+  '수원시':[37.2636,127.0286],'성남시':[37.4201,127.1263],'안양시':[37.3943,126.9568],
+  '부천시':[37.5034,126.7660],'광명시':[37.4784,126.8659],'시흥시':[37.3800,126.8029],
+  '안산시':[37.3219,126.8310],'의왕시':[37.3445,126.9677],'군포시':[37.3616,126.9348],
+  '고양시':[37.6584,126.8320],'의정부시':[37.7380,127.0339],'남양주시':[37.6360,127.2161],
+  '하남시':[37.5393,127.2146],'광주시':[37.4296,127.2553],'용인시':[37.2411,127.1776],
+  '평택시':[36.9921,127.1129],'화성시':[37.1996,126.8312],'오산시':[37.1498,127.0772],
+  '구리시':[37.5943,127.1296],'양주시':[37.7852,126.9994],'파주시':[37.7597,126.7798],
+  '김포시':[37.6152,126.7156],'이천시':[37.2794,127.4428],'안성시':[37.0078,127.2797],
+  '과천시':[37.4296,126.9874],'포천시':[37.8948,127.2001],
+};
+
+const REGION_CENTER = {
+  '서울': { latlng:[37.554,126.994], zoom:11 },
+  '경기': { latlng:[37.45,127.05],   zoom:10 },
+  '':    { latlng:[37.52,127.02],    zoom:10 },
 };
 
 // 즐겨찾기
@@ -425,7 +444,7 @@ function openCompareModal() {
 
 // 지도
 function initMap() {
-  map = L.map('map', { zoomControl:false }).setView([37.554, 126.994], 11);
+  map = L.map('map', { zoomControl:false }).setView([37.52, 127.02], 10);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'© OpenStreetMap', maxZoom:18 }).addTo(map);
   L.control.zoom({ position:'bottomright' }).addTo(map);
   map.on('click', closeSheet);
@@ -454,21 +473,25 @@ function renderMarkers() {
 
 function applyFilter() {
   const t=document.getElementById('filterType').value;
-  filtered=allProjects.filter(p=>(selectedDistricts.size===0||selectedDistricts.has(p.district))&&(!t||p.type===t));
+  filtered=allProjects.filter(p=>
+    (!selectedRegion || (p.region||'서울')===selectedRegion) &&
+    (selectedDistricts.size===0||selectedDistricts.has(p.district)) &&
+    (!t||p.type===t)
+  );
   renderMarkers();
   if(activeId && !filtered.find(p=>p.id===activeId)) closeSheet();
 }
 
 function updateDistrictBtn() {
   const btn=document.getElementById('districtBtn');
+  const unit = selectedRegion==='경기' ? '시' : selectedRegion==='서울' ? '구' : '구/시';
   if(selectedDistricts.size===0){
-    btn.textContent='전체 구 ▾'; btn.classList.remove('active');
+    btn.textContent=`전체 ${unit} ▾`; btn.classList.remove('active');
   } else if(selectedDistricts.size===1){
     btn.textContent=[...selectedDistricts][0]+' ▾'; btn.classList.add('active');
   } else {
-    btn.textContent=`${selectedDistricts.size}개 구 ▾`; btn.classList.add('active');
+    btn.textContent=`${selectedDistricts.size}개 ${unit} ▾`; btn.classList.add('active');
   }
-  // 전체 체크박스 상태
   const allBox=document.getElementById('dpAll');
   if(allBox) allBox.checked=selectedDistricts.size===0;
 }
@@ -478,21 +501,26 @@ function toggleDistrict(d, checked) {
   else selectedDistricts.delete(d);
   updateDistrictBtn();
   applyFilter();
-  document.getElementById('districtPanel').classList.remove('show'); // 선택 즉시 닫힘
+  document.getElementById('districtPanel').classList.remove('show');
   if(selectedDistricts.size===1){
     const coords=DISTRICT_COORDS[[...selectedDistricts][0]];
     if(coords) map.flyTo(coords, 13, {duration:0.9});
   } else if(selectedDistricts.size===0){
-    map.flyTo([37.554,126.994], 11, {duration:0.8});
+    const rc=REGION_CENTER[selectedRegion]||REGION_CENTER[''];
+    map.flyTo(rc.latlng, rc.zoom, {duration:0.8});
   }
 }
 
 function buildDistrictOptions() {
-  const districts=[...new Set(allProjects.map(p=>p.district))].sort();
+  // 현재 지역 필터에 맞는 구/시만 표시
+  const visibleProjects = selectedRegion
+    ? allProjects.filter(p=>(p.region||'서울')===selectedRegion)
+    : allProjects;
+  const districts=[...new Set(visibleProjects.map(p=>p.district))].sort();
   const container=document.getElementById('dpOptions');
   container.innerHTML=districts.map(d=>`
     <div class="dp-opt">
-      <input type="checkbox" id="dp_${d}" value="${d}">
+      <input type="checkbox" id="dp_${d}" value="${d}" ${selectedDistricts.has(d)?'checked':''}>
       <label for="dp_${d}" style="cursor:pointer;flex:1">${d}</label>
     </div>`).join('');
   container.querySelectorAll('input').forEach(cb=>{
@@ -504,7 +532,8 @@ function buildDistrictOptions() {
       container.querySelectorAll('input').forEach(cb=>cb.checked=false);
     }
     updateDistrictBtn(); applyFilter();
-    map.flyTo([37.554,126.994], 11, {duration:0.8});
+    const rc=REGION_CENTER[selectedRegion]||REGION_CENTER[''];
+    map.flyTo(rc.latlng, rc.zoom, {duration:0.8});
   });
 }
 
@@ -516,7 +545,7 @@ function openSheet(id) {
 
   const st = getStage(p.stage_idx);
   document.getElementById('sheetName').textContent=p.name;
-  document.getElementById('sheetSub').textContent=`${p.district} ${p.dong} · ${p.type}`;
+  document.getElementById('sheetSub').textContent=`${p.region||'서울'} ${p.district} ${p.dong||''} · ${p.type}`;
 
   // 입주권 배너
   const apt=APT_INFO[st.apt||'early'];
@@ -560,11 +589,16 @@ function openSheet(id) {
   if(p.notes){noteEl.textContent='📌 '+p.notes;noteEl.style.display='block';}else noteEl.style.display='none';
 
   // 링크
-  const q=encodeURIComponent(p.dong);
-  document.getElementById('btnNaver').href=`https://land.naver.com/search/search.naver?query=${encodeURIComponent(p.district+' '+p.dong+' '+p.type)}`;
+  const q=encodeURIComponent(p.dong || p.district);
+  document.getElementById('btnNaver').href=`https://land.naver.com/search/search.naver?query=${encodeURIComponent((p.district||'')+' '+(p.dong||'')+' '+p.type)}`;
   document.getElementById('btnJikbang').href=`https://www.zigbang.com/home/apt/map?q=${q}`;
   document.getElementById('btnHogang').href=`https://hogangnono.com/map/${p.lat},${p.lng}`;
-  document.getElementById('btnDotjeong').href=`https://cleanup.seoul.go.kr/search/search.do?searchWord=${encodeURIComponent(p.name)}`;
+  const isSeoul=(p.region||'서울')==='서울';
+  const dotjeong=document.getElementById('btnDotjeong');
+  dotjeong.href=isSeoul
+    ?`https://cleanup.seoul.go.kr/search/search.do?searchWord=${encodeURIComponent(p.name)}`
+    :`https://upis.go.kr/`;
+  dotjeong.textContent=isSeoul?'🏛️ 도정정보몽땅 (서울 공식)':'🏛️ 정비사업정보시스템 (국토부)';
 
   // 비교 버튼
   document.getElementById('btnCompare').textContent=compareList.includes(id)?'✓ 담김':'+ 비교';
@@ -636,7 +670,7 @@ function renderSearchResults(q) {
       <span class="search-item-emoji">${st.emoji}</span>
       <div class="search-item-info">
         <div class="search-item-name">${p.name}</div>
-        <div class="search-item-sub">${p.district} ${p.dong} · ${p.stage}</div>
+        <div class="search-item-sub">${p.region||'서울'} ${p.district} ${p.dong||''} · ${p.stage}</div>
       </div>
     </div>`;
   }).join('');
@@ -661,8 +695,17 @@ document.getElementById('btnOpenCompare').addEventListener('click',openCompareMo
 document.getElementById('compareClose').addEventListener('click',()=>document.getElementById('compareModal').classList.remove('show'));
 document.getElementById('compareModal').addEventListener('click',e=>{if(e.target===document.getElementById('compareModal'))document.getElementById('compareModal').classList.remove('show');});
 document.getElementById('filterType').addEventListener('change',applyFilter);
+document.getElementById('filterRegion').addEventListener('change',e=>{
+  selectedRegion=e.target.value;
+  selectedDistricts.clear();
+  buildDistrictOptions();
+  updateDistrictBtn();
+  applyFilter();
+  const rc=REGION_CENTER[selectedRegion]||REGION_CENTER[''];
+  map.flyTo(rc.latlng, rc.zoom, {duration:0.8});
+});
 
-// 구 피커 열기/닫기
+// 구/시 피커 열기/닫기
 document.getElementById('districtBtn').addEventListener('click', e=>{
   e.stopPropagation();
   document.getElementById('districtPanel').classList.toggle('show');
@@ -676,9 +719,13 @@ async function loadData() {
   try {
     const res=await fetch('data/redevelopment.json?t='+Date.now());
     const data=await res.json();
-    allProjects=data.projects||[];
+    // 기존 데이터에 region 없으면 서울로 처리
+    allProjects=(data.projects||[]).map(p=>({region:'서울',...p}));
     const badge=document.getElementById('updateBadge');
-    badge.textContent=(data.source==='sample'?'샘플 · ':'✓ 실데이터 · ')+(data.updated_at||'');
+    const ggCount=allProjects.filter(p=>p.region==='경기').length;
+    const seoulCount=allProjects.filter(p=>p.region==='서울').length;
+    const src=data.source==='sample'?'샘플':'✓ 실데이터';
+    badge.textContent=`${src} · 서울 ${seoulCount}·경기 ${ggCount} · ${data.updated_at||''}`;
     badge.style.color=data.source==='sample'?'#d97706':'#16a34a';
     buildDistrictOptions();
     applyFilter();
