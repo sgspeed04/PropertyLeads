@@ -109,25 +109,26 @@ async function fetchAllPages(serviceName) {
 
 // ── API row → 프로젝트 객체 변환 ─────────────────────────────────────────────
 function rowToProject(r, idx) {
-  const name     = r.SBSN_NM || r.JEONGBE_NM || r.ZONE_NM || '알 수 없음';
-  const stageName = r.SBSN_STEP_NM || r.STEP_NM || r.PRGSRT_NM || '';
-  const typeName  = r.SBSN_SE_NM  || r.JEONGBE_SE_NM || '';
+  // upisRebuild 필드 우선, 기존 후보 필드 폴백
+  const name      = r.RPT_NM || r.SBSN_NM || r.JEONGBE_NM || r.ZONE_NM || '알 수 없음';
+  const stageName = r.LCLSF  || r.MCLSF   || r.SBSN_STEP_NM || r.STEP_NM || r.PRGSRT_NM || '';
+  const typeName  = r.RPT_TYPE || r.RPT_SE_NM || r.SBSN_SE_NM || r.JEONGBE_SE_NM || '';
 
-  const lat = normCoord(r.LAT  || r.CNTRD_Y || r.Y_COORD || 0);
-  const lng = normCoord(r.LON  || r.CNTRD_X || r.X_COORD || 0);
+  const lat = normCoord(r.CNTRD_Y || r.LAT || r.Y_COORD || 0);
+  const lng = normCoord(r.CNTRD_X || r.LON || r.X_COORD || 0);
 
   return {
     id:           `api_${idx}`,
     name,
-    district:     r.SGG_NM || '',
-    dong:         r.EMD_NM || r.DONG_NM || '',
+    district:     r.SGG_NM  || r.LOGVM || '',
+    dong:         r.EMD_NM  || r.DONG_NM || '',
     type:         typeName.includes('재건축') ? '재건축' : '재개발',
     stage:        stageName,
     stage_idx:    getStageIdx(stageName),
     lat,
     lng,
-    area_m2:      parseInt(r.ZONE_AR || r.JEONGBE_AREA || 0),
-    units:        parseInt(r.TOT_HSHLD_CO || r.PLAN_HH || 0),
+    area_m2:      parseInt(r.TOT_AREA || r.ZONE_AR || r.JEONGBE_AREA || 0),
+    units:        parseInt(r.TOT_HSHLD || r.TOT_HSHLD_CO || r.PLAN_HH || 0),
     contractor:   r.CNSTR_CO_NM || '',
     stage_date:   (r.STEP_DT || r.PRGSRT_DE || '').substring(0, 7),
     notes:        '',
@@ -174,19 +175,8 @@ async function main() {
     return;
   }
 
-  // 서비스명 후보 — data.seoul.go.kr에서 "정비사업" 검색 후 서비스명 탭에서 확인 가능
-  // 오류 코드가 INFO-200이면 서비스명 오류, ERROR-300이면 서버 오류
   const SERVICE_CANDIDATES = [
-    'GetJeongbiSaeupInfo',        // 서울시 정비사업 현황 (v1)
-    'SttsJeongseSBSNInfo',        // 정비구역 지정 이후 진행 중 전체
-    'SULD_JGSB_STEP_INFO',        // 정비사업 단계별 현황
-    'TbJeongbeSBSNInfo',          // 정비사업 기본 정보
-    'GetUrbanImprovInfo',         // 도시정비사업 현황
-    'JsGisJeongseBitList',        // GIS 정비구역 목록
-    'NURI_JBDG_JGSB_INFO',        // 뉴리 정비사업 정보
-    'JeongBiGuyeokInfo',          // 정비구역 정보
-    'GetJeongBiGuyeokList',       // 정비구역 목록
-    'SltpNpSnInfo',               // 재개발 재건축 현황
+    'upisRebuild',                // ✓ 서울시 도시계획 정비사업 목록 (6574건, 일간 갱신)
   ];
 
   let rawRows = [];
@@ -196,6 +186,7 @@ async function main() {
       rawRows = await fetchAllPages(svc);
       if (rawRows.length > 0) {
         console.log(`[SEOUL API] ✓ ${svc} 성공 — ${rawRows.length}건`);
+        console.log(`[FIELDS] 첫번째 row 키: ${Object.keys(rawRows[0]).join(', ')}`);
         break;
       }
     } catch (e) {
