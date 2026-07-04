@@ -61,15 +61,29 @@ function isSeoulCoord(lat, lng) {
 
 // ── Seoul Open API 단일 페이지 요청 ──────────────────────────────────────────
 async function fetchPage(serviceName, start, end) {
-  const url = `http://openapi.seoul.go.kr:8088/${SEOUL_KEY}/json/${serviceName}/${start}/${end}/`;
-  const res  = await fetch(url);
-  const json = await res.json();
-  const root = json[serviceName] || json;
-  if (root.RESULT) {
-    const code = root.RESULT.CODE || '';
-    if (!code.includes('INFO-000')) throw new Error(`API 오류: ${root.RESULT.MESSAGE || code}`);
+  // HTTPS(443) 먼저 시도 — 일부 환경에서 HTTP:8088 차단
+  const urls = [
+    `https://openapi.seoul.go.kr:443/rest/${SEOUL_KEY}/json/${serviceName}/${start}/${end}/`,
+    `http://openapi.seoul.go.kr:8088/${SEOUL_KEY}/json/${serviceName}/${start}/${end}/`,
+  ];
+  let lastErr;
+  for (const url of urls) {
+    try {
+      const res  = await fetch(url);
+      const json = await res.json();
+      const root = json[serviceName] || json;
+      if (root.RESULT) {
+        const code = root.RESULT.CODE || '';
+        const msg  = root.RESULT.MESSAGE || code;
+        console.log(`    [RESULT] ${code} — ${msg}`);
+        if (!code.includes('INFO-000')) throw new Error(`API 오류: ${msg}`);
+      }
+      return { rows: root.row || [], total: parseInt(root.list_total_count || 0) };
+    } catch (e) {
+      lastErr = e;
+    }
   }
-  return { rows: root.row || [], total: parseInt(root.list_total_count || 0) };
+  throw lastErr;
 }
 
 // ── 전체 페이지 순회 ──────────────────────────────────────────────────────────
@@ -160,12 +174,19 @@ async function main() {
     return;
   }
 
-  // 서비스명 후보 (API 응답 확인 후 맞는 것 사용)
+  // 서비스명 후보 — data.seoul.go.kr에서 "정비사업" 검색 후 서비스명 탭에서 확인 가능
+  // 오류 코드가 INFO-200이면 서비스명 오류, ERROR-300이면 서버 오류
   const SERVICE_CANDIDATES = [
-    'SttsJeongseSBSNInfo',
-    'TbJeongbeSBSNInfo',
-    'JsGisJeongseBitList',
-    'NURI_JBDG_JGSB_INFO',
+    'GetJeongbiSaeupInfo',        // 서울시 정비사업 현황 (v1)
+    'SttsJeongseSBSNInfo',        // 정비구역 지정 이후 진행 중 전체
+    'SULD_JGSB_STEP_INFO',        // 정비사업 단계별 현황
+    'TbJeongbeSBSNInfo',          // 정비사업 기본 정보
+    'GetUrbanImprovInfo',         // 도시정비사업 현황
+    'JsGisJeongseBitList',        // GIS 정비구역 목록
+    'NURI_JBDG_JGSB_INFO',        // 뉴리 정비사업 정보
+    'JeongBiGuyeokInfo',          // 정비구역 정보
+    'GetJeongBiGuyeokList',       // 정비구역 목록
+    'SltpNpSnInfo',               // 재개발 재건축 현황
   ];
 
   let rawRows = [];
