@@ -2,27 +2,26 @@
  * 수도권(서울+경기) 재개발·재건축 데이터 자동 업데이트 스크립트
  *
  * ── GitHub Secrets ────────────────────────────────────────────────────────────
- *  SEOUL_API_KEY   : data.seoul.go.kr  (서울시 열린데이터광장)
- *  DATA_GO_KR_KEY  : data.go.kr        (공공데이터포털 — 서울+경기 모두 사용)
+ *  SEOUL_API_KEY   : data.seoul.go.kr   (서울시 열린데이터광장)
+ *  GG_API_KEY      : openapi.gg.go.kr   (경기도 공공데이터포털 — 인증키 신청)
  *
  * ── 사용 API ──────────────────────────────────────────────────────────────────
- *  [서울] openapi.seoul.go.kr  서비스: upisRebuild              (6574건, 일간)
- *  [경기] apis.data.go.kr      서비스: GyeonggiUrbanRenewalInfo  (경기도 정비사업)
+ *  [서울] openapi.seoul.go.kr/rest  서비스: upisRebuild            (6574건, 일간)
+ *  [경기] openapi.gg.go.kr          서비스: GenrlImprvBizpropls    (일반정비사업, 분기)
+ *                                   서비스: TBGRISSMSCLBSNSM       (소규모, 보조)
  *
- *  경기도 서비스명을 data.go.kr 에서 찾는 방법:
- *    → data.go.kr → 검색: "경기도 도시정비사업" → 오픈API 탭
- *    → 서비스명을 GG_SERVICE 상수에 입력
+ *  GG_API_KEY 발급: openapi.gg.go.kr → 인증키 신청 → GitHub Secrets에 GG_API_KEY 추가
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
 const fs   = require('fs');
 const path = require('path');
 
-const DATA_FILE   = path.join(__dirname, '..', 'data', 'redevelopment.json');
-const TODAY       = new Date().toISOString().split('T')[0];
-const SEOUL_KEY   = process.env.SEOUL_API_KEY;
-const DATA_GO_KEY = process.env.DATA_GO_KR_KEY;
-const PAGE_SIZE   = 1000;
+const DATA_FILE = path.join(__dirname, '..', 'data', 'redevelopment.json');
+const TODAY     = new Date().toISOString().split('T')[0];
+const SEOUL_KEY = process.env.SEOUL_API_KEY;
+const GG_KEY    = process.env.GG_API_KEY;
+const PAGE_SIZE = 1000;
 
 // ── 단계 매핑 ────────────────────────────────────────────────────────────────
 const STAGE_MAP = [
@@ -130,43 +129,35 @@ async function fetchSeoulAllPages(serviceName) {
   return allRows;
 }
 
-// ── data.go.kr 경기도 API 페이지 요청 ────────────────────────────────────────
-// data.go.kr REST API 형식 A (JSON, REST)
-async function fetchDataGoPage(baseUrl, params, pageNo, numOfRows) {
-  const qs = new URLSearchParams({
-    ...params,
-    serviceKey: DATA_GO_KEY,
-    pageNo,
-    numOfRows,
-    _type: 'json',
-  });
-  const res  = await fetch(`${baseUrl}?${qs}`);
+// ── openapi.gg.go.kr 경기도 API 페이지 요청 ─────────────────────────────────
+// 형식: https://openapi.gg.go.kr/{SERVICE}?KEY={KEY}&Type=json&pIndex={p}&pSize={n}
+async function fetchGgPage(serviceName, pIndex, pSize) {
+  const url = `https://openapi.gg.go.kr/${serviceName}?KEY=${GG_KEY}&Type=json&pIndex=${pIndex}&pSize=${pSize}`;
+  const res  = await fetch(url);
   const json = await res.json();
-  // data.go.kr 응답 구조: json.response.body.items.item / totalCount
-  const body  = json?.response?.body;
-  if (!body) {
-    const resultCode = json?.response?.header?.resultCode;
-    if (resultCode && resultCode !== '00') throw new Error(`API 오류: ${json?.response?.header?.resultMsg}`);
-    throw new Error('응답 구조 불명');
+  const root = json[serviceName] || json;
+  if (root.RESULT) {
+    const code = root.RESULT.CODE || '';
+    const msg  = root.RESULT.MESSAGE || code;
+    console.log(`    [GG RESULT] ${code} — ${msg}`);
+    if (!code.includes('INFO-000')) throw new Error(`GG API 오류: ${msg}`);
   }
-  const items = body.items?.item;
-  const rows  = !items ? [] : Array.isArray(items) ? items : [items];
-  return { rows, total: parseInt(body.totalCount || 0) };
+  return { rows: root.row || [], total: parseInt(root.list_total_count || 0) };
 }
 
-async function fetchDataGoAllPages(baseUrl, params) {
-  const first   = await fetchDataGoPage(baseUrl, params, 1, PAGE_SIZE);
+async function fetchGgAllPages(serviceName) {
+  const first   = await fetchGgPage(serviceName, 1, PAGE_SIZE);
   const allRows = [...first.rows];
   const total   = first.total || allRows.length;
-  console.log(`[DATA.GO.KR] ${baseUrl.split('/').pop()}: 전체 ${total}건`);
-  let pageNo = 2;
-  while ((pageNo - 1) * PAGE_SIZE < total) {
-    const { rows } = await fetchDataGoPage(baseUrl, params, pageNo, PAGE_SIZE);
+  console.log(`[GG API] ${serviceName}: 전체 ${total}건`);
+  let pIndex = 2;
+  while ((pIndex - 1) * PAGE_SIZE < total) {
+    const { rows } = await fetchGgPage(serviceName, pIndex, PAGE_SIZE);
     if (rows.length === 0) break;
     allRows.push(...rows);
-    console.log(`  …페이지 ${pageNo} 수신 (누계 ${allRows.length})`);
-    pageNo++;
-    await new Promise(r => setTimeout(r, 300));
+    console.log(`  …페이지 ${pIndex} 수신 (누계 ${allRows.length})`);
+    pIndex++;
+    await new Promise(r => setTimeout(r, 200));
   }
   return allRows;
 }
@@ -259,65 +250,40 @@ async function fetchSeoul(existing) {
   return mergeWithExisting(apiProjects, existing.projects);
 }
 
-// ── 경기도 데이터 수집 (data.go.kr 사용) ────────────────────────────────────
+// ── 경기도 데이터 수집 (openapi.gg.go.kr) ───────────────────────────────────
 async function fetchGyeonggi(existing) {
-  if (!DATA_GO_KEY) {
-    console.log('[GG] DATA_GO_KR_KEY 없음 — 경기도 데이터 스킵.');
+  if (!GG_KEY) {
+    console.log('[GG] GG_API_KEY 없음 — 경기도 데이터 스킵.');
+    console.log('[GG] openapi.gg.go.kr 에서 인증키 신청 후 GitHub Secret GG_API_KEY 등록하세요.');
     return existing.projects.filter(p => p.region === '경기');
   }
 
-  // data.go.kr에서 경기도 정비사업 데이터를 제공하는 API 후보
-  // → data.go.kr 검색: "경기도 도시정비사업" 또는 "정비사업 현황 경기"
-  const GG_API_CANDIDATES = [
-    {
-      // 국토교통부 도시정비사업 현황 (경기도 포함 전국)
-      url: 'https://apis.data.go.kr/1613000/UrbanRenewalService/getUrbanRenewalList',
-      params: { sido: '경기도' },
-    },
-    {
-      // 국토부 공간정보 포털 — 정비구역 현황
-      url: 'https://apis.data.go.kr/1613000/udip/getJeongbiGuyeokList',
-      params: { ctprvnCd: '41' }, // 경기도 코드
-    },
-    {
-      // 한국토지주택공사 정비사업
-      url: 'https://apis.data.go.kr/1741000/RenovAreaService/getRenovAreaList',
-      params: { sido: '경기' },
-    },
-    {
-      // 전국 도시정비사업 현황 — 경기도 필터
-      url: 'https://apis.data.go.kr/1613000/UrbanRenewalSvc/getUrbanRenewalSvcList',
-      params: {},
-    },
-  ];
+  // 확인된 경기도 정비사업 API 서비스명
+  // 1순위: GenrlImprvBizpropls — 일반정비사업 (재개발·재건축), 분기 갱신
+  // 2순위: TBGRISSMSCLBSNSM    — 소규모 주택정비사업 (가로주택정비 등), 보조
+  const GG_SERVICES = ['GenrlImprvBizpropls', 'TBGRISSMSCLBSNSM'];
 
-  let rawRows = [];
-  let usedUrl = '';
-  for (const { url, params } of GG_API_CANDIDATES) {
+  let allRawRows = [];
+  for (const svc of GG_SERVICES) {
     try {
-      const svcName = url.split('/').pop();
-      console.log(`[GG API] 시도: ${svcName}`);
-      const rows = await fetchDataGoAllPages(url, params);
+      console.log(`[GG API] 시도: ${svc}`);
+      const rows = await fetchGgAllPages(svc);
       if (rows.length > 0) {
-        rawRows = rows;
-        usedUrl = url;
-        console.log(`[GG API] ✓ ${svcName} 성공 — ${rows.length}건`);
+        console.log(`[GG API] ✓ ${svc} 성공 — ${rows.length}건`);
         console.log(`[GG FIELDS] ${Object.keys(rows[0]).join(', ')}`);
-        break;
+        allRawRows.push(...rows);
       }
     } catch (e) {
-      console.warn(`  ✗ ${url.split('/').pop()}: ${e.message}`);
+      console.warn(`  ✗ ${svc}: ${e.message}`);
     }
   }
 
-  if (rawRows.length === 0) {
-    console.warn('[GG] 모든 data.go.kr 서비스 실패 — 기존 경기도 데이터 유지.');
-    console.warn('[GG] data.go.kr 에서 "경기도 도시정비사업" 검색 후 정확한 서비스명을 확인하세요.');
+  if (allRawRows.length === 0) {
+    console.warn('[GG] 모든 서비스 실패 — 기존 경기도 데이터 유지.');
     return existing.projects.filter(p => p.region === '경기');
   }
 
-  // 경기도인지 확인: 좌표 또는 지역명으로 필터
-  const apiProjects = rawRows
+  const apiProjects = allRawRows
     .map((r, i) => rowToProject(r, i, '경기'))
     .filter(p => isGyeonggiCoord(p.lat, p.lng) && p.name !== '알 수 없음' && p.district);
   console.log(`[GG] 경기 구역 통과: ${apiProjects.length}건`);
