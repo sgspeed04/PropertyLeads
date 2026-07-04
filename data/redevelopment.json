@@ -4,9 +4,9 @@
   "note": "수도권 실데이터 — 서울 756개·경기 0개 구역 (2026-07-04 갱신)",
   "projects": [
     {
+      "region": "서울",
       "id": "api_24",
       "name": "전농7재정비촉진구역 ",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -25,9 +25,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_25",
       "name": "공덕 제6주택재개발정비사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -46,9 +46,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_26",
       "name": "사당3재건축정비사업",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -67,9 +67,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_27",
       "name": "긴등마을 재정비촉진구역",
-      "region": "서울",
       "district": "강서구",
       "dong": "",
       "type": "재개발",
@@ -88,9 +88,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_29",
       "name": "신용산역 북측 제1구역 도시정비형 재개발구역",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -109,9 +109,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_30",
       "name": "신설 제1 주택정비형 공공재개발사업 ",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -130,9 +130,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_31",
       "name": "양동구역 제11.12지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -151,9 +151,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_32",
       "name": "신당 제8구역 주택재개발정비사업",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -172,9 +172,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_33",
       "name": "장위6구역 ",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -193,9 +193,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_34",
       "name": "한남4 재정비촉진구역 ",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -214,9 +214,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_35",
       "name": "마포로5 도시정비형 재개발구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -235,9 +235,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_36",
       "name": "마포로5 도시정비형 재개발구역 제9-1지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -256,9 +256,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_37",
       "name": "금호 제14-1 주택재개발 정비사업",
-      "region": "서울",
       "district": "성동구",
       "dong": "",
       "type": "재개발",
@@ -277,9 +277,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_38",
       "name": "은마아파트 재건축 정비구역 ",
-      "region": "서울",
       "district": "강남구",
       "dong": "",
       "type": "재개발",
@@ -298,9 +298,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_39",
       "name": "양평제12 도시환경정비구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -319,9 +319,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_42",
       "name": "면목4 주택재건축정비구역",
-      "region": "서울",
       "district": "중랑구",
       "dong": "",
       "type": "재개발",
@@ -340,9 +340,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_43",
       "name": "개포주공4단지 주택재건축정비사업",
-      "region": "서울",
       "district": "강남구",
       "dong": "",
       "type": "재개발",
@@ -361,9 +361,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_44",
       "name": "잠실우성4차아파트 주택재건축 정비구역",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -382,9 +382,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_45",
       "name": "홍은제1 주택재건축 정비사업",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -403,9 +403,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_47",
       "name": "홍은 제2주택재건축 정비구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -424,9 +424,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_48",
       "name": "용두제6구역 주택재개발정비사업",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -445,9 +445,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_49",
       "name": "중화동 우성타운 재건축정비구역 ",
-      "region": "서울",
       "district": "중랑구",
       "dong": "",
       "type": "재개발",
@@ -466,9 +466,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_50",
       "name": "사당3 재건축정비사업",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -487,9 +487,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_51",
       "name": "증산2재정비촉진구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -508,9 +508,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_52",
       "name": "수색7재정비촉진구역 ",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -529,9 +529,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_53",
       "name": "수색13 주택재개발사업 ",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -550,9 +550,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_54",
       "name": "역삼동 758번지일대 주택재건축정비사업",
-      "region": "서울",
       "district": "강남구",
       "dong": "",
       "type": "재개발",
@@ -571,9 +571,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_55",
       "name": "수색9 재정비촉진구역 주택재개발사업 ",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -592,9 +592,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_56",
       "name": "제기1주거환경개선지구",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -613,9 +613,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_60",
       "name": "1-1구역",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -634,9 +634,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_61",
       "name": "1-2구역",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -655,9 +655,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_62",
       "name": "2구역",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -676,9 +676,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_64",
       "name": "강북3 재정비촉진구역",
-      "region": "서울",
       "district": "강북구",
       "dong": "",
       "type": "재개발",
@@ -697,9 +697,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_65",
       "name": "가락프라자아파트 주택재건축사업",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -718,9 +718,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_66",
       "name": "길음5재정비촉진구역(주택정비형재개발사업)",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -739,9 +739,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_67",
       "name": "홍은 제2주택재건축 정비구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -760,9 +760,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_69",
       "name": "고척동 한효아파트 재건축정비구역 ",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -781,9 +781,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_71",
       "name": "3구역",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -802,9 +802,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_72",
       "name": "노량진5재정비촉진구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -823,9 +823,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_73",
       "name": "노량진8재정비촉진구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -844,9 +844,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_75",
       "name": "문래동2가A 도시정비형  재개발구역 4지구",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -865,9 +865,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_78",
       "name": "마포로3구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -886,9 +886,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_79",
       "name": "4-2지구",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -907,9 +907,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_80",
       "name": "흑석9재정비촉진구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -928,9 +928,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_81",
       "name": "문래동1가A 도시정비형 재개발구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -949,9 +949,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_82",
       "name": "문래동1가B 도시정비형 재개발구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -970,9 +970,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_83",
       "name": "신촌지역 마포4  도시정비형 재개발구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -991,9 +991,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_84",
       "name": "상봉10재정비촉진구역",
-      "region": "서울",
       "district": "중랑구",
       "dong": "",
       "type": "재개발",
@@ -1012,9 +1012,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_85",
       "name": "무교다동 11지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -1033,9 +1033,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_86",
       "name": "무교다동 23-1지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -1054,9 +1054,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_87",
       "name": "무교다동 23-9지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -1075,9 +1075,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_88",
       "name": "무교다동 24-6지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -1096,9 +1096,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_89",
       "name": "무교다동 24-4지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -1117,9 +1117,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_90",
       "name": "무교다동구역 제16지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -1138,9 +1138,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_92",
       "name": "무교다동 24-2지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -1159,9 +1159,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_93",
       "name": "무교다동 23-12지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -1180,9 +1180,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_94",
       "name": "무교다동 22-3지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -1201,9 +1201,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_95",
       "name": "무교다동 23-8지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -1222,9 +1222,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_98",
       "name": "신정2재정비촉진구역",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -1243,9 +1243,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_509",
       "name": "유원제일2차아파트 재건축정비사업",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -1264,9 +1264,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_510",
       "name": "마포로1구역 제48지구 도시정비형 재개발사업 ",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -1285,9 +1285,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_511",
       "name": "흑석4재정비촉진구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -1306,9 +1306,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_512",
       "name": "주택재건축정비구역",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -1327,9 +1327,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_565",
       "name": "무교다동 8지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -1348,9 +1348,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_566",
       "name": "무교다동 23-11지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -1369,9 +1369,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_567",
       "name": "마포지역 도시환경 정비사업구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -1390,9 +1390,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_568",
       "name": "신촌지역(마포)1-2지구 도시정비형 재개발구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -1411,9 +1411,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_569",
       "name": "사당3 재건축정비사업",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -1432,9 +1432,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_570",
       "name": "마포로5구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -1453,9 +1453,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_571",
       "name": "마포로5-2",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -1474,9 +1474,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_572",
       "name": "마포로5-3",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -1495,9 +1495,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_573",
       "name": "마포로5-3-1",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -1516,9 +1516,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_574",
       "name": "마포로5-4",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -1537,9 +1537,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_575",
       "name": "마포로5-8",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -1558,9 +1558,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_576",
       "name": "효창제6구역 주택재개발정비사업",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -1579,9 +1579,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_577",
       "name": "연신내구역 도시정비형 재개발사업",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -1600,9 +1600,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_578",
       "name": "잠실주공5단지아파트 재건축사업 정비구역",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -1621,9 +1621,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_579",
       "name": "잠실우성4차아파트주택재건축정비구역",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -1642,9 +1642,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_580",
       "name": "신촌지역(마포) 4-9지구 도시정비형 재개발구역 ",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -1663,9 +1663,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_581",
       "name": "미장세림아파트 주택재건축사업",
-      "region": "서울",
       "district": "성동구",
       "dong": "",
       "type": "재개발",
@@ -1684,9 +1684,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_582",
       "name": "청담삼익아파트 재건축사업",
-      "region": "서울",
       "district": "강남구",
       "dong": "",
       "type": "재개발",
@@ -1705,9 +1705,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_583",
       "name": "합정7재정비촉진구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -1726,9 +1726,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_584",
       "name": "강동역 역세권 활성화 도시정비형 재개발 정비구역",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -1747,9 +1747,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_585",
       "name": "여의도 공작아파트 재건축정비사업 ",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -1768,9 +1768,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_586",
       "name": "제기 제6구역 주택재개발정비구역",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -1789,9 +1789,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_590",
       "name": "봉천제12-2 주택재개발정비사업",
-      "region": "서울",
       "district": "관악구",
       "dong": "",
       "type": "재개발",
@@ -1810,9 +1810,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_599",
       "name": "공평구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -1831,9 +1831,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_600",
       "name": "공평구역<15.16지구>",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -1852,9 +1852,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_601",
       "name": "돈의문3재정비촉진구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -1873,9 +1873,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_618",
       "name": "영등포1-3재정비촉진구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -1894,9 +1894,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_630",
       "name": "삼선제5구역 주택재개발 정비사업",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -1915,9 +1915,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_631",
       "name": "영천구역 주택재개발정비구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -1936,9 +1936,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_632",
       "name": "마포로5 도시정비형 재개발구역 9-1지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -1957,9 +1957,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_633",
       "name": "수색4재정비촉진구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -1978,9 +1978,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_634",
       "name": "가락상아1차 아파트 재건축 정비사업",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -1999,9 +1999,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_635",
       "name": "오류동 현대연립 재건축 정비사업",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -2020,9 +2020,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_639",
       "name": "미아3 재정비촉진구역 ",
-      "region": "서울",
       "district": "강북구",
       "dong": "",
       "type": "재개발",
@@ -2041,9 +2041,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_640",
       "name": "미아9-2 주택재건축정비사업",
-      "region": "서울",
       "district": "강북구",
       "dong": "",
       "type": "재개발",
@@ -2062,9 +2062,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_641",
       "name": "거여2재정비촉진구역 (주택재개발사업)",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -2083,9 +2083,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_642",
       "name": "개봉5 주택재건축 정비구역",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -2104,9 +2104,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_643",
       "name": "대흥제2구역 주택재개발사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -2125,9 +2125,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_644",
       "name": "중앙동 새싹마을 관리형 주거환경개선사업",
-      "region": "서울",
       "district": "관악구",
       "dong": "",
       "type": "재개발",
@@ -2146,9 +2146,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_645",
       "name": "신수2 주택재건축 정비구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -2167,9 +2167,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_646",
       "name": "영등포1-13재정비촉진구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -2188,9 +2188,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_647",
       "name": "서울역-서대문 1.2 도시정비형 재개발구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2209,9 +2209,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_648",
       "name": "서울역-서대문 1,2 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2230,9 +2230,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_649",
       "name": "서울역-서대문 1.2",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2251,9 +2251,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_650",
       "name": "서울역-서대문 1.2",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2272,9 +2272,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_651",
       "name": "서울역-서대문 1.2",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2293,9 +2293,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_716",
       "name": "서울역-서대문 1.2",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2314,9 +2314,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_717",
       "name": "서울역-서대문 1.2구역 제1지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2335,9 +2335,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_718",
       "name": "영천구역 주택재개발정비구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -2356,9 +2356,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_719",
       "name": "을지로2가 1.3.6.18",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2377,9 +2377,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_720",
       "name": "을지로2가 2",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2398,9 +2398,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_721",
       "name": "을지로2가 18-1",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2419,9 +2419,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_722",
       "name": "을지로2가 18-2",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2440,9 +2440,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_857",
       "name": "주택재개발사업",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -2461,9 +2461,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_864",
       "name": "상아.현대아파트 주택재건축사업",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -2482,9 +2482,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_865",
       "name": "남구로역세권 공공임대주택 도시정비형 재개발정비구역",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -2503,9 +2503,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_867",
       "name": "국화아파트 재건축정비구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -2524,9 +2524,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_869",
       "name": "서울역-서대문 1.2",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2545,9 +2545,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_870",
       "name": "문래동2·3가B 도시정비형 재개발구역 ",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -2566,9 +2566,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_874",
       "name": "서소문5",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2587,9 +2587,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_875",
       "name": "서소문6",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2608,9 +2608,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_876",
       "name": "서소문8-1",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2629,9 +2629,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_877",
       "name": "서소문8-2",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2650,9 +2650,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_878",
       "name": "서소문9",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2671,9 +2671,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_895",
       "name": "신길우성2차·우창아파트 재건축 정비사업",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -2692,9 +2692,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_896",
       "name": "제기 도시정비형 재개발구역",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -2713,9 +2713,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_898",
       "name": "신정1재정비촉진구역",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -2734,9 +2734,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_899",
       "name": "천왕역세권 공공임대주택 건립관련 도시환경정비사업",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -2755,9 +2755,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_900",
       "name": "둔촌동 삼익빌라 주택재건축정비사업",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -2776,9 +2776,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_901",
       "name": "면목3 주택재건축구역",
-      "region": "서울",
       "district": "중랑구",
       "dong": "",
       "type": "재개발",
@@ -2797,9 +2797,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_902",
       "name": "이문1재정비촉진구역",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -2818,9 +2818,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_903",
       "name": "이문3(3-1) 재정비촉진구역",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -2839,9 +2839,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_905",
       "name": "장위10구역 ",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -2860,9 +2860,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_906",
       "name": "오류2동 147번지 일대 주거환경관리 정비구역 ",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -2881,9 +2881,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_907",
       "name": "신길10재정비촉진구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -2902,9 +2902,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_908",
       "name": "신문로제2구역 제8지구 도시정비형 재개발사업",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -2923,9 +2923,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_909",
       "name": "홍은제14 주택재개발정비구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -2944,9 +2944,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_910",
       "name": "상봉7재정비촉진구역",
-      "region": "서울",
       "district": "중랑구",
       "dong": "",
       "type": "재개발",
@@ -2965,9 +2965,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_935",
       "name": "순화 도시정비형 재개발구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -2986,9 +2986,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_936",
       "name": "순화 도시정비형 재개발구역 제1-2지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -3007,9 +3007,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_937",
       "name": "삼선제5구역 주택재개발 정비사업",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -3028,9 +3028,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_938",
       "name": "동선제2구역 주택재개발정비사업",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -3049,9 +3049,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_940",
       "name": "이문1재정비촉진구역",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -3070,9 +3070,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_941",
       "name": "잠실진주아파트 재건축사업",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -3091,9 +3091,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_942",
       "name": "신촌지역(서대문)도시정비형 재개발구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -3112,9 +3112,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_943",
       "name": "문래동1가A 도시정비형 재개발구역 ",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -3133,9 +3133,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_944",
       "name": "문래동1가B 도시정비형 재개발구역 ",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -3154,9 +3154,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_964",
       "name": "문래동2가A 도시정비형 재개발구역 ",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -3175,9 +3175,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_965",
       "name": "문래동2가B 도시정비형 재개발구역 ",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -3196,9 +3196,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_966",
       "name": "문래동4가 도시환경정비구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -3217,9 +3217,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_967",
       "name": "북아현2 재정비촉진구역 ",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -3238,9 +3238,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_968",
       "name": "효창제6구역주택재개발정비사업",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -3259,9 +3259,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_969",
       "name": "방화5재정비촉진구역 (주택재건축사업) ",
-      "region": "서울",
       "district": "강서구",
       "dong": "",
       "type": "재개발",
@@ -3280,9 +3280,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_971",
       "name": "수색4재정비촉진구역(주택재개발사업)",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -3301,9 +3301,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_972",
       "name": "가재울6 재정비촉진구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -3322,9 +3322,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_987",
       "name": "도시정비형 재개발사업구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -3343,9 +3343,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_990",
       "name": "중구 다산권 성곽마을 관리형 주거환경개선사업",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -3364,9 +3364,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_991",
       "name": "서울특별시 마포구 창전동 27-19호 일대",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -3385,9 +3385,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1013",
       "name": "개포시영아파트 중심상가재건축정비사업",
-      "region": "서울",
       "district": "강남구",
       "dong": "",
       "type": "재개발",
@@ -3406,9 +3406,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1016",
       "name": "국제빌딩주변 도시정비형 재개발구역",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -3427,9 +3427,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1017",
       "name": "4구역",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -3448,9 +3448,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1018",
       "name": "응암제11구역 주택재개발정비사업",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -3469,9 +3469,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1020",
       "name": "서소문8-3",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -3490,9 +3490,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1021",
       "name": "갈현제1구역 주택재개발정비사업",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -3511,9 +3511,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1022",
       "name": "용답동 108-1번지 일대 주택재개발정비사업",
-      "region": "서울",
       "district": "성동구",
       "dong": "",
       "type": "재개발",
@@ -3532,9 +3532,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1023",
       "name": "노량진6재정비촉진구역 ",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -3553,9 +3553,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1038",
       "name": "북아현2 재정비촉진구역 ",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -3574,9 +3574,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1040",
       "name": "한강맨션아파트 주택재건축정비구역",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -3595,9 +3595,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1041",
       "name": "상계4재정비촉진구역 ",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -3616,9 +3616,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1042",
       "name": "가락삼익맨숀 아파트 재건축정비사업",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -3637,9 +3637,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1043",
       "name": "수정아파트 재건축정비사업",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -3658,9 +3658,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1044",
       "name": "개포시영아파트 주택재건축정비사업",
-      "region": "서울",
       "district": "강남구",
       "dong": "",
       "type": "재개발",
@@ -3679,9 +3679,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1046",
       "name": "월계동 487-17일대 주택재건축 정비사업",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -3700,9 +3700,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1047",
       "name": "응암제2구역 주택재개발정비사업",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -3721,9 +3721,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1111",
       "name": "가락프라자아파트 주택재건축사업 ",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -3742,9 +3742,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1112",
       "name": "월계동 487-17번지 일대 주택재건축정비사업",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -3763,9 +3763,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1127",
       "name": "성북제2-신월곡1 결합정비사업",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -3784,9 +3784,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1128",
       "name": "연희 제1주택재건축정비구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -3805,9 +3805,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1293",
       "name": "대흥제2구역주택재개발사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -3826,9 +3826,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1542",
       "name": "장위1 재정비촉진구역",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -3847,9 +3847,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_1976",
       "name": "대흥제2구역 주택재개발사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -3868,9 +3868,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2055",
       "name": "을지로2가 19-1",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -3889,9 +3889,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2083",
       "name": "이문4재정비촉진구역",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -3910,9 +3910,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2084",
       "name": "신길14재정비촉진구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -3931,9 +3931,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2085",
       "name": "공평지구<H9>",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -3952,9 +3952,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2086",
       "name": "을지로2가 19-3",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -3973,9 +3973,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2087",
       "name": "을지로2가 19-4",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -3994,9 +3994,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2088",
       "name": "을지로2가 20-1",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -4015,9 +4015,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2089",
       "name": "을지로2가 20-2",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -4036,9 +4036,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2090",
       "name": "을지로2가 18-5",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -4057,9 +4057,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2092",
       "name": "신촌지역(마포) 4-15지구 도시정비형 재개발구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -4078,9 +4078,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2093",
       "name": "마포로1 도시정비형 재개발구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -4099,9 +4099,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2094",
       "name": "마포로1 도시정비형 재개발구역 제28.29지구",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -4120,9 +4120,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2096",
       "name": "을지로3가 도시정비형 재개발구역 제12지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -4141,9 +4141,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2098",
       "name": "상계주공5단지 재건축정비구역",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -4162,9 +4162,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2101",
       "name": "고덕주공3단지아파트 주택재건축 정비구역",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -4183,9 +4183,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2102",
       "name": "마포로1구역 제12.13지구 도시정비형 재개발사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -4204,9 +4204,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2103",
       "name": "면목1 역세권 장기전세주택 도시환경정비사업",
-      "region": "서울",
       "district": "중랑구",
       "dong": "",
       "type": "재개발",
@@ -4225,9 +4225,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2104",
       "name": "송파미성아파트 재건축정비구역",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -4246,9 +4246,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2105",
       "name": "사당2 주택재건축 정비사업",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -4267,9 +4267,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2106",
       "name": "신길8재정비촉진구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -4288,9 +4288,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2107",
       "name": "가락1차현대아파트 재건축정비사업",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -4309,9 +4309,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2108",
       "name": "강북2재정비촉진구역",
-      "region": "서울",
       "district": "강북구",
       "dong": "",
       "type": "재개발",
@@ -4330,9 +4330,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2226",
       "name": "응암제1구역 주택재개발정비사업",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -4351,9 +4351,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2227",
       "name": "사당3 재건축 정비사업",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -4372,9 +4372,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2228",
       "name": "마포로1구역 제28.29지구 도시정비형 재개발구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -4393,9 +4393,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2229",
       "name": "을지로3가 도시정비형 재개발구역 제9지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -4414,9 +4414,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2231",
       "name": "신동아1.2차아파트 주택재건축 정비사업",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -4435,9 +4435,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2234",
       "name": "영등포 도심 역세권 도시정비형 재개발구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -4456,9 +4456,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2235",
       "name": "홍은제6주택 재건축정비구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -4477,9 +4477,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2236",
       "name": "마포로5 도시정비형 재개발구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -4498,9 +4498,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2237",
       "name": "마포로5구역 10.11지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -4519,9 +4519,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2296",
       "name": "뉴서울아파트, 개나리 열망연립 재건축 정비사업",
-      "region": "서울",
       "district": "관악구",
       "dong": "",
       "type": "재개발",
@@ -4540,9 +4540,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2425",
       "name": "고덕주공2단지아파트 주택재건축정비사업",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -4561,9 +4561,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2533",
       "name": "서소문8-4",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -4582,9 +4582,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2645",
       "name": "잠실미성크로바아파트 재건축사업",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -4603,9 +4603,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2769",
       "name": "순화 도시정비형 재개발구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -4624,9 +4624,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2900",
       "name": "정비창 전면 도시정비형재개발구역 2-1구역",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -4645,9 +4645,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2905",
       "name": "장위5구역",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -4666,9 +4666,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2909",
       "name": "행당 제7재개발 정비구역",
-      "region": "서울",
       "district": "성동구",
       "dong": "",
       "type": "재개발",
@@ -4687,9 +4687,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2920",
       "name": "을지로2가 1-2",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -4708,9 +4708,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_2921",
       "name": "연신내구역 도시정비형 재개발사업",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -4729,9 +4729,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_3005",
       "name": "문래동2·3가 도시환경정비구역 ",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -4750,9 +4750,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_3006",
       "name": "신촌지역(마포)4-15지구 도시정비형 재개발사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -4771,9 +4771,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_3007",
       "name": "북아현3 재정비촉진구역 ",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -4792,9 +4792,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_3008",
       "name": "금호제20구역 주택재개발정비사업",
-      "region": "서울",
       "district": "성동구",
       "dong": "",
       "type": "재개발",
@@ -4813,9 +4813,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_3012",
       "name": "성북 제2구역 주택재개발정비구역",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -4834,9 +4834,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_3032",
       "name": "문래동 1.2가 도시환경정비구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -4855,9 +4855,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_3308",
       "name": "홍은2동 제1주거환경개선구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -4876,9 +4876,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_3309",
       "name": "홍제 제2구역 주택재개발사업",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -4897,9 +4897,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_3599",
       "name": "신용산역 북측 도시정비형 재개발정비구역 2구역",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -4918,9 +4918,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4029",
       "name": "영진시장(아파트) 도시정비형 재개발구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -4939,9 +4939,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4030",
       "name": "을지로2가 19-2",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -4960,9 +4960,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4032",
       "name": "흑석11재정비촉진구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -4981,9 +4981,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4123",
       "name": "오류2동 147번지 일대 주거환경관리 정비구역",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -5002,9 +5002,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4124",
       "name": "마포로1구역 제36지구",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -5023,9 +5023,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4125",
       "name": "마포로1구역 제38지구",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -5044,9 +5044,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4126",
       "name": "마포로1구역 제43지구",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -5065,9 +5065,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4127",
       "name": "마포로1구역 제51지구",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -5086,9 +5086,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4128",
       "name": "마포로1구역 제58-1지구",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -5107,9 +5107,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4129",
       "name": "마포로1구역 제58-2지구",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -5128,9 +5128,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4130",
       "name": "공릉1 주택재건축사업",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -5149,9 +5149,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4131",
       "name": "응암4주택재건축",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -5170,9 +5170,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4132",
       "name": "종로구 부암동 성곽마을(창의문 백악,인왕마을) 관리형 주거환경개선사업 정비구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -5191,9 +5191,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4133",
       "name": "천호8 재정비촉진구역",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -5212,9 +5212,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4134",
       "name": "공덕1 주택재건축 정비구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -5233,9 +5233,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4135",
       "name": "대림가락아파트 재건축정비구역",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -5254,9 +5254,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4136",
       "name": "마포로1구역 58지구",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -5275,9 +5275,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4137",
       "name": "신촌지역(마포)3-3지구 도시정비형 재개발구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -5296,9 +5296,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4138",
       "name": "동작구 상도동(성대골) 관리형 주거환경개선사업",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -5317,9 +5317,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4139",
       "name": "수송 도시정비형 재개발구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -5338,9 +5338,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4140",
       "name": "수송 도시정비형 재개발구역 제1-2지구",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -5359,9 +5359,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4141",
       "name": "영천구역 주택재개발정비구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -5380,9 +5380,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4142",
       "name": "한남5재정비촉진구역",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -5401,9 +5401,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4143",
       "name": "홍은제6주택 재건축정비구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -5422,9 +5422,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4144",
       "name": "마포로1구역 도시정비형 재개발구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -5443,9 +5443,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4145",
       "name": "공릉1주택재건축정비사업",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -5464,9 +5464,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4146",
       "name": "마포로1구역 제48지구 도시정비형 재개발사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -5485,9 +5485,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4147",
       "name": "신촌지역(마포) 4-15지구 도시정비형 재개발구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -5506,9 +5506,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4148",
       "name": "수표 도시정비형 재개발구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -5527,9 +5527,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4149",
       "name": "양동구역 제11·12지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -5548,9 +5548,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4150",
       "name": "서소문 도시정비형 재개발구역 제10지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -5569,9 +5569,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4151",
       "name": "길음1재정비촉진구역 ",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -5590,9 +5590,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4383",
       "name": "홍은 제14주택재개발정비구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -5611,9 +5611,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4384",
       "name": "흑석11재정비촉진구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -5632,9 +5632,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4385",
       "name": "대조제1구역 주택재개발정비사업",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -5653,9 +5653,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4386",
       "name": "용두제6구역 주택재개발정비사업",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -5674,9 +5674,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4387",
       "name": "고덕주공5단지아파트 주택재건축 정비구역",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -5695,9 +5695,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4388",
       "name": "흑석5재정비촉진구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -5716,9 +5716,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4389",
       "name": "관악구 강남아파트 재건축사업업",
-      "region": "서울",
       "district": "관악구",
       "dong": "",
       "type": "재개발",
@@ -5737,9 +5737,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4390",
       "name": "봉천제12-1 주택재개발정비사업",
-      "region": "서울",
       "district": "관악구",
       "dong": "",
       "type": "재개발",
@@ -5758,9 +5758,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4391",
       "name": "수색6재정비촉진구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -5779,9 +5779,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4392",
       "name": "흑석7재정비촉진구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -5800,9 +5800,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4394",
       "name": "상계 주택개량 재개발사업",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -5821,9 +5821,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4395",
       "name": "성수1주택재건축정비구역",
-      "region": "서울",
       "district": "성동구",
       "dong": "",
       "type": "재개발",
@@ -5842,9 +5842,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4405",
       "name": "독바위역세권 도시정비형 재개발정비구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -5863,9 +5863,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4489",
       "name": "을지로2가 18-3",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -5884,9 +5884,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4490",
       "name": "을지로2가 18-4",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -5905,9 +5905,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4491",
       "name": "을지로2가 11",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -5926,9 +5926,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4492",
       "name": "을지로2가 20-3",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -5947,9 +5947,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4608",
       "name": "효창제6구역 주택재개발정비사업",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -5968,9 +5968,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4609",
       "name": "월계동 487-17일대 주택재건축 정비사업",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -5989,9 +5989,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4610",
       "name": "용두5 주택재개발구역",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -6010,9 +6010,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4611",
       "name": "신정2재정비촉진구역",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -6031,9 +6031,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4612",
       "name": "신정4재정비촉진구역",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -6052,9 +6052,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4613",
       "name": "마포로1구역 제10지구",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -6073,9 +6073,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4614",
       "name": "서소문 도시정비형  재개발구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6094,9 +6094,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4615",
       "name": "서소문구역 제11.12지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6115,9 +6115,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4616",
       "name": "무교다동 10-1 지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6136,9 +6136,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4617",
       "name": "무교다동 10-2 지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6157,9 +6157,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4618",
       "name": "무교다동 15지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6178,9 +6178,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4619",
       "name": "무교다동 16지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6199,9 +6199,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4620",
       "name": "무교다동 22-1지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6220,9 +6220,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4621",
       "name": "무교다동 22-2지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6241,9 +6241,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4622",
       "name": "무교다동 23-2지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6262,9 +6262,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4623",
       "name": "무교다동 23-3지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6283,9 +6283,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4624",
       "name": "무교다동 23-4지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6304,9 +6304,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4625",
       "name": "무교다동 23-5지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6325,9 +6325,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4626",
       "name": "무교다동 23-7지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6346,9 +6346,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4627",
       "name": "무교다동 23-10지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6367,9 +6367,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4628",
       "name": "무교다동 24-1지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6388,9 +6388,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4629",
       "name": "무교다동 24-3지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6409,9 +6409,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4630",
       "name": "무교다동 24-5지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6430,9 +6430,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4631",
       "name": "무교다동 32지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6451,9 +6451,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4632",
       "name": "무교다동 36-1지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6472,9 +6472,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4633",
       "name": "무교다동 36-2지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6493,9 +6493,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4634",
       "name": "무교다동 36-3지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6514,9 +6514,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4635",
       "name": "무교다동 36-4지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6535,9 +6535,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4636",
       "name": "무교다동 37지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6556,9 +6556,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4637",
       "name": "마포로3구역 제1지구 도시정비형 재개발사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -6577,9 +6577,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4638",
       "name": "세운재정비촉진구역 3-2구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6598,9 +6598,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4639",
       "name": "세운재정비촉진구역 3-3구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6619,9 +6619,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4640",
       "name": "세운재정비촉진구역 3-8구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -6640,9 +6640,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4651",
       "name": "공평 소단위공동개발지구 도시정비형 재개발구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -6661,9 +6661,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4652",
       "name": "석관제2주택재개발정비구역",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -6682,9 +6682,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4769",
       "name": "청진 도시정비형재개발구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -6703,9 +6703,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4857",
       "name": "가재울9 재정비촉진구역(도시정비형 재개발사업)",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -6724,9 +6724,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4859",
       "name": "봉천 제14 주택재개발정비구역",
-      "region": "서울",
       "district": "관악구",
       "dong": "",
       "type": "재개발",
@@ -6745,9 +6745,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4860",
       "name": "청파 제1 주택정비형 재개발사업 ",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -6766,9 +6766,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4861",
       "name": "마포로1구역 제24지구 재개발사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -6787,9 +6787,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4862",
       "name": "노량1재정비촉진구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -6808,9 +6808,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4863",
       "name": "방배 제7주택재건축정비구역",
-      "region": "서울",
       "district": "서초구",
       "dong": "",
       "type": "재개발",
@@ -6829,9 +6829,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4864",
       "name": "장위14구역 ",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -6850,9 +6850,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_4865",
       "name": "수송 도시정비형 재개발구역 제1-7지구",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -6871,9 +6871,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5217",
       "name": "무악제2주택재개발정비구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -6892,9 +6892,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5219",
       "name": "응암제10구역 주택재개발구역정비구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -6913,9 +6913,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5220",
       "name": "증산5재정비촉진구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -6934,9 +6934,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5224",
       "name": "금호제15 주택재개발정비구역",
-      "region": "서울",
       "district": "성동구",
       "dong": "",
       "type": "재개발",
@@ -6955,9 +6955,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5288",
       "name": "전농 재정비촉진구역(도시정비형 재개발사업)",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -6976,9 +6976,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5289",
       "name": "신림1재정비촉진구역",
-      "region": "서울",
       "district": "관악구",
       "dong": "",
       "type": "재개발",
@@ -6997,9 +6997,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5290",
       "name": "방화3재정비촉진구역",
-      "region": "서울",
       "district": "강서구",
       "dong": "",
       "type": "재개발",
@@ -7018,9 +7018,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5291",
       "name": "문래동1가A 도시정비형 재개발구역 5지구",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -7039,9 +7039,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5292",
       "name": "신길 제2구역 주택재개발정비사업",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -7060,9 +7060,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5293",
       "name": "수색7재정비촉진구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -7081,9 +7081,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5294",
       "name": "남영동 업무지구 제2구역 도시정비형 재개발사업",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -7102,9 +7102,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5295",
       "name": "상계2 재정비촉진구역",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -7123,9 +7123,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5296",
       "name": "천호2재정비촉진구역 주택재건축정비사업",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -7144,9 +7144,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5297",
       "name": "신촌지역(마포) 2-7지구 도시정비형 재개발구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -7165,9 +7165,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5302",
       "name": "창신2도시정비형 재개발구역 2-1",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7186,9 +7186,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5303",
       "name": "천호동 397-419번지 일대 주택정비형 재개발구역",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -7207,9 +7207,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5539",
       "name": " 창신2도시정비형 재개발구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7228,9 +7228,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5540",
       "name": "창신2도시정비형 재개발구역 2-2",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7249,9 +7249,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5541",
       "name": "창신2도시정비형 재개발구역 2-3",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7270,9 +7270,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5542",
       "name": "창신2도시정비형 재개발구역 2-4",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7291,9 +7291,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5543",
       "name": "창신2도시정비형 재개발구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7312,9 +7312,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5544",
       "name": "창신2도시정비형 재개발구역 2-A",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7333,9 +7333,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5545",
       "name": "창신3도시정비형 재개발구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7354,9 +7354,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5546",
       "name": "창신4도시정비형 재개발구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7375,9 +7375,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5547",
       "name": "창신4도시정비형 재개발구역 4-1",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7396,9 +7396,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5548",
       "name": "창신4도시정비형 재개발구역 4-2",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7417,9 +7417,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5549",
       "name": "창신4도시정비형 재개발구역 4-3",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7438,9 +7438,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5550",
       "name": "창신 도시정비형 재개발구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7459,9 +7459,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5551",
       "name": "응봉1주택재건축 정비사업",
-      "region": "서울",
       "district": "성동구",
       "dong": "",
       "type": "재개발",
@@ -7480,9 +7480,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5553",
       "name": "신향빌라 재건축사업",
-      "region": "서울",
       "district": "광진구",
       "dong": "",
       "type": "재개발",
@@ -7501,9 +7501,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5557",
       "name": "가락삼익맨숀아파트 재건축정비구역",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -7522,9 +7522,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5572",
       "name": "면목6구역 주택재건축정비사업 ",
-      "region": "서울",
       "district": "중랑구",
       "dong": "",
       "type": "재개발",
@@ -7543,9 +7543,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5573",
       "name": "남대문구역 제7-1지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -7564,9 +7564,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5575",
       "name": "무교다동 23-6지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -7585,9 +7585,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5576",
       "name": "세운재정비촉진구역 3-9구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -7606,9 +7606,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5577",
       "name": "세운재정비촉진구역 3-10구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -7627,9 +7627,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5679",
       "name": "염리2재정비촉진구역(주택재개발사업)",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -7648,9 +7648,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5680",
       "name": "개포우성4차아파트 재건축사업",
-      "region": "서울",
       "district": "강남구",
       "dong": "",
       "type": "재개발",
@@ -7669,9 +7669,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5681",
       "name": "마포로1구역 제24지구 재개발사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -7690,9 +7690,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5682",
       "name": "봉천 제4-1-2 주택재개발정비구역",
-      "region": "서울",
       "district": "관악구",
       "dong": "",
       "type": "재개발",
@@ -7711,9 +7711,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5683",
       "name": "개포우성7차아파트 재건축사업 ",
-      "region": "서울",
       "district": "강남구",
       "dong": "",
       "type": "재개발",
@@ -7732,9 +7732,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5684",
       "name": "창신1도시정비형 재개발구역 1-1",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7753,9 +7753,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5685",
       "name": "창신1도시정비형 재개발구역 1-2",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7774,9 +7774,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5686",
       "name": "창신1도시정비형 재개발구역 1-3",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7795,9 +7795,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5687",
       "name": "창신1도시정비형 재개발구역 1-4",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7816,9 +7816,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5688",
       "name": "창신1도시정비형 재개발구역 1-5",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7837,9 +7837,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5689",
       "name": "창신1도시정비형 재개발구역 1-6",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7858,9 +7858,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5690",
       "name": " 창신1도시정비형 재개발구역 1-7",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7879,9 +7879,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5691",
       "name": "창신1도시정비형 재개발구역 1-8",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7900,9 +7900,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5692",
       "name": "창신1도시정비형 재개발구역 1-9",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7921,9 +7921,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5693",
       "name": "창신1도시정비형 재개발구역 1-10",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7942,9 +7942,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5694",
       "name": "창신1도시정비형 재개발구역 1-A",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -7963,9 +7963,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5704",
       "name": "신당 제9주택재개발정비구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -7984,9 +7984,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5705",
       "name": "홍제3 주택재건축 정비구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -8005,9 +8005,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5706",
       "name": "마포로1구역 제58-1지구",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -8026,9 +8026,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5707",
       "name": "마포로1구역 제58-2지구",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -8047,9 +8047,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5708",
       "name": "봉천2역세권 장기전세주택도시환경정비사업",
-      "region": "서울",
       "district": "관악구",
       "dong": "",
       "type": "재개발",
@@ -8068,9 +8068,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5711",
       "name": "관리형 주거환경개선사업",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -8089,9 +8089,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5712",
       "name": "홍제1 주택재건축정비사업",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -8110,9 +8110,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5751",
       "name": "노량진3재정비촉진구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -8131,9 +8131,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5817",
       "name": "봉래 도시정비형 재개발구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -8152,9 +8152,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5818",
       "name": "봉천제12-1 주택재개발정비사업",
-      "region": "서울",
       "district": "관악구",
       "dong": "",
       "type": "재개발",
@@ -8173,9 +8173,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5821",
       "name": "신수1 주택재건축정비구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -8194,9 +8194,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5946",
       "name": "자양1 주택재건축 정비구역",
-      "region": "서울",
       "district": "광진구",
       "dong": "",
       "type": "재개발",
@@ -8215,9 +8215,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5947",
       "name": "서소문구역 제11.12지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -8236,9 +8236,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5950",
       "name": "이문1재정비촉진구역",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -8257,9 +8257,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5951",
       "name": "수표도시정비형재개발구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -8278,9 +8278,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5952",
       "name": "동작구 상도동(성대골) 관리형 주거환경개선사업",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -8299,9 +8299,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5953",
       "name": "신월7동 1구역  주택정비형 재개발구역",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -8320,9 +8320,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5955",
       "name": "노량진8재정비촉진구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -8341,9 +8341,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5957",
       "name": "마장동 382번지 일대 주택정비형 재개발사업",
-      "region": "서울",
       "district": "성동구",
       "dong": "",
       "type": "재개발",
@@ -8362,9 +8362,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5958",
       "name": "주교동구역 일반정비지구21",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -8383,9 +8383,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5959",
       "name": "청량리미주아파트 재건축정비구역",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -8404,9 +8404,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5963",
       "name": "가재울7 재정비촉진구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -8425,9 +8425,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5964",
       "name": "석관4구역 주택재개발 정비사업",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -8446,9 +8446,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5965",
       "name": "전농 재정비촉진구역(도시정비형 재개발사업)",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -8467,9 +8467,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5967",
       "name": "신촌지역(마포) 4-9지구 도시정비형 재개발구역 ",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -8488,9 +8488,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5969",
       "name": "신반포2차아파트 주택재건축정비사업",
-      "region": "서울",
       "district": "서초구",
       "dong": "",
       "type": "재개발",
@@ -8509,9 +8509,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5970",
       "name": "독산시흥구역",
-      "region": "서울",
       "district": "금천구",
       "dong": "",
       "type": "재개발",
@@ -8530,9 +8530,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5971",
       "name": "목동7단지 아파트 재건축 정비구역",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -8551,9 +8551,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5972",
       "name": "미아제11 주택정비형 재개발정비사업",
-      "region": "서울",
       "district": "강북구",
       "dong": "",
       "type": "재개발",
@@ -8572,9 +8572,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5973",
       "name": "성내3 재정비촉진구역",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -8593,9 +8593,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5974",
       "name": "성내5 재정비촉진구역",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -8614,9 +8614,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5975",
       "name": "관수동일대 도시정비형 재개발구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -8635,9 +8635,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5977",
       "name": "돈암제6 주택재개발 사업",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -8656,9 +8656,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5978",
       "name": "수색6재정비촉진구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -8677,9 +8677,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5981",
       "name": "미아9-2 주택재건축정비사업",
-      "region": "서울",
       "district": "강북구",
       "dong": "",
       "type": "재개발",
@@ -8698,9 +8698,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5982",
       "name": "논현동현아파트 재건축정비사업",
-      "region": "서울",
       "district": "강남구",
       "dong": "",
       "type": "재개발",
@@ -8719,9 +8719,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5983",
       "name": "개포주공6,7단지 주택재건축정비구역",
-      "region": "서울",
       "district": "강남구",
       "dong": "",
       "type": "재개발",
@@ -8740,9 +8740,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5993",
       "name": "마포로1구역 제48지구 도시정비형 재개발사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -8761,9 +8761,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5994",
       "name": "자양4동 A구역 주택정비형 재개발구역",
-      "region": "서울",
       "district": "광진구",
       "dong": "",
       "type": "재개발",
@@ -8782,9 +8782,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5996",
       "name": "불광1 주택재건축 정비구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -8803,9 +8803,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_5997",
       "name": "천호A1-2구역(천호동 461-31일대 주택정비형 재개발구역)",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -8824,9 +8824,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6001",
       "name": "창신동 23일대 주택정비형 재개발구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -8845,9 +8845,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6005",
       "name": "공덕7구역 주택정비형 재개발사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -8866,9 +8866,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6006",
       "name": "정비구역",
-      "region": "서울",
       "district": "강북구",
       "dong": "",
       "type": "재개발",
@@ -8887,9 +8887,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6007",
       "name": "종암9구역 주택정비형 재개발사업",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -8908,9 +8908,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6008",
       "name": "천호3구역",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -8929,9 +8929,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6009",
       "name": "주교동구역 일반정비지구6",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -8950,9 +8950,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6010",
       "name": "주교동구역 일반정비지구7",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -8971,9 +8971,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6011",
       "name": "주교동구역 일반정비지구14",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -8992,9 +8992,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6012",
       "name": "가재울7 재정비촉진구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -9013,9 +9013,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6013",
       "name": "한남4 재정비촉진구역 ",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -9034,9 +9034,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6014",
       "name": "역촌역세권(대조동59-1번지 일대) 장기전세주택 도시정비형 재개발정비구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -9055,9 +9055,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6016",
       "name": "공평구역 제3지구",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -9076,9 +9076,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6018",
       "name": "고덕2-2지구 주택재건축 정비구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -9097,9 +9097,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6020",
       "name": "주교동구역 존치지구1",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -9118,9 +9118,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6021",
       "name": "주교동구역 존치지구2",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -9139,9 +9139,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6022",
       "name": "광희동구역 8-4지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -9160,9 +9160,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6023",
       "name": "광희동구역 8-5지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -9181,9 +9181,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6024",
       "name": "광희동구역 존치3지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -9202,9 +9202,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6025",
       "name": "성내3촉진구역(도시정비형 재개발사업)",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -9223,9 +9223,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6027",
       "name": "충현2구역 도시정비형 재개발구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -9244,9 +9244,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6028",
       "name": "구로우성아파트 재건축정비사업",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -9265,9 +9265,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6030",
       "name": "여의도 시범아파트 재건축사업",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -9286,9 +9286,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6032",
       "name": "흑석2구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -9307,9 +9307,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6033",
       "name": "광희동구역 5지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -9328,9 +9328,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6034",
       "name": "광희동구역 11지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -9349,9 +9349,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6035",
       "name": "광희동구역 존치5지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -9370,9 +9370,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6037",
       "name": "세운 6-4-22,23구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -9391,9 +9391,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6038",
       "name": "양동구역 제8-1·6지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -9412,9 +9412,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6039",
       "name": "신사1 주택재건축 정비사업",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -9433,9 +9433,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6040",
       "name": "도곡개포한신아파트 주택재건축정비사업",
-      "region": "서울",
       "district": "강남구",
       "dong": "",
       "type": "재개발",
@@ -9454,9 +9454,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6041",
       "name": "주교동구역 일반정비지구1",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -9475,9 +9475,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6042",
       "name": "목동14단지 재건축 정비구역",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -9496,9 +9496,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6043",
       "name": "망우1구역 공공재건축정비구역",
-      "region": "서울",
       "district": "중랑구",
       "dong": "",
       "type": "재개발",
@@ -9517,9 +9517,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6044",
       "name": "고척동 253번지 일대 주택정비형 재개발사업",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -9538,9 +9538,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6045",
       "name": "돈암제6 주택재개발 사업",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -9559,9 +9559,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6047",
       "name": "중계본동 주택재개발정비사업",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -9580,9 +9580,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6048",
       "name": "세운3-8·9·10구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -9601,9 +9601,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6049",
       "name": "성산시영아파트  주택재건축 정비사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -9622,9 +9622,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6050",
       "name": "서초진흥아파트 재건축정비사업",
-      "region": "서울",
       "district": "서초구",
       "dong": "",
       "type": "재개발",
@@ -9643,9 +9643,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6051",
       "name": "방배 제13주택재건축 정비사업",
-      "region": "서울",
       "district": "서초구",
       "dong": "",
       "type": "재개발",
@@ -9664,9 +9664,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6052",
       "name": "북아현4재정비촉진구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -9685,9 +9685,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6053",
       "name": "내자·필운구역 제2-1지구",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -9706,9 +9706,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6054",
       "name": "강북5  재정비촉진구역",
-      "region": "서울",
       "district": "강북구",
       "dong": "",
       "type": "재개발",
@@ -9727,9 +9727,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6057",
       "name": "을지로3가 도시정비형  재개발구역 제1·2지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -9748,9 +9748,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6059",
       "name": "연희제1주택재개발 정비사업",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -9769,9 +9769,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6060",
       "name": "흑석9재정비촉진구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -9790,9 +9790,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6061",
       "name": "주교동구역 일반정비지구18",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -9811,9 +9811,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6062",
       "name": "독산2구역 주택정비형 재개발사업",
-      "region": "서울",
       "district": "금천구",
       "dong": "",
       "type": "재개발",
@@ -9832,9 +9832,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6063",
       "name": "노량진2재정비촉진구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -9853,9 +9853,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6064",
       "name": "쌍문한양1차아파트 재건축 정비구역",
-      "region": "서울",
       "district": "도봉구",
       "dong": "",
       "type": "재개발",
@@ -9874,9 +9874,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6065",
       "name": "응암동700번지 일대 주택정비형 재개발사업",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -9895,9 +9895,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6066",
       "name": "신사1 주택재건축 정비사업",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -9916,9 +9916,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6067",
       "name": "사당17구역 주택정비형 재개발사업",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -9937,9 +9937,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6068",
       "name": "광운대역세권 공공임대주택 건립 관련 도시정비형 재개발정비구역",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -9958,9 +9958,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6070",
       "name": "목동5단지아파트 재건축사업 정비구역",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -9979,9 +9979,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6071",
       "name": "중구 다산권 성곽마을 관리형 주거환경개선사업",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -10000,9 +10000,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6072",
       "name": "신림5구역 주택정비형 재개발사업",
-      "region": "서울",
       "district": "관악구",
       "dong": "",
       "type": "재개발",
@@ -10021,9 +10021,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6073",
       "name": "주교동구역 일반정비지구17",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -10042,9 +10042,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6074",
       "name": "신당제10구역 주택정비형재개발사업",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -10063,9 +10063,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6075",
       "name": "천호2재정비촉진구역 ",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -10084,9 +10084,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6076",
       "name": "마포로5 도시정비형재개발구역 2지구",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -10105,9 +10105,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6077",
       "name": "무교다동 제29지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -10126,9 +10126,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6078",
       "name": "수색11재정비촉진구역(도시환경정비사업)",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -10147,9 +10147,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6079",
       "name": "시흥1구역 주택정비형 재개발사업",
-      "region": "서울",
       "district": "금천구",
       "dong": "",
       "type": "재개발",
@@ -10168,9 +10168,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6080",
       "name": "마포로1구역 제58-2지구",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -10189,9 +10189,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6081",
       "name": "목동8단지 재건축 정비사업",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -10210,9 +10210,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6082",
       "name": "삼양사거리역세권 장기전세주택 도시정비형 재개발구역",
-      "region": "서울",
       "district": "강북구",
       "dong": "",
       "type": "재개발",
@@ -10231,9 +10231,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6083",
       "name": "가락프라자아파트 주택재건축사업",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -10252,9 +10252,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6084",
       "name": "신길 제2구역 주택재개발정비사업",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -10273,9 +10273,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6085",
       "name": "면목9구역 주택정비형 공공재개발사업",
-      "region": "서울",
       "district": "중랑구",
       "dong": "",
       "type": "재개발",
@@ -10294,9 +10294,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6086",
       "name": "광희동구역 7지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -10315,9 +10315,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6087",
       "name": "광희동구역 존치2지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -10336,9 +10336,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6088",
       "name": "독바위역세권 도시정비형  재개발정비구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -10357,9 +10357,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6089",
       "name": "행당동 248번지 일대 역세권 활성화사업  도시정비형 재개발 정비구역",
-      "region": "서울",
       "district": "성동구",
       "dong": "",
       "type": "재개발",
@@ -10378,9 +10378,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6090",
       "name": "가락우성1차아파트  재건축정비구역",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -10399,9 +10399,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6091",
       "name": "천호A1-1구역 주택정비형  공공재개발사업",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -10420,9 +10420,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6093",
       "name": "불광제5 주택정비형 재개발사업",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -10441,9 +10441,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6094",
       "name": "마포로1구역 제28.29지구 도시정비형 재개발구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -10462,9 +10462,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6096",
       "name": "임광3차아파트 재건축 정비구역",
-      "region": "서울",
       "district": "서초구",
       "dong": "",
       "type": "재개발",
@@ -10483,9 +10483,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6097",
       "name": "수색7재정비촉진구역 ",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -10504,9 +10504,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6101",
       "name": "개봉3동 너른뜰마을 관리형 주거환경개선사업 정비구역",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -10525,9 +10525,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6102",
       "name": "신촌지역 마포4-9지구 도시정비형 재개발사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -10546,9 +10546,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6103",
       "name": "가리봉2구역 주택재개발 정비구역",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -10567,9 +10567,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6104",
       "name": "종암8구역 주택재개발 정비사업",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -10588,9 +10588,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6105",
       "name": "대흥·성원·동진빌라  주택재건축 정비구역",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -10609,9 +10609,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6106",
       "name": "홍은 제2주택재건축 정비구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -10630,9 +10630,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6107",
       "name": "불광동 수리마을 주거환경관리사업",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -10651,9 +10651,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6110",
       "name": "상게주공5단지 재건축사업",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -10672,9 +10672,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6113",
       "name": "신사동 200번지 일대 주택정비형 재개발정비구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -10693,9 +10693,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6114",
       "name": "숙대입구역세권(갈월동 52-6일원) 장기전세주택 도시정비형 재개발사업",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -10714,9 +10714,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6115",
       "name": "개봉동 49번지 일대 주택정비형 재개발사업",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -10735,9 +10735,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6116",
       "name": "불광제5주택정비형 재개발사업",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -10756,9 +10756,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6117",
       "name": "중림동 398번지 일대  주택정비형 재개발사업",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -10777,9 +10777,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6120",
       "name": "한남4 재정비촉진구역 ",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -10798,9 +10798,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6121",
       "name": "신동아1·2차아파트 주택재건축 정비사업",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -10819,9 +10819,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6122",
       "name": "광희동구역 3-2지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -10840,9 +10840,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6123",
       "name": "광희동구역 존치8지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -10861,9 +10861,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6124",
       "name": "광희동구역 존치9지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -10882,9 +10882,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6127",
       "name": "숭인동 56일대 주택정비형 재개발구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -10903,9 +10903,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6128",
       "name": "수색6재정비촉진구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -10924,9 +10924,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6130",
       "name": "봉래구역 제2지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -10945,9 +10945,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6132",
       "name": "천호3-1구역",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -10966,9 +10966,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6133",
       "name": "고덕현대아파트 주택재건축사업",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -10987,9 +10987,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6135",
       "name": "천왕3역세권(오류동206-2번지 일대) 장기전세주택  도시정비형 재개발정비구역",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -11008,9 +11008,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6136",
       "name": "제기3주거환경개선지구",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -11029,9 +11029,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6138",
       "name": "광희동구역 존치6지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11050,9 +11050,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6140",
       "name": "불광8 주택정비형 재개발사업",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -11071,9 +11071,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6141",
       "name": "국제빌딩주변 도시정비형 재개발구역",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -11092,9 +11092,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6142",
       "name": "가리봉1구역 주택정비형 재개발사업",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -11113,9 +11113,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6144",
       "name": "돈암제6구역 재개발사업",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -11134,9 +11134,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6145",
       "name": "광희동구역 2지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11155,9 +11155,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6146",
       "name": "청파 제1 주택정비형 재개발사업",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -11176,9 +11176,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6147",
       "name": "방배6 주택재건축 정비구역",
-      "region": "서울",
       "district": "서초구",
       "dong": "",
       "type": "재개발",
@@ -11197,9 +11197,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6148",
       "name": "양동 도시정비형 재개발구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11218,9 +11218,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6149",
       "name": "창신동 629번지 일대 주택정비형 재개발 정비구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -11239,9 +11239,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6150",
       "name": "주교동구역 일반정비지구5",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11260,9 +11260,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6152",
       "name": "태릉우성아파트 재건축사업 정비구역",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -11281,9 +11281,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6153",
       "name": "구로2동 살구마을 관리형 주거환경개선사업 정비구역",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -11302,9 +11302,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6154",
       "name": "상계동 154-3일대 주택정비형 재개발정비구역",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -11323,9 +11323,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6155",
       "name": "천호동 532-2번지 일대 주택정비형  재개발 정비구역",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -11344,9 +11344,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6156",
       "name": "신월7동 2구역 주택정비형 공공재개발구역",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -11365,9 +11365,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6157",
       "name": "문래동1가A 도시정비형 재개발구역  제8·11지구",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -11386,9 +11386,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6159",
       "name": "순화구역 제1-2지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11407,9 +11407,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6161",
       "name": "광희동구역 존치10지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11428,9 +11428,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6162",
       "name": "광희동구역 3-3지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11449,9 +11449,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6163",
       "name": "광희동구역 3-4지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11470,9 +11470,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6164",
       "name": "마포로4 도시정비형 재개발구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -11491,9 +11491,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6166",
       "name": "마포로4구역 도시정비형 재개발사업",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -11512,9 +11512,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6167",
       "name": "주교동구역 일반정비지구16",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11533,9 +11533,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6168",
       "name": "광희동구역 존치1지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11554,9 +11554,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6169",
       "name": "신안빌라 주택재건축정비사업",
-      "region": "서울",
       "district": "강서구",
       "dong": "",
       "type": "재개발",
@@ -11575,9 +11575,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6171",
       "name": "관수동구역 제8지구 도시정비형 재개발구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -11596,9 +11596,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6172",
       "name": "목동 10단지 아파트 재건축정비사업",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -11617,9 +11617,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6173",
       "name": "방학신동아1단지아파트 재건축정비구역",
-      "region": "서울",
       "district": "도봉구",
       "dong": "",
       "type": "재개발",
@@ -11638,9 +11638,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6174",
       "name": "신문로2구역 12지구",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -11659,9 +11659,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6176",
       "name": "을지로3가 도시정비형 재개발구역 제10지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11680,9 +11680,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6177",
       "name": "서소문 1-1지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11701,9 +11701,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6178",
       "name": "서소문 1-2지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11722,9 +11722,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6179",
       "name": "염리동 488-14번지 일대 주택정비형 재개발사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -11743,9 +11743,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6181",
       "name": "상계5 재정비촉진구역",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -11764,9 +11764,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6184",
       "name": "신길역세권(신길동 39-3번지 일대)  장기전세주택 도시정비형 재개발사업",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -11785,9 +11785,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6185",
       "name": "공덕8구역 주택정비형 재개발사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -11806,9 +11806,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6188",
       "name": "방화2재정비촉진구역(주택재개발사업)",
-      "region": "서울",
       "district": "강서구",
       "dong": "",
       "type": "재개발",
@@ -11827,9 +11827,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6189",
       "name": "7-3지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11848,9 +11848,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6190",
       "name": "신이문역세권 장기전세주택 도시정비형 재개발정비구역",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -11869,9 +11869,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6191",
       "name": "연희1 주거환경개선사업",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -11890,9 +11890,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6193",
       "name": "공덕 제6주택정비형 재개발정비사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -11911,9 +11911,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6194",
       "name": "주교동구역 일반정비지구8",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11932,9 +11932,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6195",
       "name": "주교동구역 일반정비지구11",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11953,9 +11953,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6196",
       "name": "주교동구역 일반정비지구13",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11974,9 +11974,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6197",
       "name": "주교동구역 일반정비지구20",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -11995,9 +11995,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6199",
       "name": "효창제6구역 주택재개발정비사업",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -12016,9 +12016,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6208",
       "name": "불광제5 주택재개발정비사업",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -12037,9 +12037,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6210",
       "name": "마포로1구역 제48지구 도시정비형 재개발사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -12058,9 +12058,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6218",
       "name": "저동구역 제2지구 도시정비형 재개발구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -12079,9 +12079,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6222",
       "name": "도곡우성아파트 재건축정비사업",
-      "region": "서울",
       "district": "강남구",
       "dong": "",
       "type": "재개발",
@@ -12100,9 +12100,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6224",
       "name": "용두1주거환경개선사업",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -12121,9 +12121,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6225",
       "name": "개포주공4단지 주택재건축 정비사업",
-      "region": "서울",
       "district": "강남구",
       "dong": "",
       "type": "재개발",
@@ -12142,9 +12142,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6226",
       "name": "가락우창아파트 재건축정비사업",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -12163,9 +12163,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6227",
       "name": "창신동 23-606번지 일대 주택정비형 재개발 정비구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -12184,9 +12184,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6228",
       "name": "목동1단지아파트 재건축 정비구역",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -12205,9 +12205,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6229",
       "name": "목동2단지 아파트 재건축사업 정비구역",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -12226,9 +12226,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6230",
       "name": "신촌지역 마포4-10지구  도시정비형 재개발사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -12247,9 +12247,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6231",
       "name": "13·14·15지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -12268,9 +12268,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6232",
       "name": "합정7재정비촉진구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -12289,9 +12289,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6236",
       "name": "주교동구역 일반정비지구2",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -12310,9 +12310,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6237",
       "name": "무교다동 38지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -12331,9 +12331,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6238",
       "name": "서울역-서대문 1·2구역 1지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -12352,9 +12352,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6240",
       "name": "청량리4재정비촉진구역",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -12373,9 +12373,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6241",
       "name": "광희동구역 8-2지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -12394,9 +12394,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6273",
       "name": "12지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -12415,9 +12415,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6274",
       "name": "오금현대아파트 재건축정비구역",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -12436,9 +12436,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6275",
       "name": "서계 통합구역 주택정비형 재개발사업",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -12457,9 +12457,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6276",
       "name": "홍은2-2주거환경개선구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -12478,9 +12478,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6277",
       "name": "강북구 미아제3구역 주택재개발사업",
-      "region": "서울",
       "district": "강북구",
       "dong": "",
       "type": "재개발",
@@ -12499,9 +12499,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6278",
       "name": "중계본동 주택재개발정비사업",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -12520,9 +12520,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6279",
       "name": "광희동구역 3-1지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -12541,9 +12541,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6280",
       "name": "중화2촉진구역",
-      "region": "서울",
       "district": "중랑구",
       "dong": "",
       "type": "재개발",
@@ -12562,9 +12562,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6281",
       "name": "제기1주거환경개선지구",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -12583,9 +12583,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6282",
       "name": "신정4재정비촉진구역",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -12604,9 +12604,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6283",
       "name": "광희동구역 8-3지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -12625,9 +12625,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6284",
       "name": "신촌지역(마포) 4-15지구 도시정비형 재개발구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -12646,9 +12646,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6285",
       "name": "불광1 주택재건축 정비구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -12667,9 +12667,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6287",
       "name": "충정로1구역 주택정비형 공공재개발사업",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -12688,9 +12688,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6289",
       "name": "강북2 재정비촉진구역",
-      "region": "서울",
       "district": "강북구",
       "dong": "",
       "type": "재개발",
@@ -12709,9 +12709,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6290",
       "name": "동소문제2 주택재개발정비사업",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -12730,9 +12730,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6291",
       "name": "여의도 한양아파트 주택재건축정비사업",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -12751,9 +12751,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6292",
       "name": "목동9단지 아파트 재건축사업 정비구역",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -12772,9 +12772,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6319",
       "name": "신촌지역 마포4-1지구  도시정비형 재개발사업",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -12793,9 +12793,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6320",
       "name": "세운3-2·3구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -12814,9 +12814,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6324",
       "name": "중곡아파트 공공재건축 정비구역",
-      "region": "서울",
       "district": "광진구",
       "dong": "",
       "type": "재개발",
@@ -12835,9 +12835,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6325",
       "name": "한남3 재정비촉진구역",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -12856,9 +12856,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6326",
       "name": "가리봉1구역 주택정비형 재개발사업",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -12877,9 +12877,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6327",
       "name": "사당12구역 주택정비형 재개발구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -12898,9 +12898,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6329",
       "name": "긴등마을 재정비촉진구역",
-      "region": "서울",
       "district": "강서구",
       "dong": "",
       "type": "재개발",
@@ -12919,9 +12919,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6331",
       "name": "남대문로5가 1구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -12940,9 +12940,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6332",
       "name": "신월시영아파트 재건축 정비구역",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -12961,9 +12961,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6333",
       "name": "북아현 1-3구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -12982,9 +12982,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6334",
       "name": "세운 4구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -13003,9 +13003,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6335",
       "name": "광희동구역 1지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -13024,9 +13024,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6336",
       "name": "광희동구역 6지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -13045,9 +13045,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6338",
       "name": "안암제2구역 주택재개발정비사업",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -13066,9 +13066,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6339",
       "name": "창동상아1차아파트 재건축정비구역",
-      "region": "서울",
       "district": "도봉구",
       "dong": "",
       "type": "재개발",
@@ -13087,9 +13087,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6340",
       "name": "내방역 역세권 활성화사업 도시정비형 재개발정비구역",
-      "region": "서울",
       "district": "서초구",
       "dong": "",
       "type": "재개발",
@@ -13108,9 +13108,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6341",
       "name": "신길13재정비촉진구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -13129,9 +13129,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6342",
       "name": "고덕2-1지구 주택재건축 정비구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -13150,9 +13150,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6343",
       "name": "신반포4지구 재건축정비사업구역",
-      "region": "서울",
       "district": "서초구",
       "dong": "",
       "type": "재개발",
@@ -13171,9 +13171,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6344",
       "name": "주교동 구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -13192,9 +13192,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6345",
       "name": "금호 제21 주택정비형 재개발구역",
-      "region": "서울",
       "district": "성동구",
       "dong": "",
       "type": "재개발",
@@ -13213,9 +13213,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6359",
       "name": "가락프라자아파트 주택재건축정비사업",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -13234,9 +13234,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6380",
       "name": "양동 도시정비형 재개발구역 4-2·7지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -13255,9 +13255,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6381",
       "name": "강북5  재정비촉진구역",
-      "region": "서울",
       "district": "강북구",
       "dong": "",
       "type": "재개발",
@@ -13276,9 +13276,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6382",
       "name": "강북구 미아제3구역 주택재개발사업",
-      "region": "서울",
       "district": "강북구",
       "dong": "",
       "type": "재개발",
@@ -13297,9 +13297,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6385",
       "name": "본동구역 주택정비형 공공재개발사업",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -13318,9 +13318,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6386",
       "name": "염창역(목동 523-45번지 일대) 역세권 활성화사업 (도시정비형 재개발) 정비구역",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -13339,9 +13339,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6387",
       "name": "휘경 제5 주택정비형재개발사업",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -13360,9 +13360,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6393",
       "name": "목동12단지 아파트 재건축사업",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -13381,9 +13381,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6394",
       "name": "홍은15구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -13402,9 +13402,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6396",
       "name": "홍은5 주택재건축정비사업",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -13423,9 +13423,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6397",
       "name": "신설동역세권 장기전세주택 도시정비형 재개발 정비구역",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -13444,9 +13444,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6398",
       "name": "세운6-3-3구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -13465,9 +13465,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6399",
       "name": "우신빌라 재건축정비사업",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -13486,9 +13486,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6402",
       "name": "봉래구역 존치1지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -13507,9 +13507,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6403",
       "name": "홍제역 역세권 활성화사업 도시정비형 재개발 정비구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -13528,9 +13528,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6404",
       "name": "북아현1구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -13549,9 +13549,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6405",
       "name": "내자·필운구역  도시정비형  재개발사업",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -13570,9 +13570,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6407",
       "name": "갈현제2구역 주택정비형 재개발정비구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -13591,9 +13591,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6417",
       "name": "창신1도시정비형 재개발구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -13612,9 +13612,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6423",
       "name": "정비창 전면 도시정비형재개발구역 2-1구역",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -13633,9 +13633,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6424",
       "name": "서울가든빌라  주택재건축 정비사업",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -13654,9 +13654,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6425",
       "name": "쌍문3구역  주택정비형 재개발사업",
-      "region": "서울",
       "district": "도봉구",
       "dong": "",
       "type": "재개발",
@@ -13675,9 +13675,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6426",
       "name": "무교다동 31지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -13696,9 +13696,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6428",
       "name": "성북제2-신월곡1 결합정비사업",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -13717,9 +13717,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6430",
       "name": "남대문 도시정비형 재개발구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -13738,9 +13738,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6431",
       "name": "3지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -13759,9 +13759,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6432",
       "name": "11지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -13780,9 +13780,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6434",
       "name": "자양한양아파트  주택재건축 정비구역",
-      "region": "서울",
       "district": "광진구",
       "dong": "",
       "type": "재개발",
@@ -13801,9 +13801,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6437",
       "name": "개포 통합(경남, 우성3차, 현대1차 아파트)  주택재건축 정비사업",
-      "region": "서울",
       "district": "강남구",
       "dong": "",
       "type": "재개발",
@@ -13822,9 +13822,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6438",
       "name": "주교동구역 소단위관리지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -13843,9 +13843,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6440",
       "name": "서울역-서대문구 1·2구역 1지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -13864,9 +13864,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6441",
       "name": "수송 도시정비형 재개발구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -13885,9 +13885,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6442",
       "name": "수송 도시정비형 재개발구역 제1-7지구",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -13906,9 +13906,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6443",
       "name": "삼환도봉아파트 재건축 정비구역",
-      "region": "서울",
       "district": "도봉구",
       "dong": "",
       "type": "재개발",
@@ -13927,9 +13927,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6444",
       "name": "상도제7주택재개발정비구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -13948,9 +13948,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6445",
       "name": "신반포 19차 아파트 주택재건축 정비구역",
-      "region": "서울",
       "district": "서초구",
       "dong": "",
       "type": "재개발",
@@ -13969,9 +13969,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6446",
       "name": "신반포 19차·25차 아파트 재건축정비구역",
-      "region": "서울",
       "district": "서초구",
       "dong": "",
       "type": "재개발",
@@ -13990,9 +13990,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6447",
       "name": "용두동 39-361번지 일대 주택정비형 재개발사업",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -14011,9 +14011,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6448",
       "name": "연희2구역 주택정비형 공공재개발사업",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -14032,9 +14032,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6450",
       "name": " 둔촌주공아파트 주택재건축사업 정비구역",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -14053,9 +14053,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6451",
       "name": "마천5 재정비촉진구역",
-      "region": "서울",
       "district": "송파구",
       "dong": "",
       "type": "재개발",
@@ -14074,9 +14074,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6452",
       "name": "영천1 주거환경개선사업",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -14095,9 +14095,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6453",
       "name": "노량진6재정비촉진구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -14116,9 +14116,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6455",
       "name": "노량진3 재정비촉진구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -14137,9 +14137,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6456",
       "name": "천호2재정비촉진구역 ",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -14158,9 +14158,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6457",
       "name": "명일신동아아파트 재건축정비사업",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -14179,9 +14179,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6458",
       "name": "주교동구역 일반정비지구9",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -14200,9 +14200,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6459",
       "name": "주교동구역 일반정비지구10",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -14221,9 +14221,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6460",
       "name": "주교동구역 일반정비지구12",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -14242,9 +14242,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6461",
       "name": "주교동구역 일반정비지구15",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -14263,9 +14263,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6462",
       "name": "광희동구역 9지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -14284,9 +14284,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6464",
       "name": "상계3재정비촉진구역",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -14305,9 +14305,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6466",
       "name": "청파2구역 주택정비형 재개발사업",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -14326,9 +14326,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6467",
       "name": "서린구역 제3·4·5지구 도시정비형 재개발사업",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -14347,9 +14347,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6470",
       "name": "세운 5-1·3구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -14368,9 +14368,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6471",
       "name": "세운 5-1구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -14389,9 +14389,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6472",
       "name": "세운 5-3구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -14410,9 +14410,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6473",
       "name": "상봉13구역 주택정비형 재개발사업",
-      "region": "서울",
       "district": "중랑구",
       "dong": "",
       "type": "재개발",
@@ -14431,9 +14431,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6474",
       "name": "신동아1·2차아파트 주택재건축 정비사업",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -14452,9 +14452,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6475",
       "name": "대림1구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -14473,9 +14473,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6476",
       "name": "문래동1가A 도시정비형 재개발구역 제11지구",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -14494,9 +14494,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6477",
       "name": "하월곡1구역 주택정비형 재개발사업",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -14515,9 +14515,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6480",
       "name": "대방역세권 장기전세주택 도시정비형 재개발구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -14536,9 +14536,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6481",
       "name": "목2동 232번지 일대 주택정비형 재개발사업",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -14557,9 +14557,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6484",
       "name": "목동11단지아파트 재건축사업 정비구역",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -14578,9 +14578,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6485",
       "name": "신사동 237번지 일대 주택정비형 재개발정비구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -14599,9 +14599,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6486",
       "name": "이문4재정비촉진구역",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -14620,9 +14620,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6487",
       "name": "신림8 주택정비형 재개발사업",
-      "region": "서울",
       "district": "관악구",
       "dong": "",
       "type": "재개발",
@@ -14641,9 +14641,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6488",
       "name": "주교동구역 일반정비지구19",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -14662,9 +14662,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6489",
       "name": "광희동구역 4-1지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -14683,9 +14683,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6491",
       "name": "관수동구역 제3지구 도시정비형 재개발구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -14704,9 +14704,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6492",
       "name": "천호1 재정비촉진구역",
-      "region": "서울",
       "district": "강동구",
       "dong": "",
       "type": "재개발",
@@ -14725,9 +14725,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6493",
       "name": "광희동구역 10-1지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -14746,9 +14746,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6494",
       "name": "광희동구역 존치4지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -14767,9 +14767,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6495",
       "name": "광희동구역 존치7지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -14788,9 +14788,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6497",
       "name": "합정7재정비촉진구역",
-      "region": "서울",
       "district": "마포구",
       "dong": "",
       "type": "재개발",
@@ -14809,9 +14809,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6499",
       "name": "명동  도시정비형  재개발구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -14830,9 +14830,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6500",
       "name": "안암1 주택재건축 정비사업",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -14851,9 +14851,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6503",
       "name": "신길1재정비촉진구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -14872,9 +14872,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6504",
       "name": "목동 13단지 아파트 재건축 정비사업",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -14893,9 +14893,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6505",
       "name": "여의도 진주아파트 재건축사업",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -14914,9 +14914,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6506",
       "name": "응암동755번지 일대 주택정비형 재개발사업",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -14935,9 +14935,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6507",
       "name": "순화 도시정비형 재개발구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -14956,9 +14956,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6508",
       "name": "우신빌라 재건축사업",
-      "region": "서울",
       "district": "구로구",
       "dong": "",
       "type": "재개발",
@@ -14977,9 +14977,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6509",
       "name": "사당동 252-15일대 역세권 활성화사업 도시정비형 재개발 정비구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -14998,9 +14998,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6511",
       "name": "당산1구역",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -15019,9 +15019,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6512",
       "name": "효창공원앞역세권(효창동 5-307일원) 장기전세주택 도시정비형 재개발사업",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -15040,9 +15040,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6513",
       "name": "공평 도시정비형 재개발구역 소단위 공동개발지구 도시정비형 재개발사업",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -15061,9 +15061,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6514",
       "name": "봉천 제4-1-2구역 주택재개발정비사업",
-      "region": "서울",
       "district": "관악구",
       "dong": "",
       "type": "재개발",
@@ -15082,9 +15082,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6515",
       "name": "여의도 수정아파트 재건축사업",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -15103,9 +15103,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6516",
       "name": "성수1구역  주택재건축 정비구역",
-      "region": "서울",
       "district": "성동구",
       "dong": "",
       "type": "재개발",
@@ -15124,9 +15124,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6517",
       "name": "광희동 구역",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -15145,9 +15145,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6518",
       "name": "광희동구역 4-2지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -15166,9 +15166,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6519",
       "name": "광희동구역 8-1지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -15187,9 +15187,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6523",
       "name": "성북1구역 주택정비형  공공재개발사업",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -15208,9 +15208,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6525",
       "name": "사당5 주택재건축정비사업",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -15229,9 +15229,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6526",
       "name": "양평 제13구역 도시정비형 재개발사업(공공재개발사업)",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -15250,9 +15250,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6527",
       "name": "월계동신아파트 주택재건축정비구역",
-      "region": "서울",
       "district": "노원구",
       "dong": "",
       "type": "재개발",
@@ -15271,9 +15271,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6529",
       "name": "개포현대2차아파트 재건축정비사업",
-      "region": "서울",
       "district": "강남구",
       "dong": "",
       "type": "재개발",
@@ -15292,9 +15292,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6530",
       "name": "주교동구역 일반정비지구3",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -15313,9 +15313,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6532",
       "name": "미아4-1구역 8-373번지 일대",
-      "region": "서울",
       "district": "강북구",
       "dong": "",
       "type": "재개발",
@@ -15334,9 +15334,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6533",
       "name": "대조1주택재개발정비구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -15355,9 +15355,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6534",
       "name": "상도15구역 주택정비형 재개발구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -15376,9 +15376,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6537",
       "name": "불광1 주택재건축 정비구역",
-      "region": "서울",
       "district": "은평구",
       "dong": "",
       "type": "재개발",
@@ -15397,9 +15397,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6541",
       "name": "주교동구역 일반정비지구4",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -15418,9 +15418,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6542",
       "name": "동작1주택재건축 정비구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -15439,9 +15439,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6544",
       "name": "홍은1 도시정비형 재개발사업 (공공재개발사업)",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -15460,9 +15460,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6546",
       "name": "홍실아파트 주택재건축 정비사업",
-      "region": "서울",
       "district": "강남구",
       "dong": "",
       "type": "재개발",
@@ -15481,9 +15481,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6549",
       "name": "봉천 제14 주택재개발정비구역",
-      "region": "서울",
       "district": "관악구",
       "dong": "",
       "type": "재개발",
@@ -15502,9 +15502,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6551",
       "name": "공평 도시정비형 재개발구역",
-      "region": "서울",
       "district": "종로구",
       "dong": "",
       "type": "재개발",
@@ -15523,9 +15523,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6555",
       "name": "목동4단지아파트 재건축사업 정비구역",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -15544,9 +15544,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6556",
       "name": "광희동구역 10-2지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -15565,9 +15565,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6557",
       "name": "을지로3가 도시정비형 재개발구역  제10지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -15586,9 +15586,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6558",
       "name": "신정동 1152번지 일대 주택정비형 재개발사업",
-      "region": "서울",
       "district": "양천구",
       "dong": "",
       "type": "재개발",
@@ -15607,9 +15607,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6559",
       "name": "장위15구역",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -15628,9 +15628,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6560",
       "name": "신림7  주택정비형 재개발사업",
-      "region": "서울",
       "district": "관악구",
       "dong": "",
       "type": "재개발",
@@ -15649,9 +15649,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6561",
       "name": "문래동1가A 도시정비형 재개발구역  제8지구",
-      "region": "서울",
       "district": "영등포구",
       "dong": "",
       "type": "재개발",
@@ -15670,9 +15670,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6562",
       "name": "신용산역 북측 2구역 도시정비형 재개발구역",
-      "region": "서울",
       "district": "용산구",
       "dong": "",
       "type": "재개발",
@@ -15691,9 +15691,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6563",
       "name": "명동 1지구",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
@@ -15712,9 +15712,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6564",
       "name": "마포로4구역 1지구",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -15733,9 +15733,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6565",
       "name": "돈암제6 주택재개발정비사업",
-      "region": "서울",
       "district": "성북구",
       "dong": "",
       "type": "재개발",
@@ -15754,9 +15754,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6567",
       "name": "상도14구역 주택정비형 재개발구역",
-      "region": "서울",
       "district": "동작구",
       "dong": "",
       "type": "재개발",
@@ -15775,9 +15775,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6568",
       "name": "청량리 제9구역 주택정비형 재개발사업 ",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -15796,9 +15796,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6570",
       "name": "마포로4구역 제1지구",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -15817,9 +15817,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6571",
       "name": "이문3(3-1) 재정비촉진구역",
-      "region": "서울",
       "district": "동대문구",
       "dong": "",
       "type": "재개발",
@@ -15838,9 +15838,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6572",
       "name": "마포로5구역",
-      "region": "서울",
       "district": "서대문구",
       "dong": "",
       "type": "재개발",
@@ -15859,9 +15859,9 @@
       "ref_note": ""
     },
     {
+      "region": "서울",
       "id": "api_6573",
       "name": "마포로5구역 10.11지구 ",
-      "region": "서울",
       "district": "중구",
       "dong": "",
       "type": "재개발",
