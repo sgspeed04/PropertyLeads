@@ -51,13 +51,30 @@ function getStageIdx(name = '') {
 // ── 좌표 정규화 (서울 API는 도수×10^7 반환하는 경우 있음) ───────────────────
 function normCoord(v) {
   const n = parseFloat(v) || 0;
-  if (n > 900000) return n / 1e7;   // 1274901234 → 127.4901234
+  if (n > 900000) return n / 1e7;
   return n;
 }
 
 function isSeoulCoord(lat, lng) {
   return lat > 37.4 && lat < 37.7 && lng > 126.7 && lng < 127.3;
 }
+
+// ── 구(區) 중심 좌표 — upisRebuild는 좌표 없어서 LOGVM으로 대체 ─────────────
+const DISTRICT_COORD = {
+  '종로구': [37.5926, 126.9794], '중구':    [37.5641, 126.9979],
+  '용산구': [37.5311, 126.9788], '성동구':  [37.5635, 127.0366],
+  '광진구': [37.5385, 127.0823], '동대문구':[37.5744, 127.0394],
+  '중랑구': [37.6063, 127.0931], '성북구':  [37.5894, 127.0167],
+  '강북구': [37.6396, 127.0253], '도봉구':  [37.6688, 127.0471],
+  '노원구': [37.6542, 127.0568], '은평구':  [37.6026, 126.9291],
+  '서대문구':[37.5792, 126.9368],'마포구':  [37.5638, 126.9086],
+  '양천구': [37.5169, 126.8664], '강서구':  [37.5510, 126.8495],
+  '구로구': [37.4954, 126.8874], '금천구':  [37.4570, 126.8951],
+  '영등포구':[37.5262, 126.8966],'동작구':  [37.5124, 126.9393],
+  '관악구': [37.4784, 126.9516], '서초구':  [37.4837, 127.0325],
+  '강남구': [37.5172, 127.0473], '송파구':  [37.5145, 127.1059],
+  '강동구': [37.5300, 127.1237],
+};
 
 // ── Seoul Open API 단일 페이지 요청 ──────────────────────────────────────────
 async function fetchPage(serviceName, start, end) {
@@ -109,25 +126,34 @@ async function fetchAllPages(serviceName) {
 
 // ── API row → 프로젝트 객체 변환 ─────────────────────────────────────────────
 function rowToProject(r, idx) {
-  // upisRebuild 필드 우선, 기존 후보 필드 폴백
-  const name      = r.RPT_NM || r.SBSN_NM || r.JEONGBE_NM || r.ZONE_NM || '알 수 없음';
-  const stageName = r.LCLSF  || r.MCLSF   || r.SBSN_STEP_NM || r.STEP_NM || r.PRGSRT_NM || '';
-  const typeName  = r.RPT_TYPE || r.RPT_SE_NM || r.SBSN_SE_NM || r.JEONGBE_SE_NM || '';
+  // upisRebuild 실제 필드명 기준
+  const name      = r.RGN_NM || r.PSTN_NM || r.RPT_NM || r.SBSN_NM || '알 수 없음';
+  const stageName = r.LCLSF  || r.MCLSF   || r.SCLSF  || '';
+  const typeName  = r.RPT_TYPE || '';
+  const district  = r.LOGVM  || r.SGG_NM  || '';
 
-  const lat = normCoord(r.CNTRD_Y || r.LAT || r.Y_COORD || 0);
-  const lng = normCoord(r.CNTRD_X || r.LON || r.X_COORD || 0);
+  // 좌표 없으면 구 중심 좌표로 대체 (약간 랜덤 분산으로 겹침 방지)
+  let lat = normCoord(r.CNTRD_Y || r.LAT || r.Y_COORD || 0);
+  let lng = normCoord(r.CNTRD_X || r.LON || r.X_COORD || 0);
+  if (!isSeoulCoord(lat, lng)) {
+    const center = DISTRICT_COORD[district];
+    if (center) {
+      lat = center[0] + (Math.random() - 0.5) * 0.02;
+      lng = center[1] + (Math.random() - 0.5) * 0.02;
+    }
+  }
 
   return {
     id:           `api_${idx}`,
     name,
-    district:     r.SGG_NM  || r.LOGVM || '',
+    district,
     dong:         r.EMD_NM  || r.DONG_NM || '',
     type:         typeName.includes('재건축') ? '재건축' : '재개발',
     stage:        stageName,
     stage_idx:    getStageIdx(stageName),
     lat,
     lng,
-    area_m2:      parseInt(r.TOT_AREA || r.ZONE_AR || r.JEONGBE_AREA || 0),
+    area_m2:      parseInt(r.AREA_EXS || r.TOT_AREA || r.ZONE_AR || 0),
     units:        parseInt(r.TOT_HSHLD || r.TOT_HSHLD_CO || r.PLAN_HH || 0),
     contractor:   r.CNSTR_CO_NM || '',
     stage_date:   (r.STEP_DT || r.PRGSRT_DE || '').substring(0, 7),
@@ -201,12 +227,12 @@ async function main() {
     return;
   }
 
-  // 변환 + 좌표 필터 (서울 범위 외 제거)
+  // 변환 + 필터 (서울 구에 해당하는 것만)
   const apiProjects = rawRows
     .map((r, i) => rowToProject(r, i))
-    .filter(p => isSeoulCoord(p.lat, p.lng));
+    .filter(p => isSeoulCoord(p.lat, p.lng) && p.name !== '알 수 없음' && p.district);
 
-  console.log(`[PROCESS] 서울 좌표 통과: ${apiProjects.length}건`);
+  console.log(`[PROCESS] 서울 구역 통과: ${apiProjects.length}건`);
 
   // 기존 수작업 데이터와 병합
   const merged = mergeWithExisting(apiProjects, existing.projects);
