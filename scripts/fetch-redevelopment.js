@@ -130,7 +130,9 @@ function rowToProject(r, idx) {
   const name      = r.RGN_NM || r.PSTN_NM || r.RPT_NM || r.SBSN_NM || '알 수 없음';
   const stageName = r.LCLSF  || r.MCLSF   || r.SCLSF  || '';
   const typeName  = r.RPT_TYPE || '';
-  const district  = r.LOGVM  || r.SGG_NM  || '';
+  // LOGVM returns "서울특별시 광진구" — extract just the 구 name via partial match
+  const logvmRaw  = r.LOGVM  || r.SGG_NM  || '';
+  const district  = Object.keys(DISTRICT_COORD).find(k => logvmRaw.includes(k)) || logvmRaw;
 
   // 좌표 없으면 구 중심 좌표로 대체 (약간 랜덤 분산으로 겹침 방지)
   let lat = normCoord(r.CNTRD_Y || r.LAT || r.Y_COORD || 0);
