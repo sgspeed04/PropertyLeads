@@ -6,11 +6,11 @@
  *  GG_API_KEY      : openapi.gg.go.kr   (경기도 공공데이터포털 — 인증키 신청)
  *
  * ── 사용 API ──────────────────────────────────────────────────────────────────
- *  [서울] openapi.seoul.go.kr/rest  서비스: upisRebuild            (6574건, 일간)
- *  [경기] openapi.gg.go.kr          서비스: GenrlImprvBizpropls    (일반정비사업, 분기)
- *                                   서비스: TBGRISSMSCLBSNSM       (소규모, 보조)
- *
- *  GG_API_KEY 발급: openapi.gg.go.kr → 인증키 신청 → GitHub Secrets에 GG_API_KEY 추가
+ *  [서울] openapi.seoul.go.kr/rest  서비스: upisRebuild            (6577건, 일간)
+ *         실제 필드: RPT_MNG_CD, PRJC_CD, LOGVM, RPT_TYPE, LCLSF, MCLSF, SCLSF,
+ *                    PSTN_NM, RGN_NM, AREA_EXS (확인 2026-07-09)
+ *         ※ PRGSRT_SE/STEP_NM/CNTRD_X/Y 없음 — 좌표는 LOGVM/PSTN_NM 구명 기반 추출
+ *  [경기] openapi.gg.go.kr  서비스: GenrlImprvBizpropls / TBGRISSMSCLBSNSM
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -23,14 +23,17 @@ const SEOUL_KEY = process.env.SEOUL_API_KEY;
 const GG_KEY    = process.env.GG_API_KEY;
 const PAGE_SIZE = 1000;
 
-// ── 단계 매핑 ────────────────────────────────────────────────────────────────
+// ── 단계 매핑 (idx: -2=모니터링, -1=준비단계, 0=구역지정, 1=조합, 2=사업시행, 3=관리처분, 4=착공, 5=완료)
 const STAGE_MAP = [
-  { key: '완료',     idx: 5 }, { key: '준공',     idx: 5 }, { key: '입주',     idx: 5 },
-  { key: '착공',     idx: 4 }, { key: '이주',     idx: 4 }, { key: '철거',     idx: 4 },
-  { key: '관리처분', idx: 3 },
-  { key: '사업시행', idx: 2 },
-  { key: '조합설립', idx: 1 }, { key: '추진위',   idx: 1 },
-  { key: '정비구역', idx: 0 }, { key: '구역지정', idx: 0 },
+  { key: '완료',       idx: 5 }, { key: '준공',      idx: 5 }, { key: '입주',      idx: 5 },
+  { key: '착공',       idx: 4 }, { key: '이주',      idx: 4 }, { key: '철거',      idx: 4 },
+  { key: '관리처분',   idx: 3 },
+  { key: '사업시행',   idx: 2 },
+  { key: '조합설립',   idx: 1 }, { key: '조합인가',  idx: 1 },
+  { key: '추진위',     idx: 1 }, { key: '준비위',    idx: 1 },
+  { key: '정비구역',   idx: 0 }, { key: '구역지정',  idx: 0 }, { key: '구역지',    idx: 0 },
+  { key: '모니터링',   idx: -2 }, { key: '정비예정', idx: -2 }, { key: '관심구역',  idx: -2 },
+  { key: '준비단계',   idx: -1 }, { key: '준비위결성',idx: -1 },
 ];
 
 function getStageIdx(name = '') {
@@ -89,6 +92,28 @@ const DISTRICT_COORD = {
   '동두천시':[37.9036, 127.0607],'과천시':  [37.4296, 126.9874],
 };
 
+// ── fetch 공통 헬퍼 (User-Agent + 타임아웃 + 원인 로깅) ─────────────────────
+const FETCH_HEADERS = {
+  'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+  'Accept': 'application/json, text/plain, */*',
+  'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
+};
+
+async function fetchWithTimeout(url, timeoutMs = 30000, extraHeaders = {}) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { headers: { ...FETCH_HEADERS, ...extraHeaders }, signal: controller.signal });
+    clearTimeout(timer);
+    return res;
+  } catch (e) {
+    clearTimeout(timer);
+    const cause = e.cause;
+    const detail = cause ? ` [${cause.code || cause.constructor?.name || ''}] ${cause.message || ''}` : '';
+    throw new Error(`${e.message}${detail}`.trim());
+  }
+}
+
 // ── Seoul Open API 페이지 요청 ────────────────────────────────────────────────
 async function fetchSeoulPage(serviceName, start, end) {
   const urls = [
@@ -98,7 +123,8 @@ async function fetchSeoulPage(serviceName, start, end) {
   let lastErr;
   for (const url of urls) {
     try {
-      const res  = await fetch(url);
+      const res  = await fetchWithTimeout(url, 30000, { Referer: 'https://data.seoul.go.kr/' });
+      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
       const json = await res.json();
       const root = json[serviceName] || json;
       if (root.RESULT) {
@@ -130,19 +156,33 @@ async function fetchSeoulAllPages(serviceName) {
 }
 
 // ── openapi.gg.go.kr 경기도 API 페이지 요청 ─────────────────────────────────
-// 형식: https://openapi.gg.go.kr/{SERVICE}?KEY={KEY}&Type=json&pIndex={p}&pSize={n}
 async function fetchGgPage(serviceName, pIndex, pSize) {
-  const url = `https://openapi.gg.go.kr/${serviceName}?KEY=${GG_KEY}&Type=json&pIndex=${pIndex}&pSize=${pSize}`;
-  const res  = await fetch(url);
-  const json = await res.json();
-  const root = json[serviceName] || json;
-  if (root.RESULT) {
-    const code = root.RESULT.CODE || '';
-    const msg  = root.RESULT.MESSAGE || code;
-    console.log(`    [GG RESULT] ${code} — ${msg}`);
-    if (!code.includes('INFO-000')) throw new Error(`GG API 오류: ${msg}`);
+  const qs = `KEY=${GG_KEY}&Type=json&pIndex=${pIndex}&pSize=${pSize}`;
+  const urls = [
+    `https://openapi.gg.go.kr/${serviceName}?${qs}`,
+    `http://openapi.gg.go.kr/${serviceName}?${qs}`,
+  ];
+  let lastErr;
+  for (const url of urls) {
+    const proto = url.startsWith('https') ? 'HTTPS' : 'HTTP';
+    try {
+      const res  = await fetchWithTimeout(url, 30000, { Referer: 'https://openapi.gg.go.kr/' });
+      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+      const json = await res.json();
+      const root = json[serviceName] || json;
+      if (root.RESULT) {
+        const code = root.RESULT.CODE || '';
+        const msg  = root.RESULT.MESSAGE || code;
+        console.log(`    [GG RESULT] ${code} — ${msg}`);
+        if (!code.includes('INFO-000')) throw new Error(`GG API 오류: ${msg}`);
+      }
+      return { rows: root.row || [], total: parseInt(root.list_total_count || 0) };
+    } catch (e) {
+      console.warn(`    [GG ${proto}] 실패: ${e.message}`);
+      lastErr = e;
+    }
   }
-  return { rows: root.row || [], total: parseInt(root.list_total_count || 0) };
+  throw lastErr;
 }
 
 async function fetchGgAllPages(serviceName) {
@@ -164,13 +204,21 @@ async function fetchGgAllPages(serviceName) {
 
 // ── row → 프로젝트 객체 변환 ──────────────────────────────────────────────────
 function rowToProject(r, idx, region = '서울') {
-  const name      = r.RGN_NM || r.PSTN_NM || r.RPT_NM || r.SBSN_NM || r.JNGB_NM || '알 수 없음';
-  const stageName = r.LCLSF  || r.MCLSF   || r.SCLSF  || r.STEP_NM || '';
-  const typeName  = r.RPT_TYPE || r.JNGB_TYPE || '';
-  // LOGVM returns "서울특별시 광진구" or "경기도 수원시" — extract just the 구/시 name
-  const logvmRaw  = r.LOGVM  || r.SGG_NM  || r.SIGUNGU_NM || '';
-  const district  = Object.keys(DISTRICT_COORD).find(k => logvmRaw.includes(k)) || logvmRaw;
+  const name = r.RGN_NM || r.PSTN_NM || r.RPT_NM || r.SBSN_NM || r.JNGB_NM || '알 수 없음';
 
+  // upisRebuild API에는 PRGSRT_SE/STEP_NM 없음 (run#14 확인)
+  // SCLSF → MCLSF → LCLSF 순으로 단계 텍스트 추출
+  const stageName = r.SCLSF || r.MCLSF || r.LCLSF || '';
+
+  // RPT_TYPE(보고유형): 재개발/재건축 구분에 사용 (run#14에서 필드 존재 확인)
+  const typeHint     = r.RPT_TYPE || r.LCLSF || r.MCLSF || r.JNGB_TYPE || '';
+  const isRebuilding = name.includes('재건축') || typeHint.includes('재건축');
+
+  // LOGVM이 "서울특별시"만 반환 시 PSTN_NM(위치명)에서 구 이름 추출 시도
+  const locationRaw = r.LOGVM || r.PSTN_NM || r.SGG_NM || r.SIGUNGU_NM || '';
+  const district    = Object.keys(DISTRICT_COORD).find(k => locationRaw.includes(k)) || '';
+
+  // upisRebuild는 좌표 필드 없음 → 구 중심 좌표 + 소폭 랜덤 오프셋
   let lat = normCoord(r.CNTRD_Y || r.LAT || r.Y_COORD || r.LAT_CD || 0);
   let lng = normCoord(r.CNTRD_X || r.LON || r.X_COORD || r.LOT_CD || 0);
   if (!isMetroCoord(lat, lng)) {
@@ -182,25 +230,25 @@ function rowToProject(r, idx, region = '서울') {
   }
 
   return {
-    id:           `${region === '서울' ? 'api' : 'gg'}_${idx}`,
+    id:             `${region === '서울' ? 'api' : 'gg'}_${idx}`,
     name,
     region,
     district,
-    dong:         r.EMD_NM  || r.DONG_NM || '',
-    type:         typeName.includes('재건축') ? '재건축' : '재개발',
-    stage:        stageName,
-    stage_idx:    getStageIdx(stageName),
+    dong:           r.EMD_NM  || r.DONG_NM || '',
+    type:           isRebuilding ? '재건축' : '재개발',
+    stage:          stageName,
+    stage_idx:      getStageIdx(stageName),
     lat,
     lng,
-    area_m2:      parseInt(r.AREA_EXS || r.TOT_AREA || r.ZONE_AR || 0),
-    units:        parseInt(r.TOT_HSHLD || r.TOT_HSHLD_CO || r.PLAN_HH || 0),
-    contractor:   r.CNSTR_CO_NM || '',
-    stage_date:   (r.STEP_DT || r.PRGSRT_DE || '').substring(0, 7),
-    notes:        '',
-    subway:       '',
-    hangang:      false,
+    area_m2:        parseInt(r.AREA_EXS || r.TOT_AREA || r.ZONE_AR || 0),
+    units:          parseInt(r.TOT_HSHLD || r.TOT_HSHLD_CO || r.PLAN_HH || 0),
+    contractor:     r.CNSTR_CO_NM || '',
+    stage_date:     (r.STEP_DT || r.PRGSRT_DE || '').substring(0, 7),
+    notes:          '',
+    subway:         '',
+    hangang:        false,
     completion_est: '',
-    ref_note:     '',
+    ref_note:       '',
   };
 }
 
@@ -235,7 +283,8 @@ async function fetchSeoul(existing) {
     if (rawRows.length > 0) {
       console.log(`[SEOUL API] ✓ upisRebuild 성공 — ${rawRows.length}건`);
       console.log(`[FIELDS] ${Object.keys(rawRows[0]).join(', ')}`);
-      console.log(`[SAMPLE] LOGVM="${rawRows[0].LOGVM}" RGN_NM="${rawRows[0].RGN_NM}"`);
+      const s = rawRows[0];
+      console.log(`[SAMPLE] RGN_NM="${s.RGN_NM}" LOGVM="${s.LOGVM}" PSTN_NM="${s.PSTN_NM}" RPT_TYPE="${s.RPT_TYPE}" LCLSF="${s.LCLSF}" MCLSF="${s.MCLSF}" SCLSF="${s.SCLSF}"`);
     }
   } catch (e) {
     console.warn(`[SEOUL] 실패: ${e.message} — 기존 데이터 유지`);
@@ -247,22 +296,22 @@ async function fetchSeoul(existing) {
     .map((r, i) => rowToProject(r, i, '서울'))
     .filter(p => isSeoulCoord(p.lat, p.lng) && p.name !== '알 수 없음' && p.district);
   console.log(`[SEOUL] 서울 구역 통과: ${apiProjects.length}건`);
+
+  // 구별 분포 로그
+  const distMap = {};
+  for (const p of apiProjects) distMap[p.district] = (distMap[p.district] || 0) + 1;
+  console.log('[DISTRICT]', JSON.stringify(distMap));
+
   return mergeWithExisting(apiProjects, existing.projects);
 }
 
-// ── 경기도 데이터 수집 (openapi.gg.go.kr) ───────────────────────────────────
+// ── 경기도 데이터 수집 ───────────────────────────────────────────────────────
 async function fetchGyeonggi(existing) {
   if (!GG_KEY) {
     console.log('[GG] GG_API_KEY 없음 — 경기도 데이터 스킵.');
-    console.log('[GG] openapi.gg.go.kr 에서 인증키 신청 후 GitHub Secret GG_API_KEY 등록하세요.');
     return existing.projects.filter(p => p.region === '경기');
   }
-
-  // 확인된 경기도 정비사업 API 서비스명
-  // 1순위: GenrlImprvBizpropls — 일반정비사업 (재개발·재건축), 분기 갱신
-  // 2순위: TBGRISSMSCLBSNSM    — 소규모 주택정비사업 (가로주택정비 등), 보조
   const GG_SERVICES = ['GenrlImprvBizpropls', 'TBGRISSMSCLBSNSM'];
-
   let allRawRows = [];
   for (const svc of GG_SERVICES) {
     try {
@@ -270,19 +319,19 @@ async function fetchGyeonggi(existing) {
       const rows = await fetchGgAllPages(svc);
       if (rows.length > 0) {
         console.log(`[GG API] ✓ ${svc} 성공 — ${rows.length}건`);
-        console.log(`[GG FIELDS] ${Object.keys(rows[0]).join(', ')}`);
+        const s = rows[0];
+        console.log(`[GG FIELDS] ${Object.keys(s).join(', ')}`);
+        console.log(`[GG SAMPLE] ${JSON.stringify(Object.fromEntries(Object.entries(s).slice(0, 12)))}`);
         allRawRows.push(...rows);
       }
     } catch (e) {
       console.warn(`  ✗ ${svc}: ${e.message}`);
     }
   }
-
   if (allRawRows.length === 0) {
     console.warn('[GG] 모든 서비스 실패 — 기존 경기도 데이터 유지.');
     return existing.projects.filter(p => p.region === '경기');
   }
-
   const apiProjects = allRawRows
     .map((r, i) => rowToProject(r, i, '경기'))
     .filter(p => isGyeonggiCoord(p.lat, p.lng) && p.name !== '알 수 없음' && p.district);
@@ -295,7 +344,6 @@ async function main() {
   let existing = { updated_at: TODAY, source: 'sample', projects: [] };
   if (fs.existsSync(DATA_FILE)) {
     existing = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
-    // 기존 프로젝트에 region 없으면 서울로 태그
     existing.projects = existing.projects.map(p => ({ region: '서울', ...p }));
   }
 
@@ -304,7 +352,7 @@ async function main() {
     fetchGyeonggi(existing),
   ]);
 
-  const merged = [...seoulProjects, ...ggProjects];
+  const merged     = [...seoulProjects, ...ggProjects];
   const seoulCount = seoulProjects.length;
   const ggCount    = ggProjects.length;
 
