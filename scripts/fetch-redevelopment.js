@@ -157,7 +157,9 @@ async function fetchSeoulAllPages(serviceName) {
   return allRows;
 }
 
-// ── OA-2254 추진 경과 서비스명 자동 탐색 (5초 타임아웃으로 빠른 실패) ────────
+// ── OA-2254 추진 경과 서비스명 자동 탐색 ─────────────────────────────────────
+// Seoul API takes ~10s per page, so use 20s timeout; no early-break since TCP is
+// reachable when this function is called (gated on successful upisRebuild fetch).
 const OA2254_CANDIDATES = [
   'upisGss',        // 경과 약어 추측
   'upisRbldGss',    // rebuild + 경과
@@ -167,6 +169,10 @@ const OA2254_CANDIDATES = [
   'upisbizPrgs',    // biz + progress
   'upisRbldPrg',    // rebuild + prg
   'upisBizGss',     // biz + gss
+  'upisRbldHst',    // rebuild + history
+  'upisImprvHst',   // improve + history
+  'upisStts',       // 사업 status 약어
+  'upisBizStts',    // biz + status
 ];
 
 async function discoverProgressService() {
@@ -174,7 +180,7 @@ async function discoverProgressService() {
   console.log('[OA-2254] 추진경과 API 서비스명 탐색 시작...');
   for (const svcName of OA2254_CANDIDATES) {
     const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 5000);
+    const timer = setTimeout(() => ctrl.abort(), 20000);
     try {
       const url = `https://openapi.seoul.go.kr:443/rest/${SEOUL_KEY}/json/${svcName}/1/3/`;
       const res = await fetch(url, { headers: FETCH_HEADERS, signal: ctrl.signal });
@@ -191,9 +197,7 @@ async function discoverProgressService() {
       console.log(`[OA-2254] ✗ ${svcName}: ${code} ${root.RESULT?.MESSAGE || ''}`);
     } catch (e) {
       clearTimeout(timer);
-      const isTimeout = e.message.includes('abort') || e.message.includes('timeout') || e.message.includes('TIMEOUT');
-      console.log(`[OA-2254] ✗ ${svcName}: ${isTimeout ? '타임아웃' : e.message.substring(0, 50)}`);
-      if (isTimeout) break; // 네트워크가 차단되면 나머지 후보도 타임아웃 → 조기 종료
+      console.log(`[OA-2254] ✗ ${svcName}: ${e.message.substring(0, 80)}`);
     }
   }
   console.log('[OA-2254] 탐색 완료 — 서비스명 미확인');
