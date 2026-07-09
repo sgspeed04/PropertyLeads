@@ -38,7 +38,17 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin main
+          # 스크립트가 생성한 파일을 임시 저장
+          cp data/redevelopment.json /tmp/redevelopment_new.json
+          [ -f data/nohuodo.json ] && cp data/nohuodo.json /tmp/nohuodo_new.json || true
+          # remote 최신 상태로 리셋 (로컬 변경 무시 → 충돌 방지)
+          git fetch origin main
+          git reset --hard origin/main
+          # 새로 생성한 데이터 복원
+          cp /tmp/redevelopment_new.json data/redevelopment.json
+          [ -f /tmp/nohuodo_new.json ] && cp /tmp/nohuodo_new.json data/nohuodo.json || true
+          # 변경이 있을 때만 커밋·푸시
           git add data/redevelopment.json data/nohuodo.json
-          git diff --staged --quiet || git commit -m "chore: 재개발 데이터 자동 업데이트 $(date +'%Y-%m-%d')"
+          git diff --staged --quiet && exit 0
+          git commit -m "chore: 재개발 데이터 자동 업데이트 $(date +'%Y-%m-%d')"
           git push -u origin main
