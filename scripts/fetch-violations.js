@@ -77,9 +77,11 @@ const BOARDS = [
 // 달라서 위에서부터 순서대로 시도하고, 처음으로 결과가 나오는 후보를 사용한다.
 const ROW_SELECTORS = [
   'table tbody tr td.subject a, table tbody tr td.title a',
-  'table tbody tr a[href*="view.do"]',
-  'ul.board-list li a[href*="view.do"]',
-  'a[href*="view.do"]',
+  'table tbody tr a[href*="view.do" i]',
+  'table tbody tr a[href*="ntt" i]',
+  'ul.board-list li a[href*="view.do" i]',
+  'a[href*="view.do" i]',
+  'a[href*="ntt" i]',
 ];
 
 function absoluteUrl(base, href) {
@@ -115,7 +117,13 @@ function parseListHtml(html, baseUrl) {
 
   console.log(`  [PARSE] 선택자 "${usedSelector}" 로 ${anchors.length}개 링크 발견`);
   if (anchors.length === 0) {
-    console.log(`  [PARSE] 진단용 HTML 스니펫(앞 1500자):\n${html.slice(0, 1500)}`);
+    // <head> 대신 실제 목록이 있을 법한 <table>/<ul> 부근을 찾아서 보여준다 — 첫 태그가 없으면 body 앞부분이라도.
+    const bodyIdx = html.search(/<body/i);
+    const tableIdx = html.search(/<table/i);
+    const listIdx = html.search(/<ul/i);
+    const candidates = [tableIdx, listIdx].filter(i => i >= 0);
+    const start = candidates.length ? Math.min(...candidates) : (bodyIdx >= 0 ? bodyIdx : 0);
+    console.log(`  [PARSE] 진단용 HTML 스니펫 (전체 길이 ${html.length}자, ${start}번째 문자부터 2500자):\n${html.slice(start, start + 2500)}`);
     return [];
   }
 
