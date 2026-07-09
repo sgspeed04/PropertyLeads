@@ -137,6 +137,7 @@ textarea.form-control{resize:vertical;min-height:70px}
       <div class="nav-item" data-view="dashboard" onclick="navigate('dashboard')"><span class="nav-icon">📊</span>대시보드</div>
       <div class="nav-item" data-view="leads" onclick="navigate('leads')"><span class="nav-icon">🏠</span>리드 관리</div>
       <div class="nav-item" data-view="architects" onclick="navigate('architects')"><span class="nav-icon">📐</span>건축사 파트너</div>
+      <div class="nav-item" data-view="notices" onclick="navigate('notices')"><span class="nav-icon">🤖</span>자동수집 공고</div>
       <div class="nav-item" data-view="settings" onclick="navigate('settings')"><span class="nav-icon">⚙️</span>설정</div>
     </div>
     <div class="sidebar-footer">
@@ -236,6 +237,9 @@ let cfg = {
 };
 let sb = null, syncStatus = 'local', currentView = 'dashboard';
 let leadFilterStatus = '', leadFilterDistrict = '', leadSearchQ = '';
+let autoNotices = [];
+let dismissedNoticeIds = new Set();
+try { dismissedNoticeIds = new Set(JSON.parse(localStorage.getItem('viol_dismissed_notices') || '[]')); } catch(e) {}
 
 // ─── STORAGE ─────────────────────────────────────────────────
 function load() {
@@ -326,7 +330,7 @@ function navigate(view) {
   currentView = view;
   document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active', el.dataset.view===view));
   document.getElementById('sidebar').classList.remove('show');
-  const titles = {dashboard:'대시보드', leads:'리드 관리', architects:'건축사 파트너', settings:'설정'};
+  const titles = {dashboard:'대시보드', leads:'리드 관리', architects:'건축사 파트너', notices:'자동수집 공고', settings:'설정'};
   document.getElementById('pageTitle').textContent = titles[view]||'';
   render();
 }
@@ -341,6 +345,7 @@ function render() {
   if (currentView === 'dashboard') content.innerHTML = renderDashboard();
   else if (currentView === 'leads') content.innerHTML = renderLeads();
   else if (currentView === 'architects') content.innerHTML = renderArchitects();
+  else if (currentView === 'notices') content.innerHTML = renderNotices();
   else if (currentView === 'settings') content.innerHTML = renderSettings();
 }
 
@@ -551,6 +556,61 @@ function deleteArchitect(id) {
   save(); render();
 }
 
+// ─── AUTO-COLLECTED NOTICES ────────────────────────────────────
+async function loadAutoNotices() {
+  try {
+    const res = await fetch('data/violations_notices.json?t=' + Date.now());
+    if (!res.ok) return;
+    const data = await res.json();
+    autoNotices = data.notices || [];
+    if (currentView === 'notices') render();
+  } catch (e) { /* 데이터 파일이 없거나 로컬 파일 접근 제한 — 조용히 무시 */ }
+}
+function saveDismissed() {
+  localStorage.setItem('viol_dismissed_notices', JSON.stringify([...dismissedNoticeIds]));
+}
+function dismissNotice(id) {
+  dismissedNoticeIds.add(id);
+  saveDismissed();
+  render();
+}
+function convertNoticeToLead(id) {
+  const n = autoNotices.find(n => n.id === id);
+  if (!n) return;
+  openLeadModal();
+  document.getElementById('leadAddress').value = n.title;
+  document.getElementById('leadDistrict').value = n.district || '';
+  document.getElementById('leadDate').value = n.detected_date || '';
+  document.getElementById('leadSourceUrl').value = n.url || '';
+  document.getElementById('leadNotes').value = `자동수집 공고에서 등록됨 (원본 제목: ${n.title})`;
+  dismissNotice(id);
+}
+function renderNotices() {
+  const visible = autoNotices.filter(n => !dismissedNoticeIds.has(n.id));
+  const rowsHtml = visible.length ? visible.map(n => `
+    <tr>
+      <td>${n.title}</td>
+      <td>${n.district || '-'}</td>
+      <td>${n.detected_date || '-'}</td>
+      <td>${n.url ? `<a href="${n.url}" target="_blank" rel="noopener">🔗 원본</a>` : '-'}</td>
+      <td class="actions-cell">
+        <button class="btn btn-primary btn-sm" onclick="convertNoticeToLead('${n.id}')">+ 리드로 등록</button>
+        <button class="btn-ghost" onclick="dismissNotice('${n.id}')" title="숨기기">🗑️</button>
+      </td>
+    </tr>`).join('') : `<tr><td colspan="5"><div class="empty-state"><div class="e-icon">🤖</div>자동수집된 위반건축물 공고가 없습니다.<br><span style="font-size:12px">강남구청 공시송달 게시판을 매일 확인해 새 공고가 있으면 여기 표시됩니다.</span></div></td></tr>`;
+
+  return `
+    <div class="card">
+      <div class="form-hint" style="margin-bottom:14px">강남구청 파일럿 — 매일 자동으로 위반건축물 관련 공고를 훑어 이 목록에 채웁니다. 리드로 등록하면 '리드 관리'에서 계속 진행 상황을 관리할 수 있어요.</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>공고 제목</th><th>구/시</th><th>날짜</th><th>원본</th><th></th></tr></thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
 // ─── SETTINGS ────────────────────────────────────────────────
 function renderSettings() {
   return `
@@ -626,6 +686,7 @@ document.querySelectorAll('.overlay').forEach(ov => ov.addEventListener('click',
 load();
 navigate('dashboard');
 if (cfg.supabaseUrl && cfg.supabaseKey) initSupabase();
+loadAutoNotices();
 </script>
 </body>
 </html>
