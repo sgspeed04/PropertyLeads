@@ -1,0 +1,10 @@
+{
+  "name": "tracker",
+  "private": true,
+  "version": "1.0.0",
+  "description": "한상규 자문 서비스 & 개인 트래커 — 데이터 자동 수집 스크립트",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.2.0"
+  }
+}

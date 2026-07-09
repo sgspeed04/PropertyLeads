@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>위반건축물 리드 관리</title>
+<style>
+:root {
+  --primary: #2563eb; --primary-dark: #1d4ed8; --success: #16a34a;
+  --warning: #d97706; --danger: #dc2626; --purple: #7c3aed;
+  --bg: #f8fafc; --card: #ffffff; --border: #e2e8f0;
+  --text: #0f172a; --muted: #64748b; --sidebar: #0f172a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.app{display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{width:220px;background:var(--sidebar);color:#fff;display:flex;flex-direction:column;position:fixed;height:100vh;z-index:200;transition:transform .3s}
+.sidebar-logo{padding:22px 18px 18px;border-bottom:1px solid #1e293b}
+.sidebar-logo h1{font-size:17px;font-weight:700;letter-spacing:-.3px}
+.sidebar-logo p{font-size:11px;color:#64748b;margin-top:3px}
+.sidebar-nav{flex:1;padding:12px 0;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:11px;padding:11px 18px;cursor:pointer;color:#94a3b8;font-size:13.5px;font-weight:500;border-left:3px solid transparent;transition:all .15s}
+.nav-item:hover{background:#1e293b;color:#fff}
+.nav-item.active{background:#1e293b;color:#fff;border-left-color:var(--primary)}
+.nav-icon{font-size:16px;width:18px;text-align:center}
+.sidebar-footer{padding:14px 18px;border-top:1px solid #1e293b}
+.sync-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#64748b;margin-right:6px}
+.sync-dot.ok{background:#22c55e} .sync-dot.err{background:#ef4444} .sync-dot.ing{background:#f59e0b;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sync-label{font-size:11px;color:#64748b}
+
+/* MAIN */
+.main{margin-left:220px;flex:1;display:flex;flex-direction:column}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar h2{font-size:19px;font-weight:700}
+.topbar-right{display:flex;gap:10px;align-items:center}
+.hamburger{display:none;background:none;border:none;cursor:pointer;font-size:20px;padding:4px}
+.content{padding:28px;flex:1}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px}
+.stat-label{font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:500}
+.stat-value{font-size:26px;font-weight:800}
+.stat-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.stat.c1 .stat-value{color:var(--primary)} .stat.c2 .stat-value{color:var(--success)}
+.stat.c3 .stat-value{color:var(--warning)} .stat.c4 .stat-value{color:var(--purple)}
+
+/* CARDS */
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:18px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.card-title{font-size:15px;font-weight:700}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+
+/* BUTTONS */
+.btn{padding:8px 15px;border-radius:8px;border:none;cursor:pointer;font-size:13.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:all .15s;text-decoration:none}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark)}
+.btn-outline{background:#fff;color:var(--text);border:1px solid var(--border)}.btn-outline:hover{background:var(--bg)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-success{background:var(--success);color:#fff}
+.btn-sm{padding:5px 10px;font-size:12px;border-radius:6px}
+.btn-ghost{background:none;border:none;cursor:pointer;color:var(--muted);padding:4px 8px;border-radius:6px;font-size:13px;transition:all .15s}.btn-ghost:hover{background:var(--bg);color:var(--text)}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;padding:10px 14px;font-size:11.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:13px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f8fafc}
+.actions-cell{display:flex;gap:4px;align-items:center}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:100px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.badge-blue{background:#dbeafe;color:#1d4ed8} .badge-green{background:#dcfce7;color:#15803d}
+.badge-yellow{background:#fef3c7;color:#92400e} .badge-purple{background:#ede9fe;color:#6d28d9}
+.badge-red{background:#fee2e2;color:#b91c1c} .badge-gray{background:#f1f5f9;color:#475569}
+.badge-orange{background:#fff7ed;color:#c2410c}
+
+/* SEARCH & FILTER */
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.search-wrap{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 12px}
+.search-wrap input{border:none;outline:none;font-size:13.5px;width:180px;background:transparent}
+select.filter-select{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13.5px;background:#fff;cursor:pointer;outline:none}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center}
+.overlay.show{display:flex}
+.modal{background:#fff;border-radius:16px;width:560px;max-width:96vw;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-hd{padding:22px 22px 0;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:1;border-bottom:1px solid var(--border);padding-bottom:14px}
+.modal-hd h3{font-size:17px;font-weight:700}
+.modal-body{padding:20px 22px}
+.modal-ft{padding:0 22px 20px;display:flex;gap:10px;justify-content:flex-end}
+.close-btn{background:none;border:none;cursor:pointer;font-size:22px;color:var(--muted);padding:2px 6px}
+
+/* FORMS */
+.form-group{margin-bottom:15px}
+.form-label{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
+.form-control{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13.5px;outline:none;transition:border-color .15s;background:#fff}
+.form-control:focus{border-color:var(--primary)}
+textarea.form-control{resize:vertical;min-height:70px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-hint{font-size:11.5px;color:var(--muted);margin-top:4px}
+.required{color:var(--danger)}
+.code-block{background:#0f172a;color:#e2e8f0;font-family:ui-monospace,monospace;font-size:11.5px;padding:14px;border-radius:8px;overflow-x:auto;white-space:pre;line-height:1.6}
+.empty-state{text-align:center;padding:48px 20px;color:var(--muted)}
+.empty-state .e-icon{font-size:36px;margin-bottom:10px}
+
+/* 구별 분포 바 (sequential, single hue = --primary) */
+.dist-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.dist-label{width:70px;font-size:12.5px;color:var(--text);flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dist-track{flex:1;height:10px;background:var(--bg);border-radius:5px;overflow:hidden}
+.dist-fill{height:100%;border-radius:5px;background:var(--primary)}
+.dist-count{width:34px;text-align:right;font-size:12.5px;font-weight:700;color:var(--text);flex-shrink:0;font-variant-numeric:tabular-nums}
+
+@media (max-width:900px) {
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.show{transform:translateX(0)}
+  .main{margin-left:0}
+  .hamburger{display:block}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .grid2{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <h1>🏚️ 위반건축물 리드</h1>
+      <p>건축사 협업 · 리드 관리</p>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-item" data-view="dashboard" onclick="navigate('dashboard')"><span class="nav-icon">📊</span>대시보드</div>
+      <div class="nav-item" data-view="leads" onclick="navigate('leads')"><span class="nav-icon">🏠</span>리드 관리</div>
+      <div class="nav-item" data-view="architects" onclick="navigate('architects')"><span class="nav-icon">📐</span>건축사 파트너</div>
+      <div class="nav-item" data-view="settings" onclick="navigate('settings')"><span class="nav-icon">⚙️</span>설정</div>
+    </div>
+    <div class="sidebar-footer">
+      <span class="sync-dot" id="syncDot"></span><span class="sync-label" id="syncLabel">로컬 저장</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('show')">☰</button>
+        <h2 id="pageTitle">대시보드</h2>
+      </div>
+      <div class="topbar-right" id="topbarActions"></div>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+
+<!-- 리드 모달 -->
+<div class="overlay" id="leadModal">
+  <div class="modal">
+    <div class="modal-hd"><h3 id="leadModalTitle">리드 추가</h3><button class="close-btn" onclick="closeModal('leadModal')">×</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="leadId">
+      <div class="form-group"><label class="form-label">주소 <span class="required">*</span></label><input class="form-control" id="leadAddress" placeholder="예: 서울시 강남구 역삼동 123-45"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">구/시</label><input class="form-control" id="leadDistrict" placeholder="예: 강남구"></div>
+        <div class="form-group"><label class="form-label">위반 유형</label>
+          <select class="form-control" id="leadType">
+            <option value="무단증축">무단증축</option>
+            <option value="무단용도변경">무단용도변경</option>
+            <option value="불법가설물">불법가설물</option>
+            <option value="옥상/발코니확장">옥상/발코니확장</option>
+            <option value="기타">기타</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">확인일(공고일)</label><input class="form-control" id="leadDate" type="date"></div>
+        <div class="form-group"><label class="form-label">상태</label>
+          <select class="form-control" id="leadStatus">
+            <option value="new">신규</option>
+            <option value="contacted">컨택완료</option>
+            <option value="referred">건축사소개</option>
+            <option value="contracted">계약성사</option>
+            <option value="paid">수수료수령</option>
+            <option value="dropped">보류/중단</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">담당 건축사</label>
+          <select class="form-control" id="leadArchitectId"><option value="">미배정</option></select>
+        </div>
+        <div class="form-group"><label class="form-label">예상 소개 수수료(원)</label><input class="form-control" id="leadFee" type="number" placeholder="500000"></div>
+      </div>
+      <div class="form-group"><label class="form-label">출처 링크(구청 공고 등)</label><input class="form-control" id="leadSourceUrl" placeholder="https://..."></div>
+      <div class="form-group"><label class="form-label">메모</label><textarea class="form-control" id="leadNotes" placeholder="소유주 연락 상황, 특이사항 등"></textarea></div>
+    </div>
+    <div class="modal-ft"><button class="btn btn-outline" onclick="closeModal('leadModal')">취소</button><button class="btn btn-primary" onclick="saveLead()">저장</button></div>
+  </div>
+</div>
+
+<!-- 건축사 모달 -->
+<div class="overlay" id="architectModal">
+  <div class="modal">
+    <div class="modal-hd"><h3 id="architectModalTitle">건축사 추가</h3><button class="close-btn" onclick="closeModal('architectModal')">×</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="architectId">
+      <div class="form-group"><label class="form-label">이름 <span class="required">*</span></label><input class="form-control" id="architectName"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">소속(건축사사무소)</label><input class="form-control" id="architectCompany"></div>
+        <div class="form-group"><label class="form-label">전문분야</label><input class="form-control" id="architectSpecialty" placeholder="양성화, 원상복구 등"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">연락처</label><input class="form-control" id="architectPhone"></div>
+        <div class="form-group"><label class="form-label">이메일</label><input class="form-control" id="architectEmail" type="email"></div>
+      </div>
+      <div class="form-group"><label class="form-label">소개 수수료율(%)</label><input class="form-control" id="architectFeeRate" type="number" step="0.1" placeholder="10"></div>
+      <div class="form-group"><label class="form-label">메모</label><textarea class="form-control" id="architectNotes"></textarea></div>
+    </div>
+    <div class="modal-ft"><button class="btn btn-outline" onclick="closeModal('architectModal')">취소</button><button class="btn btn-primary" onclick="saveArchitect()">저장</button></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+'use strict';
+
+// ─── STATE ───────────────────────────────────────────────────
+const D_KEY = 'viol_data', S_KEY = 'viol_settings';
+let leads = [], architects = [];
+let cfg = {
+  supabaseUrl: 'https://fbctahxjzwwzuscjvaxg.supabase.co',
+  supabaseKey: 'sb_publishable_xNUx8DMdQvTgulv4MbOmyQ_8CW9HnQ-',
+};
+let sb = null, syncStatus = 'local', currentView = 'dashboard';
+let leadFilterStatus = '', leadFilterDistrict = '', leadSearchQ = '';
+
+// ─── STORAGE ─────────────────────────────────────────────────
+function load() {
+  try {
+    const d = JSON.parse(localStorage.getItem(D_KEY) || '{}');
+    leads = d.leads || []; architects = d.architects || [];
+    const s = JSON.parse(localStorage.getItem(S_KEY) || '{}');
+    cfg = {...cfg, ...s};
+  } catch(e) {}
+}
+function save() {
+  localStorage.setItem(D_KEY, JSON.stringify({leads, architects}));
+  localStorage.setItem(S_KEY, JSON.stringify(cfg));
+  if (sb) syncSupabase();
+}
+
+// ─── SUPABASE ────────────────────────────────────────────────
+async function initSupabase() {
+  if (!cfg.supabaseUrl || !cfg.supabaseKey) return;
+  try {
+    sb = supabase.createClient(cfg.supabaseUrl, cfg.supabaseKey);
+    await pullFromSupabase();
+    setSyncStatus('ok');
+  } catch(e) { setSyncStatus('err'); }
+}
+async function pullFromSupabase() {
+  if (!sb) return;
+  try {
+    setSyncStatus('ing');
+    const [ar, lr] = await Promise.all([
+      sb.from('viol_architects').select('*').order('created_at'),
+      sb.from('viol_leads').select('*').order('created_at', {ascending:false})
+    ]);
+    if (!ar.error) architects = ar.data;
+    if (!lr.error) leads = lr.data;
+    localStorage.setItem(D_KEY, JSON.stringify({leads, architects}));
+    setSyncStatus('ok');
+    render();
+  } catch(e) { setSyncStatus('err'); }
+}
+async function syncSupabase() {
+  if (!sb) return;
+  setSyncStatus('ing');
+  try {
+    await Promise.all([
+      sb.from('viol_architects').upsert(architects),
+      sb.from('viol_leads').upsert(leads)
+    ]);
+    setSyncStatus('ok');
+  } catch(e) { setSyncStatus('err'); }
+}
+function setSyncStatus(s) {
+  syncStatus = s;
+  const dot = document.getElementById('syncDot');
+  const lbl = document.getElementById('syncLabel');
+  if (!dot) return;
+  dot.className = 'sync-dot' + (s==='ok'?' ok':s==='err'?' err':s==='ing'?' ing':'');
+  lbl.textContent = s==='ok'?'Supabase 동기화':s==='err'?'동기화 오류':s==='ing'?'동기화 중...':'로컬 저장';
+}
+
+// ─── UTILS ───────────────────────────────────────────────────
+const uid = () => crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)+Math.random().toString(36).slice(2);
+const fmt = n => (n||0).toLocaleString('ko-KR');
+const fmtW = n => n ? '₩'+fmt(n) : '-';
+const today = () => new Date().toISOString().slice(0,10);
+const thisMonth = () => new Date().toISOString().slice(0,7);
+const $v = id => document.getElementById(id).value.trim();
+
+const STATUS_MAP = {
+  new:       ['badge-blue',   '신규'],
+  contacted: ['badge-gray',   '컨택완료'],
+  referred:  ['badge-purple', '건축사소개'],
+  contracted:['badge-yellow', '계약성사'],
+  paid:      ['badge-green',  '수수료수령'],
+  dropped:   ['badge-red',    '보류/중단'],
+};
+function statusBadge(s) {
+  const [cls,lbl] = STATUS_MAP[s]||['badge-gray',s];
+  return `<span class="badge ${cls}">${lbl}</span>`;
+}
+function architectName(id) {
+  const a = architects.find(a=>a.id===id);
+  return a ? a.name + (a.company?` <span style="color:var(--muted);font-size:12px">${a.company}</span>`:'') : '<span style="color:var(--muted)">미배정</span>';
+}
+
+// ─── NAVIGATION ──────────────────────────────────────────────
+function navigate(view) {
+  currentView = view;
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active', el.dataset.view===view));
+  document.getElementById('sidebar').classList.remove('show');
+  const titles = {dashboard:'대시보드', leads:'리드 관리', architects:'건축사 파트너', settings:'설정'};
+  document.getElementById('pageTitle').textContent = titles[view]||'';
+  render();
+}
+
+function render() {
+  const actions = document.getElementById('topbarActions');
+  if (currentView === 'leads') actions.innerHTML = `<button class="btn btn-primary" onclick="openLeadModal()">+ 리드 추가</button>`;
+  else if (currentView === 'architects') actions.innerHTML = `<button class="btn btn-primary" onclick="openArchitectModal()">+ 건축사 추가</button>`;
+  else actions.innerHTML = '';
+
+  const content = document.getElementById('content');
+  if (currentView === 'dashboard') content.innerHTML = renderDashboard();
+  else if (currentView === 'leads') content.innerHTML = renderLeads();
+  else if (currentView === 'architects') content.innerHTML = renderArchitects();
+  else if (currentView === 'settings') content.innerHTML = renderSettings();
+}
+
+// ─── DASHBOARD ───────────────────────────────────────────────
+function renderDashboard() {
+  const active = leads.filter(l=>!['paid','dropped'].includes(l.status));
+  const paidThisMonth = leads.filter(l=>l.status==='paid' && (l.created_at||'').slice(0,7)===thisMonth());
+  const totalPaidFee = leads.filter(l=>l.status==='paid').reduce((s,l)=>s+(parseInt(l.referral_fee)||0),0);
+  const expectedFee = active.reduce((s,l)=>s+(parseInt(l.referral_fee)||0),0);
+
+  const byDistrict = {};
+  leads.forEach(l => { const d=l.district||'기타'; byDistrict[d]=(byDistrict[d]||0)+1; });
+  const distEntries = Object.entries(byDistrict).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const maxCount = Math.max(1, ...distEntries.map(e=>e[1]));
+
+  const distHtml = distEntries.length
+    ? distEntries.map(([d,c]) => `
+        <div class="dist-row">
+          <div class="dist-label">${d}</div>
+          <div class="dist-track"><div class="dist-fill" style="width:${(c/maxCount*100).toFixed(0)}%"></div></div>
+          <div class="dist-count">${c}</div>
+        </div>`).join('')
+    : `<div class="empty-state" style="padding:20px"><div class="e-icon">🗺️</div>아직 등록된 리드가 없습니다</div>`;
+
+  const recentLeads = [...leads].sort((a,b)=>(b.created_at||'').localeCompare(a.created_at||'')).slice(0,5);
+  const recentHtml = recentLeads.length
+    ? recentLeads.map(l=>`
+        <div class="activity-item" style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">🏚️</div>
+          <div style="flex:1">
+            <div style="font-size:13.5px;font-weight:500">${l.address||'(주소 미입력)'} ${statusBadge(l.status)}</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px">${l.district||''} · ${l.violation_type||''}</div>
+          </div>
+        </div>`).join('')
+    : `<div class="empty-state" style="padding:20px"><div class="e-icon">📋</div>최근 활동이 없습니다</div>`;
+
+  return `
+    <div class="stats-grid">
+      <div class="stat c1"><div class="stat-label">전체 리드</div><div class="stat-value">${fmt(leads.length)}</div><div class="stat-sub">진행중 ${fmt(active.length)}건</div></div>
+      <div class="stat c2"><div class="stat-label">확정 수수료 누계</div><div class="stat-value">${fmtW(totalPaidFee)}</div><div class="stat-sub">이번달 완료 ${fmt(paidThisMonth.length)}건</div></div>
+      <div class="stat c3"><div class="stat-label">예상 수수료(진행중)</div><div class="stat-value">${fmtW(expectedFee)}</div><div class="stat-sub">파이프라인 합계</div></div>
+      <div class="stat c4"><div class="stat-label">파트너 건축사</div><div class="stat-value">${fmt(architects.length)}</div><div class="stat-sub">협업 중인 건축사</div></div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <div class="card-header"><span class="card-title">구/시별 리드 분포</span></div>
+        ${distHtml}
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">최근 등록 리드</span></div>
+        ${recentHtml}
+      </div>
+    </div>`;
+}
+
+// ─── LEADS ───────────────────────────────────────────────────
+function filteredLeads() {
+  const q = leadSearchQ.toLowerCase();
+  return leads.filter(l =>
+    (!leadFilterStatus || l.status===leadFilterStatus) &&
+    (!leadFilterDistrict || l.district===leadFilterDistrict) &&
+    (!q || (l.address||'').toLowerCase().includes(q) || (l.notes||'').toLowerCase().includes(q))
+  );
+}
+function renderLeads() {
+  const districts = [...new Set(leads.map(l=>l.district).filter(Boolean))].sort();
+  const rows = filteredLeads();
+  const rowsHtml = rows.length ? rows.map(l => `
+    <tr>
+      <td>${l.address||'-'}<div style="font-size:11.5px;color:var(--muted)">${l.violation_type||''}${l.detected_date?' · '+l.detected_date:''}</div></td>
+      <td>${l.district||'-'}</td>
+      <td>${statusBadge(l.status)}</td>
+      <td>${architectName(l.architect_id)}</td>
+      <td>${fmtW(l.referral_fee)}</td>
+      <td>${l.source_url?`<a href="${l.source_url}" target="_blank" rel="noopener">🔗 링크</a>`:'-'}</td>
+      <td class="actions-cell">
+        <button class="btn-ghost" onclick="openLeadModal('${l.id}')">✏️</button>
+        <button class="btn-ghost" onclick="deleteLead('${l.id}')">🗑️</button>
+      </td>
+    </tr>`).join('') : `<tr><td colspan="7"><div class="empty-state"><div class="e-icon">🏚️</div>등록된 리드가 없습니다. '+ 리드 추가'로 시작하세요.</div></td></tr>`;
+
+  return `
+    <div class="card">
+      <div class="toolbar">
+        <div class="search-wrap">🔍<input placeholder="주소·메모 검색" value="${leadSearchQ}" oninput="leadSearchQ=this.value;render()"></div>
+        <select class="filter-select" onchange="leadFilterStatus=this.value;render()">
+          <option value="">전체 상태</option>
+          ${Object.entries(STATUS_MAP).map(([k,[,lbl]])=>`<option value="${k}" ${leadFilterStatus===k?'selected':''}>${lbl}</option>`).join('')}
+        </select>
+        <select class="filter-select" onchange="leadFilterDistrict=this.value;render()">
+          <option value="">전체 구/시</option>
+          ${districts.map(d=>`<option value="${d}" ${leadFilterDistrict===d?'selected':''}>${d}</option>`).join('')}
+        </select>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>주소 / 유형</th><th>구/시</th><th>상태</th><th>담당 건축사</th><th>예상 수수료</th><th>출처</th><th></th></tr></thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+function openLeadModal(id) {
+  const l = id ? leads.find(l=>l.id===id) : null;
+  document.getElementById('leadModalTitle').textContent = l ? '리드 수정' : '리드 추가';
+  document.getElementById('leadId').value = l?.id||'';
+  document.getElementById('leadAddress').value = l?.address||'';
+  document.getElementById('leadDistrict').value = l?.district||'';
+  document.getElementById('leadType').value = l?.violation_type||'무단증축';
+  document.getElementById('leadDate').value = l?.detected_date||'';
+  document.getElementById('leadStatus').value = l?.status||'new';
+  document.getElementById('leadFee').value = l?.referral_fee||'';
+  document.getElementById('leadSourceUrl').value = l?.source_url||'';
+  document.getElementById('leadNotes').value = l?.notes||'';
+
+  const sel = document.getElementById('leadArchitectId');
+  sel.innerHTML = '<option value="">미배정</option>' + architects.map(a=>`<option value="${a.id}" ${l?.architect_id===a.id?'selected':''}>${a.name}${a.company?' ('+a.company+')':''}</option>`).join('');
+
+  openModal('leadModal');
+}
+function saveLead() {
+  const address = $v('leadAddress');
+  if (!address) { alert('주소를 입력해주세요'); return; }
+  const id = document.getElementById('leadId').value || uid();
+  const existing = leads.find(l=>l.id===id);
+  const data = {
+    id, address, district: $v('leadDistrict'),
+    violation_type: document.getElementById('leadType').value,
+    detected_date: document.getElementById('leadDate').value || null,
+    status: document.getElementById('leadStatus').value,
+    architect_id: document.getElementById('leadArchitectId').value || null,
+    referral_fee: parseInt($v('leadFee'))||0,
+    source_url: $v('leadSourceUrl'),
+    notes: $v('leadNotes'),
+    created_at: existing?.created_at || new Date().toISOString()
+  };
+  if (existing) Object.assign(existing, data);
+  else leads.push(data);
+  save(); closeModal('leadModal'); render();
+}
+function deleteLead(id) {
+  if (!confirm('이 리드를 삭제할까요?')) return;
+  leads = leads.filter(l=>l.id!==id);
+  save(); render();
+}
+
+// ─── ARCHITECTS ──────────────────────────────────────────────
+function renderArchitects() {
+  const rowsHtml = architects.length ? architects.map(a => {
+    const leadCount = leads.filter(l=>l.architect_id===a.id).length;
+    const paidCount = leads.filter(l=>l.architect_id===a.id && l.status==='paid').length;
+    return `<tr>
+      <td>${a.name}${a.company?`<div style="font-size:11.5px;color:var(--muted)">${a.company}</div>`:''}</td>
+      <td>${a.specialty||'-'}</td>
+      <td>${a.phone||''}${a.phone&&a.email?'<br>':''}${a.email||''}</td>
+      <td>${a.fee_rate?a.fee_rate+'%':'-'}</td>
+      <td>${leadCount}건 (성사 ${paidCount})</td>
+      <td class="actions-cell">
+        <button class="btn-ghost" onclick="openArchitectModal('${a.id}')">✏️</button>
+        <button class="btn-ghost" onclick="deleteArchitect('${a.id}')">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="6"><div class="empty-state"><div class="e-icon">📐</div>등록된 건축사 파트너가 없습니다.</div></td></tr>`;
+
+  return `
+    <div class="card">
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>이름</th><th>전문분야</th><th>연락처</th><th>수수료율</th><th>리드 현황</th><th></th></tr></thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+function openArchitectModal(id) {
+  const a = id ? architects.find(a=>a.id===id) : null;
+  document.getElementById('architectModalTitle').textContent = a ? '건축사 수정' : '건축사 추가';
+  document.getElementById('architectId').value = a?.id||'';
+  document.getElementById('architectName').value = a?.name||'';
+  document.getElementById('architectCompany').value = a?.company||'';
+  document.getElementById('architectSpecialty').value = a?.specialty||'';
+  document.getElementById('architectPhone').value = a?.phone||'';
+  document.getElementById('architectEmail').value = a?.email||'';
+  document.getElementById('architectFeeRate').value = a?.fee_rate||'';
+  document.getElementById('architectNotes').value = a?.notes||'';
+  openModal('architectModal');
+}
+function saveArchitect() {
+  const name = $v('architectName');
+  if (!name) { alert('이름을 입력해주세요'); return; }
+  const id = document.getElementById('architectId').value || uid();
+  const existing = architects.find(a=>a.id===id);
+  const data = {
+    id, name, company: $v('architectCompany'), specialty: $v('architectSpecialty'),
+    phone: $v('architectPhone'), email: $v('architectEmail'),
+    fee_rate: parseFloat($v('architectFeeRate'))||0,
+    notes: $v('architectNotes'),
+    created_at: existing?.created_at || new Date().toISOString()
+  };
+  if (existing) Object.assign(existing, data);
+  else architects.push(data);
+  save(); closeModal('architectModal'); render();
+}
+function deleteArchitect(id) {
+  if (!confirm('이 건축사를 삭제할까요? 배정된 리드는 미배정 상태가 됩니다.')) return;
+  architects = architects.filter(a=>a.id!==id);
+  leads.forEach(l => { if (l.architect_id===id) l.architect_id = null; });
+  save(); render();
+}
+
+// ─── SETTINGS ────────────────────────────────────────────────
+function renderSettings() {
+  return `
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px">Supabase 동기화</div>
+      <div class="form-group"><label class="form-label">Supabase URL</label><input class="form-control" id="cfgSbUrl" value="${cfg.supabaseUrl}" placeholder="https://xxx.supabase.co"></div>
+      <div class="form-group"><label class="form-label">Supabase Anon Key</label><input class="form-control" id="cfgSbKey" value="${cfg.supabaseKey}" placeholder="eyJ..." type="password"></div>
+      <button class="btn btn-primary btn-sm" onclick="saveSupabaseSettings()">저장 및 연결</button>
+      <span class="sync-label" id="settingsSyncLabel" style="margin-left:10px">${syncStatus==='ok'?'✅ 연결됨':syncStatus==='err'?'❌ 오류':'로컬 모드'}</span>
+      <div style="margin-top:16px">
+        <div style="font-size:12px;font-weight:600;margin-bottom:6px;color:var(--muted)">Supabase에서 실행할 SQL (테이블 생성):</div>
+        <div class="code-block">create table viol_architects (
+  id uuid default gen_random_uuid() primary key,
+  name text not null,
+  company text, specialty text,
+  phone text, email text,
+  fee_rate numeric, notes text,
+  created_at timestamptz default now()
+);
+create table viol_leads (
+  id uuid default gen_random_uuid() primary key,
+  architect_id uuid references viol_architects(id),
+  address text not null,
+  district text, violation_type text,
+  detected_date date,
+  status text default 'new',
+  referral_fee int default 0,
+  source_url text, notes text,
+  created_at timestamptz default now()
+);</div>
+        <button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="copySQL()">📋 SQL 복사</button>
+        <div class="form-hint" style="margin-top:8px">기존 cm_clients/cm_sessions 테이블과 동일하게 RLS + anon 정책을 적용하세요.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:10px">데이터 수집 안내</div>
+      <div style="font-size:13px;line-height:1.7;color:var(--text)">
+        위반건축물 현황은 전국 통합 오픈API가 공개되어 있지 않아(소유주 개인정보 이슈), 각 구청·시청의 위반건축물 공고 게시판을 직접 확인해 수기로 등록하는 방식을 권장합니다.
+        <div style="margin-top:10px;padding:10px;background:#eff6ff;border-radius:8px;font-size:12.5px">
+          💡 리드 추가 시 '구/시'를 입력하면 아래에서 해당 지역 공고 검색 링크를 바로 열 수 있습니다.
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:14px"><label class="form-label">구/시로 공고 검색</label>
+        <div style="display:flex;gap:8px">
+          <input class="form-control" id="quickSearchDistrict" placeholder="예: 강남구">
+          <button class="btn btn-outline btn-sm" onclick="openDistrictSearch()" style="white-space:nowrap">검색 열기</button>
+        </div>
+      </div>
+    </div>`;
+}
+function saveSupabaseSettings() {
+  cfg.supabaseUrl = document.getElementById('cfgSbUrl').value.trim();
+  cfg.supabaseKey = document.getElementById('cfgSbKey').value.trim();
+  save();
+  if (cfg.supabaseUrl && cfg.supabaseKey) initSupabase();
+}
+function copySQL() {
+  const sql = `create table viol_architects (id uuid default gen_random_uuid() primary key, name text not null, company text, specialty text, phone text, email text, fee_rate numeric, notes text, created_at timestamptz default now());\ncreate table viol_leads (id uuid default gen_random_uuid() primary key, architect_id uuid references viol_architects(id), address text not null, district text, violation_type text, detected_date date, status text default 'new', referral_fee int default 0, source_url text, notes text, created_at timestamptz default now());`;
+  navigator.clipboard.writeText(sql).then(()=>alert('SQL이 복사됐습니다!'));
+}
+function openDistrictSearch() {
+  const d = document.getElementById('quickSearchDistrict').value.trim();
+  if (!d) { alert('구/시를 입력해주세요'); return; }
+  window.open(`https://search.naver.com/search.naver?query=${encodeURIComponent(d+' 위반건축물 공고')}`, '_blank', 'noopener');
+}
+
+// ─── MODAL HELPERS ───────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.overlay').forEach(ov => ov.addEventListener('click', e => { if (e.target===ov) ov.classList.remove('show'); }));
+
+// ─── INIT ────────────────────────────────────────────────────
+load();
+navigate('dashboard');
+if (cfg.supabaseUrl && cfg.supabaseKey) initSupabase();
+</script>
+</body>
+</html>

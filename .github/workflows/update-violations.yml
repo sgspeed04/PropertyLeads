@@ -1,0 +1,36 @@
+name: 위반건축물 공고 자동 수집 (파일럿)
+
+on:
+  schedule:
+    - cron: '30 15 * * *'   # 매일 00:30 KST (UTC 15:30)
+  workflow_dispatch:          # 수동 실행 버튼
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Fetch & Update 위반건축물 공고
+        run: node scripts/fetch-violations.js
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/violations_notices.json
+          git diff --staged --quiet || git commit -m "chore: 위반건축물 공고 자동 수집 $(date +'%Y-%m-%d')"
+          git pull --rebase origin main
+          git push -u origin main
