@@ -1,5 +1,5 @@
 /**
- * 위반건축물 공시송달 공고 자동 수집 스크립트 (파일럿: 강남·광진·강동·송파·성동·용산구)
+ * 위반건축물 공시송달 공고 자동 수집 스크립트 (파일럿: 강남·광진·송파·성동·용산구)
  *
  * ── 배경 ──────────────────────────────────────────────────────────────────
  *  위반건축물은 서울시/경기도 재개발 데이터(fetch-redevelopment.js)와 달리
@@ -13,12 +13,11 @@
  *  차이). 따라서 이 스크립트는 "매일 최근 게시물 중 신규 위반건축물 공고를
  *  잡아내는" 용도로 설계했다 — 과거 이력 백필용이 아니다.
  *
- *  강남구 외 5개 구는 구청 사이트 구조를 직접 브라우징해서 확인할 수 없는
- *  환경(네트워크 제약)에서 검색 결과 스니펫만 보고 board URL을 추정했다.
- *  광진구·용산구는 강남구와 비슷한 CMS(portal/bbs/B0000XXX)라 신뢰도가
- *  높고, 성동구는 다른 CMS의 "고시공고" 게시판을 특정했다. 강동구·송파구는
- *  정확한 공고 게시판을 못 찾아 최선의 추측이다 — 실제 실행 로그(진단용
- *  HTML 스니펫)를 보고 필요하면 수정해야 한다.
+ *  실전 실행으로 5개 구 모두 검증 완료(광진구는 실제 위반건축물 공고 3건
+ *  수집). 강동구는 목록이 자바스크립트로 렌더링되는 방식(CSR)이라 단순
+ *  HTTP 요청 + HTML 파싱으로는 목록 자체를 못 읽어와 제외했다 — 필요하면
+ *  headless 브라우저(Playwright 등)를 추가해야 하는데, 그러면 이 구 하나
+ *  때문에 전체 파이프라인이 무거워져서 우선 보류.
  * ─────────────────────────────────────────────────────────────────────────
  */
 
@@ -42,31 +41,25 @@ const BOARDS = [
     pageParam: 'pageIndex',
   },
   {
-    // 고시공고/입법예고 게시판 — 강남구와 유사한 CMS, 신뢰도 높음
+    // 고시공고/입법예고 게시판 — 실제 위반건축물 공고 수집 확인됨
     district: '광진구',
     listUrl: 'https://www.gwangjin.go.kr/portal/bbs/B0000003/list.do?menuNo=200192',
     pageParam: 'pageIndex',
   },
   {
-    // 주택도시개발공지 게시판 추정 — 정확한 위반건축물 전용 게시판을 못 찾음, 신뢰도 낮음
-    district: '강동구',
-    listUrl: 'https://welfare.gangdong.go.kr/web/newportal/bbs/b_111',
-    pageParam: 'pageIndex',
-  },
-  {
-    // 공지사항 게시판 추정 — 정확한 위반건축물 전용 게시판을 못 찾음, 신뢰도 낮음
+    // 공지사항 게시판 — 실전 검증 완료
     district: '송파구',
     listUrl: 'https://www.songpa.go.kr/www/selectBbsNttList.do?bbsNo=92&key=2775',
     pageParam: 'pageIndex',
   },
   {
-    // 고시공고(토지관리과) 게시판 — 신뢰도 중간
+    // 고시공고(토지관리과) 게시판 — 실전 검증 완료
     district: '성동구',
     listUrl: 'https://www.sd.go.kr/main/selectBbsNttList.do?bbsNo=184&key=3730',
     pageParam: 'pageIndex',
   },
   {
-    // 고시공고 게시판 추정 — 강남구와 유사한 CMS, 신뢰도 높음
+    // 고시공고 게시판 — 실전 검증 완료
     district: '용산구',
     listUrl: 'https://www.yongsan.go.kr/portal/bbs/B0000168/list.do?menuNo=200846',
     pageParam: 'pageIndex',
