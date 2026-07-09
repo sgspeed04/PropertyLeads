@@ -3,14 +3,15 @@
  *
  * ── 배경 ──────────────────────────────────────────────────────────────────
  *  위반건축물은 서울시/경기도 재개발 데이터(fetch-redevelopment.js)와 달리
- *  전국 통합 오픈API가 없다. 대신 각 구청이 "위반건축물 철거명령 및
- *  이행강제금 부과 공시송달 공고" 게시판을 운영하며, 이는 소유주에게 직접
- *  연락이 닿지 않을 때 공개로 알리는 공고라 주소가 그대로 노출된다.
+ *  전국 통합 오픈API가 없다. 대신 각 구청이 "타기관 공시송달 공고" 게시판에
+ *  위반건축물 철거명령·이행강제금 공고를 다른 기관 공고(토지거래허가, 채용,
+ *  결혼중개업법 위반 등)와 섞어서 올린다. 첫 실행 결과 최근 10건 중
+ *  위반건축물 관련 공고가 없어, 제목에 관련 키워드가 있는 것만 걸러낸다.
  *
- *  이 스크립트는 강남구청 게시판 하나를 대상으로 한 파일럿이다. 실제 페이지
- *  마크업을 사전 확인하지 못한 상태로 작성했으므로(개발 환경 네트워크 제약),
- *  여러 선택자 후보를 순서대로 시도하고 진단 로그를 남긴다. 처음 실행 후
- *  Actions 로그를 보고 선택자를 맞춰야 할 수 있다.
+ *  이 게시판은 과거 글로 갈수록 게시글 번호가 급격히 낮아지는 것으로 보아
+ *  pageIndex 파라미터로 과거 아카이브까지 훑는 건 비현실적이다(수천 페이지
+ *  차이). 따라서 이 스크립트는 "매일 최근 게시물 중 신규 위반건축물 공고를
+ *  잡아내는" 용도로 설계했다 — 과거 이력 백필용이 아니다.
  * ─────────────────────────────────────────────────────────────────────────
  */
 
@@ -20,7 +21,12 @@ const cheerio = require('cheerio');
 
 const DATA_FILE = path.join(__dirname, '..', 'data', 'violations_notices.json');
 const TODAY = new Date().toISOString().split('T')[0];
-const MAX_PAGES = 5;
+const MAX_PAGES = 3;
+
+const VIOLATION_KEYWORDS = [
+  '위반건축물', '철거명령', '이행강제금', '무단증축', '무단용도변경',
+  '불법건축', '불법가설물', '원상복구', '시정명령',
+];
 
 const BOARDS = [
   {
@@ -122,36 +128,47 @@ async function fetchBoard(board) {
   }));
 }
 
+function matchesViolationKeyword(title) {
+  return VIOLATION_KEYWORDS.some(k => title.includes(k));
+}
+
 async function main() {
   let existing = { updated_at: TODAY, notices: [] };
   if (fs.existsSync(DATA_FILE)) {
     try { existing = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8')); } catch {}
   }
 
-  const results = [];
+  let rawCount = 0;
+  const matched = [];
   for (const board of BOARDS) {
     console.log(`[BOARD] ${board.district} 공고 게시판 수집 시작 — ${board.listUrl}`);
     try {
       const items = await fetchBoard(board);
-      console.log(`[BOARD] ${board.district} 완료 — ${items.length}건`);
-      results.push(...items);
+      rawCount += items.length;
+      const boardMatched = items.filter(it => matchesViolationKeyword(it.title));
+      console.log(`[BOARD] ${board.district} 완료 — 전체 ${items.length}건 중 위반건축물 관련 ${boardMatched.length}건`);
+      matched.push(...boardMatched);
     } catch (e) {
       console.error(`[BOARD] ${board.district} 실패: ${e.message}`);
     }
   }
 
-  if (results.length === 0) {
-    console.warn('[DONE] 수집된 공고가 없습니다 — 기존 데이터 유지, 선택자 점검 필요');
+  if (rawCount === 0) {
+    console.warn('[DONE] 게시판에서 아무 항목도 못 읽었습니다 — 사이트 구조 변경 가능성, 선택자 점검 필요. 기존 데이터 유지.');
     return;
+  }
+
+  if (matched.length === 0) {
+    console.log('[DONE] 게시판은 정상 수집됐지만 위반건축물 관련 공고는 없었습니다. updated_at만 갱신.');
   }
 
   // 기존 공고와 URL 기준 병합 (중복 제거, 최신 수집 결과 우선)
   const byUrl = new Map(existing.notices.map(n => [n.url, n]));
-  results.forEach(n => byUrl.set(n.url, n));
+  matched.forEach(n => byUrl.set(n.url, n));
 
   const merged = { updated_at: TODAY, notices: [...byUrl.values()] };
   fs.writeFileSync(DATA_FILE, JSON.stringify(merged, null, 2), 'utf-8');
-  console.log(`[DONE] 총 ${merged.notices.length}건 저장 완료`);
+  console.log(`[DONE] 위반건축물 관련 공고 누계 ${merged.notices.length}건 저장 완료 (이번 실행 신규 매칭 ${matched.length}건)`);
 }
 
 main().catch(e => { console.error('오류:', e); process.exit(1); });
