@@ -1,6 +1,85 @@
 {
-  "updated_at": null,
-  "source": "pilot",
-  "note": "강남구청 위반건축물 공시송달 공고 자동 수집 파일럿 — 아직 첫 수집 전",
-  "notices": []
+  "updated_at": "2026-07-09",
+  "notices": [
+    {
+      "id": "강남구_0_aHR0cHM6Ly",
+      "district": "강남구",
+      "title": "토지거래허가구역 (재)지정 및 조정 공고",
+      "url": "https://www.gangnam.go.kr/board/B_000046/1075089/view.do?mid=ID05_050209",
+      "detected_date": "2026-05-15",
+      "collected_at": "2026-07-09"
+    },
+    {
+      "id": "강남구_1_aHR0cHM6Ly",
+      "district": "강남구",
+      "title": "2026년 5월 현역 모집병 지원 홍보",
+      "url": "https://www.gangnam.go.kr/board/B_000046/1075087/view.do?mid=ID05_050209",
+      "detected_date": "2026-04-21",
+      "collected_at": "2026-07-09"
+    },
+    {
+      "id": "강남구_2_aHR0cHM6Ly",
+      "district": "강남구",
+      "title": "『2026년 상반기 지역별고용조사』 실시 안내",
+      "url": "https://www.gangnam.go.kr/board/B_000046/1075086/view.do?mid=ID05_050209",
+      "detected_date": "2026-04-14",
+      "collected_at": "2026-07-09"
+    },
+    {
+      "id": "강남구_3_aHR0cHM6Ly",
+      "district": "강남구",
+      "title": "토지거래허가구역 재지정",
+      "url": "https://www.gangnam.go.kr/board/B_000046/1075080/view.do?mid=ID05_050209",
+      "detected_date": "2026-04-09",
+      "collected_at": "2026-07-09"
+    },
+    {
+      "id": "강남구_4_aHR0cHM6Ly",
+      "district": "강남구",
+      "title": "2027년도 서울특별시 도시자연공원구역 협의매수 공고 알림",
+      "url": "https://www.gangnam.go.kr/board/B_000046/1075085/view.do?mid=ID05_050209",
+      "detected_date": "2026-03-26",
+      "collected_at": "2026-07-09"
+    },
+    {
+      "id": "강남구_5_aHR0cHM6Ly",
+      "district": "강남구",
+      "title": "2026년 4월 현역 모집병 지원 홍보",
+      "url": "https://www.gangnam.go.kr/board/B_000046/1075084/view.do?mid=ID05_050209",
+      "detected_date": "2026-03-19",
+      "collected_at": "2026-07-09"
+    },
+    {
+      "id": "강남구_6_aHR0cHM6Ly",
+      "district": "강남구",
+      "title": "「아리수 품질확인제 사업 기간제 노동자 채용시험 공고」",
+      "url": "https://www.gangnam.go.kr/board/B_000046/1075083/view.do?mid=ID05_050209",
+      "detected_date": "2026-02-04",
+      "collected_at": "2026-07-09"
+    },
+    {
+      "id": "강남구_7_aHR0cHM6Ly",
+      "district": "강남구",
+      "title": "체비지 변상금 부과 사전통지서 공시송달 공고(도봉구청)",
+      "url": "https://www.gangnam.go.kr/board/B_000046/1075082/view.do?mid=ID05_050209",
+      "detected_date": "2026-01-13",
+      "collected_at": "2026-07-09"
+    },
+    {
+      "id": "강남구_8_aHR0cHM6Ly",
+      "district": "강남구",
+      "title": "결혼중개업법 위반에 따른 행정처분 사전통지서 공시송달 공고 의뢰",
+      "url": "https://www.gangnam.go.kr/board/B_000046/1075081/view.do?mid=ID05_050209",
+      "detected_date": "2025-12-22",
+      "collected_at": "2026-07-09"
+    },
+    {
+      "id": "강남구_9_aHR0cHM6Ly",
+      "district": "강남구",
+      "title": "토지거래허가구역 재지정 및 조정 공고",
+      "url": "https://www.gangnam.go.kr/board/B_000046/1075088/view.do?mid=ID05_050209",
+      "detected_date": "2025-12-18",
+      "collected_at": "2026-07-09"
+    }
+  ]
 }
