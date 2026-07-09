@@ -7,12 +7,13 @@
  *
  * ── 사용 API ──────────────────────────────────────────────────────────────────
  *  [서울] openapi.seoul.go.kr/rest
- *    OA-2253 upisRebuild   : 정비구역 현황 (6577건) — 구역 위치·유형
- *    OA-2254 서비스명 미확인: 건설 정비사업 추진 경과 정보 — 단계 데이터 (탐색 중)
- *         실제 필드(run#14 확인): RPT_MNG_CD, PRJC_CD, LOGVM, RPT_TYPE,
- *                                  LCLSF, MCLSF, SCLSF, PSTN_NM, RGN_NM, AREA_EXS
- *         ※ 좌표 필드 없음 — LOGVM/PSTN_NM 구 이름 기반 추출
+ *    OA-2253 upisRebuild : 정비구역 현황 (6577건) — 구역 위치·유형 (단계=구역지정)
+ *    ※ OA-2253은 구역 지정 레지스트리. 추진단계 데이터는 OA-2254에 있으나
+ *      Azure GitHub Actions 러너에서 해당 백엔드 서버가 TCP 차단됨 (10s timeout).
+ *      따라서 모든 서울 레코드의 stage_idx=0 (구역지정). 추후 한국 내 실행 환경이
+ *      확보되면 OA-2254 서비스명 확인 후 단계 데이터 통합 가능.
  *  [경기] openapi.gg.go.kr  GenrlImprvBizpropls / TBGRISSMSCLBSNSM
+ *    ※ 경기도 API도 Azure에서 TCP 차단 — 기존 데이터 유지.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -155,52 +156,6 @@ async function fetchSeoulAllPages(serviceName) {
     await new Promise(r => setTimeout(r, 200));
   }
   return allRows;
-}
-
-// ── OA-2254 추진 경과 서비스명 자동 탐색 ─────────────────────────────────────
-// Seoul API takes ~10s per page, so use 20s timeout; no early-break since TCP is
-// reachable when this function is called (gated on successful upisRebuild fetch).
-const OA2254_CANDIDATES = [
-  'upisGss',        // 경과 약어 추측
-  'upisRbldGss',    // rebuild + 경과
-  'upisProgress',   // English progress
-  'upisPrgs',       // progress 약어
-  'upisCnsGss',     // 건설 + 경과
-  'upisbizPrgs',    // biz + progress
-  'upisRbldPrg',    // rebuild + prg
-  'upisBizGss',     // biz + gss
-  'upisRbldHst',    // rebuild + history
-  'upisImprvHst',   // improve + history
-  'upisStts',       // 사업 status 약어
-  'upisBizStts',    // biz + status
-];
-
-async function discoverProgressService() {
-  if (!SEOUL_KEY) return;
-  console.log('[OA-2254] 추진경과 API 서비스명 탐색 시작...');
-  for (const svcName of OA2254_CANDIDATES) {
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 20000);
-    try {
-      const url = `https://openapi.seoul.go.kr:443/rest/${SEOUL_KEY}/json/${svcName}/1/3/`;
-      const res = await fetch(url, { headers: FETCH_HEADERS, signal: ctrl.signal });
-      clearTimeout(timer);
-      const json = await res.json();
-      const root = json[svcName] || json;
-      const code = root.RESULT?.CODE || '';
-      if (code.includes('INFO-000') && root.row?.length > 0) {
-        console.log(`[OA-2254] ✓ 서비스명 발견: "${svcName}" — ${root.list_total_count}건`);
-        console.log(`[OA-2254 FIELDS] ${Object.keys(root.row[0]).join(', ')}`);
-        console.log(`[OA-2254 SAMPLE] ${JSON.stringify(root.row[0]).substring(0, 400)}`);
-        return;
-      }
-      console.log(`[OA-2254] ✗ ${svcName}: ${code} ${root.RESULT?.MESSAGE || ''}`);
-    } catch (e) {
-      clearTimeout(timer);
-      console.log(`[OA-2254] ✗ ${svcName}: ${e.message.substring(0, 80)}`);
-    }
-  }
-  console.log('[OA-2254] 탐색 완료 — 서비스명 미확인');
 }
 
 // ── openapi.gg.go.kr 경기도 API 페이지 요청 ─────────────────────────────────
@@ -394,14 +349,6 @@ async function main() {
     fetchSeoul(existing),
     fetchGyeonggi(existing),
   ]);
-
-  // 서울 API 성공 시에만 OA-2254 탐색 (네트워크 확인 후)
-  // → fetchSeoul 성공 여부는 seoulProjects 길이로 간접 확인
-  if (seoulProjects.some(p => p.id?.startsWith('api_'))) {
-    await discoverProgressService();
-  } else {
-    console.log('[OA-2254] 서울 API 불가 — 탐색 생략');
-  }
 
   const merged     = [...seoulProjects, ...ggProjects];
   const seoulCount = seoulProjects.length;
