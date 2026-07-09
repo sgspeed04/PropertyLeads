@@ -1,17 +1,24 @@
 /**
- * 위반건축물 공시송달 공고 자동 수집 스크립트 (파일럿: 강남구청)
+ * 위반건축물 공시송달 공고 자동 수집 스크립트 (파일럿: 강남·광진·강동·송파·성동·용산구)
  *
  * ── 배경 ──────────────────────────────────────────────────────────────────
  *  위반건축물은 서울시/경기도 재개발 데이터(fetch-redevelopment.js)와 달리
- *  전국 통합 오픈API가 없다. 대신 각 구청이 "타기관 공시송달 공고" 게시판에
+ *  전국 통합 오픈API가 없다. 대신 각 구청이 "공시송달/고시공고" 게시판에
  *  위반건축물 철거명령·이행강제금 공고를 다른 기관 공고(토지거래허가, 채용,
  *  결혼중개업법 위반 등)와 섞어서 올린다. 첫 실행 결과 최근 10건 중
  *  위반건축물 관련 공고가 없어, 제목에 관련 키워드가 있는 것만 걸러낸다.
  *
- *  이 게시판은 과거 글로 갈수록 게시글 번호가 급격히 낮아지는 것으로 보아
+ *  게시판은 과거 글로 갈수록 게시글 번호가 급격히 낮아지는 것으로 보아
  *  pageIndex 파라미터로 과거 아카이브까지 훑는 건 비현실적이다(수천 페이지
  *  차이). 따라서 이 스크립트는 "매일 최근 게시물 중 신규 위반건축물 공고를
  *  잡아내는" 용도로 설계했다 — 과거 이력 백필용이 아니다.
+ *
+ *  강남구 외 5개 구는 구청 사이트 구조를 직접 브라우징해서 확인할 수 없는
+ *  환경(네트워크 제약)에서 검색 결과 스니펫만 보고 board URL을 추정했다.
+ *  광진구·용산구는 강남구와 비슷한 CMS(portal/bbs/B0000XXX)라 신뢰도가
+ *  높고, 성동구는 다른 CMS의 "고시공고" 게시판을 특정했다. 강동구·송파구는
+ *  정확한 공고 게시판을 못 찾아 최선의 추측이다 — 실제 실행 로그(진단용
+ *  HTML 스니펫)를 보고 필요하면 수정해야 한다.
  * ─────────────────────────────────────────────────────────────────────────
  */
 
@@ -32,6 +39,36 @@ const BOARDS = [
   {
     district: '강남구',
     listUrl: 'https://www.gangnam.go.kr/board/B_000046/list.do?mid=ID05_050209',
+    pageParam: 'pageIndex',
+  },
+  {
+    // 고시공고/입법예고 게시판 — 강남구와 유사한 CMS, 신뢰도 높음
+    district: '광진구',
+    listUrl: 'https://www.gwangjin.go.kr/portal/bbs/B0000003/list.do?menuNo=200192',
+    pageParam: 'pageIndex',
+  },
+  {
+    // 주택도시개발공지 게시판 추정 — 정확한 위반건축물 전용 게시판을 못 찾음, 신뢰도 낮음
+    district: '강동구',
+    listUrl: 'https://welfare.gangdong.go.kr/web/newportal/bbs/b_111',
+    pageParam: 'pageIndex',
+  },
+  {
+    // 공지사항 게시판 추정 — 정확한 위반건축물 전용 게시판을 못 찾음, 신뢰도 낮음
+    district: '송파구',
+    listUrl: 'https://www.songpa.go.kr/www/selectBbsNttList.do?bbsNo=92&key=2775',
+    pageParam: 'pageIndex',
+  },
+  {
+    // 고시공고(토지관리과) 게시판 — 신뢰도 중간
+    district: '성동구',
+    listUrl: 'https://www.sd.go.kr/main/selectBbsNttList.do?bbsNo=184&key=3730',
+    pageParam: 'pageIndex',
+  },
+  {
+    // 고시공고 게시판 추정 — 강남구와 유사한 CMS, 신뢰도 높음
+    district: '용산구',
+    listUrl: 'https://www.yongsan.go.kr/portal/bbs/B0000168/list.do?menuNo=200846',
     pageParam: 'pageIndex',
   },
 ];
