@@ -3,14 +3,16 @@
  *
  * ── GitHub Secrets ────────────────────────────────────────────────────────────
  *  SEOUL_API_KEY   : data.seoul.go.kr   (서울시 열린데이터광장)
- *  GG_API_KEY      : openapi.gg.go.kr   (경기도 공공데이터포털 — 인증키 신청)
+ *  GG_API_KEY      : openapi.gg.go.kr   (경기도 공공데이터포털)
  *
  * ── 사용 API ──────────────────────────────────────────────────────────────────
- *  [서울] openapi.seoul.go.kr/rest  서비스: upisRebuild            (6577건, 일간)
- *         실제 필드: RPT_MNG_CD, PRJC_CD, LOGVM, RPT_TYPE, LCLSF, MCLSF, SCLSF,
- *                    PSTN_NM, RGN_NM, AREA_EXS (확인 2026-07-09)
- *         ※ PRGSRT_SE/STEP_NM/CNTRD_X/Y 없음 — 좌표는 LOGVM/PSTN_NM 구명 기반 추출
- *  [경기] openapi.gg.go.kr  서비스: GenrlImprvBizpropls / TBGRISSMSCLBSNSM
+ *  [서울] openapi.seoul.go.kr/rest
+ *    OA-2253 upisRebuild   : 정비구역 현황 (6577건) — 구역 위치·유형
+ *    OA-2254 서비스명 미확인: 건설 정비사업 추진 경과 정보 — 단계 데이터 (탐색 중)
+ *         실제 필드(run#14 확인): RPT_MNG_CD, PRJC_CD, LOGVM, RPT_TYPE,
+ *                                  LCLSF, MCLSF, SCLSF, PSTN_NM, RGN_NM, AREA_EXS
+ *         ※ 좌표 필드 없음 — LOGVM/PSTN_NM 구 이름 기반 추출
+ *  [경기] openapi.gg.go.kr  GenrlImprvBizpropls / TBGRISSMSCLBSNSM
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -23,7 +25,7 @@ const SEOUL_KEY = process.env.SEOUL_API_KEY;
 const GG_KEY    = process.env.GG_API_KEY;
 const PAGE_SIZE = 1000;
 
-// ── 단계 매핑 (idx: -2=모니터링, -1=준비단계, 0=구역지정, 1=조합, 2=사업시행, 3=관리처분, 4=착공, 5=완료)
+// ── 단계 매핑 (idx: -2=모니터링, -1=준비위, 0=구역지정, 1=조합, 2=사업시행, 3=관리처분, 4=착공, 5=완료)
 const STAGE_MAP = [
   { key: '완료',       idx: 5 }, { key: '준공',      idx: 5 }, { key: '입주',      idx: 5 },
   { key: '착공',       idx: 4 }, { key: '이주',      idx: 4 }, { key: '철거',      idx: 4 },
@@ -92,7 +94,7 @@ const DISTRICT_COORD = {
   '동두천시':[37.9036, 127.0607],'과천시':  [37.4296, 126.9874],
 };
 
-// ── fetch 공통 헬퍼 (User-Agent + 타임아웃 + 원인 로깅) ─────────────────────
+// ── fetch 공통 헬퍼 ──────────────────────────────────────────────────────────
 const FETCH_HEADERS = {
   'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
   'Accept': 'application/json, text/plain, */*',
@@ -155,6 +157,48 @@ async function fetchSeoulAllPages(serviceName) {
   return allRows;
 }
 
+// ── OA-2254 추진 경과 서비스명 자동 탐색 (5초 타임아웃으로 빠른 실패) ────────
+const OA2254_CANDIDATES = [
+  'upisGss',        // 경과 약어 추측
+  'upisRbldGss',    // rebuild + 경과
+  'upisProgress',   // English progress
+  'upisPrgs',       // progress 약어
+  'upisCnsGss',     // 건설 + 경과
+  'upisbizPrgs',    // biz + progress
+  'upisRbldPrg',    // rebuild + prg
+  'upisBizGss',     // biz + gss
+];
+
+async function discoverProgressService() {
+  if (!SEOUL_KEY) return;
+  console.log('[OA-2254] 추진경과 API 서비스명 탐색 시작...');
+  for (const svcName of OA2254_CANDIDATES) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 5000);
+    try {
+      const url = `https://openapi.seoul.go.kr:443/rest/${SEOUL_KEY}/json/${svcName}/1/3/`;
+      const res = await fetch(url, { headers: FETCH_HEADERS, signal: ctrl.signal });
+      clearTimeout(timer);
+      const json = await res.json();
+      const root = json[svcName] || json;
+      const code = root.RESULT?.CODE || '';
+      if (code.includes('INFO-000') && root.row?.length > 0) {
+        console.log(`[OA-2254] ✓ 서비스명 발견: "${svcName}" — ${root.list_total_count}건`);
+        console.log(`[OA-2254 FIELDS] ${Object.keys(root.row[0]).join(', ')}`);
+        console.log(`[OA-2254 SAMPLE] ${JSON.stringify(root.row[0]).substring(0, 400)}`);
+        return;
+      }
+      console.log(`[OA-2254] ✗ ${svcName}: ${code} ${root.RESULT?.MESSAGE || ''}`);
+    } catch (e) {
+      clearTimeout(timer);
+      const isTimeout = e.message.includes('abort') || e.message.includes('timeout') || e.message.includes('TIMEOUT');
+      console.log(`[OA-2254] ✗ ${svcName}: ${isTimeout ? '타임아웃' : e.message.substring(0, 50)}`);
+      if (isTimeout) break; // 네트워크가 차단되면 나머지 후보도 타임아웃 → 조기 종료
+    }
+  }
+  console.log('[OA-2254] 탐색 완료 — 서비스명 미확인');
+}
+
 // ── openapi.gg.go.kr 경기도 API 페이지 요청 ─────────────────────────────────
 async function fetchGgPage(serviceName, pIndex, pSize) {
   const qs = `KEY=${GG_KEY}&Type=json&pIndex=${pIndex}&pSize=${pSize}`;
@@ -206,19 +250,14 @@ async function fetchGgAllPages(serviceName) {
 function rowToProject(r, idx, region = '서울') {
   const name = r.RGN_NM || r.PSTN_NM || r.RPT_NM || r.SBSN_NM || r.JNGB_NM || '알 수 없음';
 
-  // upisRebuild API에는 PRGSRT_SE/STEP_NM 없음 (run#14 확인)
-  // SCLSF → MCLSF → LCLSF 순으로 단계 텍스트 추출
   const stageName = r.SCLSF || r.MCLSF || r.LCLSF || '';
 
-  // RPT_TYPE(보고유형): 재개발/재건축 구분에 사용 (run#14에서 필드 존재 확인)
   const typeHint     = r.RPT_TYPE || r.LCLSF || r.MCLSF || r.JNGB_TYPE || '';
   const isRebuilding = name.includes('재건축') || typeHint.includes('재건축');
 
-  // LOGVM이 "서울특별시"만 반환 시 PSTN_NM(위치명)에서 구 이름 추출 시도
   const locationRaw = r.LOGVM || r.PSTN_NM || r.SGG_NM || r.SIGUNGU_NM || '';
   const district    = Object.keys(DISTRICT_COORD).find(k => locationRaw.includes(k)) || '';
 
-  // upisRebuild는 좌표 필드 없음 → 구 중심 좌표 + 소폭 랜덤 오프셋
   let lat = normCoord(r.CNTRD_Y || r.LAT || r.Y_COORD || r.LAT_CD || 0);
   let lng = normCoord(r.CNTRD_X || r.LON || r.X_COORD || r.LOT_CD || 0);
   if (!isMetroCoord(lat, lng)) {
@@ -297,7 +336,6 @@ async function fetchSeoul(existing) {
     .filter(p => isSeoulCoord(p.lat, p.lng) && p.name !== '알 수 없음' && p.district);
   console.log(`[SEOUL] 서울 구역 통과: ${apiProjects.length}건`);
 
-  // 구별 분포 로그
   const distMap = {};
   for (const p of apiProjects) distMap[p.district] = (distMap[p.district] || 0) + 1;
   console.log('[DISTRICT]', JSON.stringify(distMap));
@@ -347,10 +385,19 @@ async function main() {
     existing.projects = existing.projects.map(p => ({ region: '서울', ...p }));
   }
 
+  // OA-2254 탐색 + 서울/경기 데이터 수집 병렬 실행
   const [seoulProjects, ggProjects] = await Promise.all([
     fetchSeoul(existing),
     fetchGyeonggi(existing),
   ]);
+
+  // 서울 API 성공 시에만 OA-2254 탐색 (네트워크 확인 후)
+  // → fetchSeoul 성공 여부는 seoulProjects 길이로 간접 확인
+  if (seoulProjects.some(p => p.id?.startsWith('api_'))) {
+    await discoverProgressService();
+  } else {
+    console.log('[OA-2254] 서울 API 불가 — 탐색 생략');
+  }
 
   const merged     = [...seoulProjects, ...ggProjects];
   const seoulCount = seoulProjects.length;
