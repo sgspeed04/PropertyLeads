@@ -117,13 +117,33 @@ function parseListHtml(html, baseUrl) {
 
   console.log(`  [PARSE] 선택자 "${usedSelector}" 로 ${anchors.length}개 링크 발견`);
   if (anchors.length === 0) {
-    // <head> 대신 실제 목록이 있을 법한 <table>/<ul> 부근을 찾아서 보여준다 — 첫 태그가 없으면 body 앞부분이라도.
-    const bodyIdx = html.search(/<body/i);
-    const tableIdx = html.search(/<table/i);
-    const listIdx = html.search(/<ul/i);
-    const candidates = [tableIdx, listIdx].filter(i => i >= 0);
-    const start = candidates.length ? Math.min(...candidates) : (bodyIdx >= 0 ? bodyIdx : 0);
-    console.log(`  [PARSE] 진단용 HTML 스니펫 (전체 길이 ${html.length}자, ${start}번째 문자부터 2500자):\n${html.slice(start, start + 2500)}`);
+    // 페이지 전체 <a href>를 훑어서 실제 상세보기 링크 패턴(파일명 기준)을 빈도순으로 보여준다.
+    // 내비게이션 메뉴 등 노이즈에 섞여도, 게시글 개수만큼 반복되는 패턴이 상위에 뜬다.
+    const hrefCounts = new Map();
+    $('a[href]').each((_, el) => {
+      const href = $(el).attr('href') || '';
+      const m = href.match(/([A-Za-z0-9_]+\.do)/);
+      const key = m ? m[1] : (href.split('?')[0] || href).slice(0, 40);
+      if (!key || key === '#' || key.startsWith('javascript')) return;
+      hrefCounts.set(key, (hrefCounts.get(key) || 0) + 1);
+    });
+    const top = [...hrefCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
+    console.log(`  [PARSE] 진단: 전체 <a> ${$('a[href]').length}개, href 패턴 빈도 상위 10개:`);
+    top.forEach(([k, c]) => console.log(`    ${c}회 — ${k}`));
+
+    // href가 아니라 onclick(javascript:)으로 상세보기를 여는 사이트도 있어 함께 확인한다.
+    const onclickCounts = new Map();
+    $('[onclick]').each((_, el) => {
+      const oc = $(el).attr('onclick') || '';
+      const m = oc.match(/^[A-Za-z_][A-Za-z0-9_]*\(/);
+      const key = m ? m[0] : oc.slice(0, 30);
+      onclickCounts.set(key, (onclickCounts.get(key) || 0) + 1);
+    });
+    const topOnclick = [...onclickCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
+    if (topOnclick.length) {
+      console.log(`  [PARSE] 진단: onclick 속성 ${$('[onclick]').length}개, 패턴 빈도 상위 5개:`);
+      topOnclick.forEach(([k, c]) => console.log(`    ${c}회 — ${k}`));
+    }
     return [];
   }
 
