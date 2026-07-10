@@ -158,6 +158,51 @@ async function fetchSeoulAllPages(serviceName) {
   return allRows;
 }
 
+// ── OA-2166/2167/15065 서비스ID 탐색 ──────────────────────────────────────────
+// 단계별 현황(OA-2167)이 있으면 stage_idx 문제 해결 가능
+const STAGE_API_CANDIDATES = [
+  // OA-2167 "단계별 현황" 후보
+  'upisRbldStts',  // rebuild + 현황(status)
+  'upisRbldPhase', // rebuild + phase
+  'upisRbldStep',  // rebuild + step
+  'upisBizPhase',  // biz + phase
+  'upisRbldStg',   // rebuild + stage
+  // OA-2166 "정비사업 정보" 후보
+  'upisRbldInfo',  // rebuild + info
+  'upisBizInfo',   // biz + info
+  // OA-15065 "추진현황(조합)" 후보
+  'upisAscPrgs',   // association + progress
+  'upisRbldAsc',   // rebuild + association
+];
+
+async function discoverStageApi(seoulKey) {
+  console.log('[STAGE API] OA-2166/2167/15065 서비스ID 탐색 시작...');
+  for (const svcName of STAGE_API_CANDIDATES) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 15000);
+    try {
+      const url = `https://openapi.seoul.go.kr:443/rest/${seoulKey}/json/${svcName}/1/3/`;
+      const res = await fetch(url, { headers: FETCH_HEADERS, signal: ctrl.signal });
+      clearTimeout(timer);
+      const json = await res.json();
+      const root = json[svcName] || json;
+      const code = root.RESULT?.CODE || '';
+      if (code.includes('INFO-000') && root.row?.length > 0) {
+        console.log(`[STAGE API] ✓ 발견: "${svcName}" — ${root.list_total_count}건`);
+        console.log(`[STAGE API FIELDS] ${Object.keys(root.row[0]).join(', ')}`);
+        console.log(`[STAGE API SAMPLE] ${JSON.stringify(root.row[0]).substring(0, 500)}`);
+        return svcName;
+      }
+      console.log(`[STAGE API] ✗ ${svcName}: ${code} ${root.RESULT?.MESSAGE || ''}`);
+    } catch (e) {
+      clearTimeout(timer);
+      console.log(`[STAGE API] ✗ ${svcName}: ${e.message.substring(0, 60)}`);
+    }
+  }
+  console.log('[STAGE API] 탐색 완료 — 서비스ID 미확인');
+  return null;
+}
+
 // ── openapi.gg.go.kr 경기도 API 페이지 요청 ─────────────────────────────────
 async function fetchGgPage(serviceName, pIndex, pSize) {
   const qs = `KEY=${GG_KEY}&Type=json&pIndex=${pIndex}&pSize=${pSize}`;
@@ -344,11 +389,15 @@ async function main() {
     existing.projects = existing.projects.map(p => ({ region: '서울', ...p }));
   }
 
-  // OA-2254 탐색 + 서울/경기 데이터 수집 병렬 실행
   const [seoulProjects, ggProjects] = await Promise.all([
     fetchSeoul(existing),
     fetchGyeonggi(existing),
   ]);
+
+  // 서울 API 접근 가능 시 단계 API 탐색 (OA-2166/2167/15065)
+  if (SEOUL_KEY && seoulProjects.some(p => p.id?.startsWith('api_'))) {
+    await discoverStageApi(SEOUL_KEY);
+  }
 
   const merged     = [...seoulProjects, ...ggProjects];
   const seoulCount = seoulProjects.length;
