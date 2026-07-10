@@ -6,11 +6,10 @@
  *  GG_API_KEY      : openapi.gg.go.kr   (경기도 공공데이터포털)
  *
  * ── 사용 API ──────────────────────────────────────────────────────────────────
- *  [서울] openapi.seoul.go.kr/rest
- *    OA-2253 upisRebuild : 정비구역 현황 (6577건) — 구역 위치·유형 (단계=구역지정)
- *    CleanupBussinessProgress (OA-2254 추진경과, BIZ_NO/SE_NM/SE_CD/DAY)
- *      기본 포트: http://openapi.seoul.go.kr:8088 (XML/JSON)
- *      HTTPS:443 뿐 아니라 HTTP:8088도 테스트 중 — Azure TCP 차단 여부 확인 필요
+ *  [서울] openapi.seoul.go.kr
+ *    OA-2253 upisRebuild (HTTPS:443)        : 정비구역 현황 — 구역 위치·유형·PRJC_CD
+ *    OA-2254 CleanupBussinessProgress (HTTP:8088) : 추진경과 — BIZ_NO/SE_NM/SE_CD/DAY
+ *      BIZ_NO ≈ PRJC_CD ({district_code}-{seq}), SE_CD 최고값 = 현재 단계
  *      서비스명 출처: github.com/c-yeonwoo/signal-apt (redev.py)
  *  [경기] openapi.gg.go.kr  GenrlImprvBizpropls / TBGRISSMSCLBSNSM
  *    ※ 경기도 API도 Azure에서 TCP 차단 — 기존 데이터 유지.
@@ -158,37 +157,62 @@ async function fetchSeoulAllPages(serviceName) {
   return allRows;
 }
 
-// ── 추진경과 API 접근 테스트 ───────────────────────────────────────────────────
-// 서비스명 확인 출처: github.com/c-yeonwoo/signal-apt (redev.py)
-//   CleanupBussinessProgress : BIZ_NO / SE_NM(단계명) / SE_CD(단계코드) / DAY
-//   기본 URL: http://openapi.seoul.go.kr:8088/{key}/xml/CleanupBussinessProgress/start/end/
-//   HTTPS:443 뿐 아니라 HTTP:8088 도 테스트 — 포트별로 다른 백엔드 서버 사용
+// ── 추진경과 단계 수집 (CleanupBussinessProgress, HTTP:8088만 접근 가능) ────────
+// BIZ_NO = {district_code}-{seq}, SE_NM = 단계명, SE_CD = 단계코드(숫자 클수록 진행)
+// 출처: github.com/c-yeonwoo/signal-apt (redev.py)
 
-async function discoverStageApi(seoulKey) {
-  console.log('[STAGE API] CleanupBussinessProgress 포트별 접근 테스트...');
-  const tests = [
-    { label: 'HTTP:8088/json',  url: `http://openapi.seoul.go.kr:8088/${seoulKey}/json/CleanupBussinessProgress/1/3/` },
-    { label: 'HTTP:8088/xml',   url: `http://openapi.seoul.go.kr:8088/${seoulKey}/xml/CleanupBussinessProgress/1/3/`  },
-    { label: 'HTTPS:443/json',  url: `https://openapi.seoul.go.kr:443/rest/${seoulKey}/json/CleanupBussinessProgress/1/3/` },
-    { label: 'HTTP:8088/upisNewtown', url: `http://openapi.seoul.go.kr:8088/${seoulKey}/json/upisNewtown/1/3/` },
-  ];
-  for (const { label, url } of tests) {
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 12000);
-    try {
-      const res = await fetch(url, { signal: ctrl.signal });
-      clearTimeout(timer);
-      const text = await res.text();
-      console.log(`[STAGE API] ✓ ${label}: HTTP ${res.status} — 응답길이 ${text.length}`);
-      console.log(`[STAGE API PREVIEW] ${text.substring(0, 300)}`);
-      return label;
-    } catch (e) {
-      clearTimeout(timer);
-      console.log(`[STAGE API] ✗ ${label}: ${e.message.substring(0, 80)}`);
-    }
+async function fetchProgressStages(seoulKey) {
+  const BASE = `http://openapi.seoul.go.kr:8088/${seoulKey}/json/CleanupBussinessProgress`;
+  const PAGE = 1000;
+  let allRows = [], total = 0;
+
+  try {
+    const res  = await fetchWithTimeout(`${BASE}/1/${PAGE}/`, 30000);
+    const json = await res.json();
+    const root = json.CleanupBussinessProgress || json;
+    if (root.RESULT && !root.RESULT.CODE.includes('INFO-000'))
+      throw new Error(`API 오류: ${root.RESULT.MESSAGE}`);
+    total = parseInt(root.list_total_count || 0);
+    allRows.push(...(root.row || []));
+    console.log(`[STAGE API] CleanupBussinessProgress: 전체 ${total}건`);
+  } catch (e) {
+    console.warn(`[STAGE API] 접근 실패: ${e.message} — stage_idx 미갱신`);
+    return null;
   }
-  console.log('[STAGE API] 모든 포트/포맷 접근 불가 — Azure TCP 차단 확인');
-  return null;
+
+  let start = PAGE + 1;
+  while (start <= total) {
+    const end = Math.min(start + PAGE - 1, total);
+    try {
+      const res  = await fetchWithTimeout(`${BASE}/${start}/${end}/`, 30000);
+      const json = await res.json();
+      const root = json.CleanupBussinessProgress || json;
+      allRows.push(...(root.row || []));
+      console.log(`  …페이지 ${Math.ceil(start / PAGE) + 1} 수신 (누계 ${allRows.length})`);
+    } catch (e) {
+      console.warn(`[STAGE API] 페이지 ${start}-${end} 실패: ${e.message}`);
+      break;
+    }
+    start = end + 1;
+    await new Promise(r => setTimeout(r, 200));
+  }
+
+  // BIZ_NO별 최고 SE_CD(가장 진행된 단계) 선택
+  const bizMap = {};
+  for (const row of allRows) {
+    const bizNo = row.BIZ_NO;
+    if (!bizNo) continue;
+    const seCD = parseInt(row.SE_CD || 0);
+    if (!bizMap[bizNo] || seCD > bizMap[bizNo].seCD)
+      bizMap[bizNo] = { seCD, seNm: row.SE_NM || '', day: row.DAY || '' };
+  }
+
+  const uniq = Object.keys(bizMap).length;
+  console.log(`[STAGE API] 고유 BIZ_NO: ${uniq}건`);
+  const samples = Object.entries(bizMap).slice(0, 3);
+  for (const [bizNo, v] of samples)
+    console.log(`  BIZ_NO="${bizNo}" SE_CD=${v.seCD} SE_NM="${v.seNm}" DAY="${v.day}"`);
+  return bizMap;
 }
 
 // ── openapi.gg.go.kr 경기도 API 페이지 요청 ─────────────────────────────────
@@ -280,6 +304,7 @@ function rowToProject(r, idx, region = '서울') {
     hangang:        false,
     completion_est: '',
     ref_note:       '',
+    _prjcCd:        r.PRJC_CD || '',
   };
 }
 
@@ -315,7 +340,7 @@ async function fetchSeoul(existing) {
       console.log(`[SEOUL API] ✓ upisRebuild 성공 — ${rawRows.length}건`);
       console.log(`[FIELDS] ${Object.keys(rawRows[0]).join(', ')}`);
       const s = rawRows[0];
-      console.log(`[SAMPLE] RGN_NM="${s.RGN_NM}" LOGVM="${s.LOGVM}" PSTN_NM="${s.PSTN_NM}" RPT_TYPE="${s.RPT_TYPE}" LCLSF="${s.LCLSF}" MCLSF="${s.MCLSF}" SCLSF="${s.SCLSF}"`);
+      console.log(`[SAMPLE] RGN_NM="${s.RGN_NM}" LOGVM="${s.LOGVM}" PRJC_CD="${s.PRJC_CD}" LCLSF="${s.LCLSF}" MCLSF="${s.MCLSF}" SCLSF="${s.SCLSF}"`);
     }
   } catch (e) {
     console.warn(`[SEOUL] 실패: ${e.message} — 기존 데이터 유지`);
@@ -382,10 +407,25 @@ async function main() {
     fetchGyeonggi(existing),
   ]);
 
-  // 서울 API 접근 가능 시 단계 API 탐색 (OA-2166/2167/15065)
   if (SEOUL_KEY && seoulProjects.some(p => p.id?.startsWith('api_'))) {
-    await discoverStageApi(SEOUL_KEY);
+    const bizMap = await fetchProgressStages(SEOUL_KEY);
+    if (bizMap) {
+      let matched = 0;
+      for (const p of seoulProjects) {
+        const entry = p._prjcCd ? bizMap[p._prjcCd] : null;
+        if (entry) {
+          p.stage_idx  = getStageIdx(entry.seNm);
+          p.stage      = entry.seNm;
+          p.stage_date = entry.day ? entry.day.substring(0, 6) : p.stage_date;
+          matched++;
+        }
+      }
+      console.log(`[STAGE] ${matched}/${seoulProjects.length} 구역 단계 업데이트`);
+      const unmatched = seoulProjects.filter(p => p._prjcCd && !bizMap[p._prjcCd]).slice(0, 3);
+      if (unmatched.length) console.log(`[STAGE] 미매칭 샘플: ${unmatched.map(p => p._prjcCd).join(', ')}`);
+    }
   }
+  for (const p of [...seoulProjects, ...ggProjects]) delete p._prjcCd;
 
   const merged     = [...seoulProjects, ...ggProjects];
   const seoulCount = seoulProjects.length;
