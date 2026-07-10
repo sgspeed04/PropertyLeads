@@ -8,10 +8,10 @@
  * ── 사용 API ──────────────────────────────────────────────────────────────────
  *  [서울] openapi.seoul.go.kr/rest
  *    OA-2253 upisRebuild : 정비구역 현황 (6577건) — 구역 위치·유형 (단계=구역지정)
- *    ※ OA-2253은 구역 지정 레지스트리. 추진단계 데이터는 OA-2254에 있으나
- *      Azure GitHub Actions 러너에서 해당 백엔드 서버가 TCP 차단됨 (10s timeout).
- *      따라서 모든 서울 레코드의 stage_idx=0 (구역지정). 추후 한국 내 실행 환경이
- *      확보되면 OA-2254 서비스명 확인 후 단계 데이터 통합 가능.
+ *    CleanupBussinessProgress (OA-2254 추진경과, BIZ_NO/SE_NM/SE_CD/DAY)
+ *      기본 포트: http://openapi.seoul.go.kr:8088 (XML/JSON)
+ *      HTTPS:443 뿐 아니라 HTTP:8088도 테스트 중 — Azure TCP 차단 여부 확인 필요
+ *      서비스명 출처: github.com/c-yeonwoo/signal-apt (redev.py)
  *  [경기] openapi.gg.go.kr  GenrlImprvBizpropls / TBGRISSMSCLBSNSM
  *    ※ 경기도 API도 Azure에서 TCP 차단 — 기존 데이터 유지.
  * ─────────────────────────────────────────────────────────────────────────────
@@ -158,48 +158,36 @@ async function fetchSeoulAllPages(serviceName) {
   return allRows;
 }
 
-// ── OA-2166/2167/15065 서비스ID 탐색 ──────────────────────────────────────────
-// 단계별 현황(OA-2167)이 있으면 stage_idx 문제 해결 가능
-const STAGE_API_CANDIDATES = [
-  // OA-2167 "단계별 현황" 후보
-  'upisRbldStts',  // rebuild + 현황(status)
-  'upisRbldPhase', // rebuild + phase
-  'upisRbldStep',  // rebuild + step
-  'upisBizPhase',  // biz + phase
-  'upisRbldStg',   // rebuild + stage
-  // OA-2166 "정비사업 정보" 후보
-  'upisRbldInfo',  // rebuild + info
-  'upisBizInfo',   // biz + info
-  // OA-15065 "추진현황(조합)" 후보
-  'upisAscPrgs',   // association + progress
-  'upisRbldAsc',   // rebuild + association
-];
+// ── 추진경과 API 접근 테스트 ───────────────────────────────────────────────────
+// 서비스명 확인 출처: github.com/c-yeonwoo/signal-apt (redev.py)
+//   CleanupBussinessProgress : BIZ_NO / SE_NM(단계명) / SE_CD(단계코드) / DAY
+//   기본 URL: http://openapi.seoul.go.kr:8088/{key}/xml/CleanupBussinessProgress/start/end/
+//   HTTPS:443 뿐 아니라 HTTP:8088 도 테스트 — 포트별로 다른 백엔드 서버 사용
 
 async function discoverStageApi(seoulKey) {
-  console.log('[STAGE API] OA-2166/2167/15065 서비스ID 탐색 시작...');
-  for (const svcName of STAGE_API_CANDIDATES) {
+  console.log('[STAGE API] CleanupBussinessProgress 포트별 접근 테스트...');
+  const tests = [
+    { label: 'HTTP:8088/json',  url: `http://openapi.seoul.go.kr:8088/${seoulKey}/json/CleanupBussinessProgress/1/3/` },
+    { label: 'HTTP:8088/xml',   url: `http://openapi.seoul.go.kr:8088/${seoulKey}/xml/CleanupBussinessProgress/1/3/`  },
+    { label: 'HTTPS:443/json',  url: `https://openapi.seoul.go.kr:443/rest/${seoulKey}/json/CleanupBussinessProgress/1/3/` },
+    { label: 'HTTP:8088/upisNewtown', url: `http://openapi.seoul.go.kr:8088/${seoulKey}/json/upisNewtown/1/3/` },
+  ];
+  for (const { label, url } of tests) {
     const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 15000);
+    const timer = setTimeout(() => ctrl.abort(), 12000);
     try {
-      const url = `https://openapi.seoul.go.kr:443/rest/${seoulKey}/json/${svcName}/1/3/`;
-      const res = await fetch(url, { headers: FETCH_HEADERS, signal: ctrl.signal });
+      const res = await fetch(url, { signal: ctrl.signal });
       clearTimeout(timer);
-      const json = await res.json();
-      const root = json[svcName] || json;
-      const code = root.RESULT?.CODE || '';
-      if (code.includes('INFO-000') && root.row?.length > 0) {
-        console.log(`[STAGE API] ✓ 발견: "${svcName}" — ${root.list_total_count}건`);
-        console.log(`[STAGE API FIELDS] ${Object.keys(root.row[0]).join(', ')}`);
-        console.log(`[STAGE API SAMPLE] ${JSON.stringify(root.row[0]).substring(0, 500)}`);
-        return svcName;
-      }
-      console.log(`[STAGE API] ✗ ${svcName}: ${code} ${root.RESULT?.MESSAGE || ''}`);
+      const text = await res.text();
+      console.log(`[STAGE API] ✓ ${label}: HTTP ${res.status} — 응답길이 ${text.length}`);
+      console.log(`[STAGE API PREVIEW] ${text.substring(0, 300)}`);
+      return label;
     } catch (e) {
       clearTimeout(timer);
-      console.log(`[STAGE API] ✗ ${svcName}: ${e.message.substring(0, 60)}`);
+      console.log(`[STAGE API] ✗ ${label}: ${e.message.substring(0, 80)}`);
     }
   }
-  console.log('[STAGE API] 탐색 완료 — 서비스ID 미확인');
+  console.log('[STAGE API] 모든 포트/포맷 접근 불가 — Azure TCP 차단 확인');
   return null;
 }
 
