@@ -179,6 +179,11 @@ async function fetchProgressStages(seoulKey) {
       console.log(`[STAGE FIELDS] ${Object.keys(allRows[0]).join(', ')}`);
       console.log(`[STAGE SAMPLE ROW] ${JSON.stringify(allRows[0])}`);
     }
+    const withTtl = allRows.filter(r => (r.TTL || '').trim());
+    const withDtl = allRows.filter(r => (r.DTL_CN || '').trim());
+    console.log(`[STAGE TTL/DTL_CN] TTL 있음: ${withTtl.length}건, DTL_CN 있음: ${withDtl.length}건 (첫 페이지 ${allRows.length}건 중)`);
+    for (const r of withTtl.slice(0, 5)) console.log(`  TTL SAMPLE: BIZ_NO=${r.BIZ_NO} TTL="${r.TTL}"`);
+    for (const r of withDtl.slice(0, 5)) console.log(`  DTL_CN SAMPLE: BIZ_NO=${r.BIZ_NO} DTL_CN="${r.DTL_CN}"`);
   } catch (e) {
     console.warn(`[STAGE API] 접근 실패: ${e.message} — stage_idx 미갱신`);
     return null;
@@ -217,6 +222,38 @@ async function fetchProgressStages(seoulKey) {
   for (const [bizNo, v] of samples)
     console.log(`  BIZ_NO="${bizNo}" SE_CD=${v.seCD} SE_NM="${v.seNm}" DAY="${v.day}"`);
   return bizMap;
+}
+
+// ── BIZ_NO ↔ 사업명 매핑용 형제 서비스 탐색 (임시 진단) ────────────────────────
+const BIZ_NAME_CANDIDATES = [
+  'CleanupBussinessInfo', 'CleanupBussinessBasic', 'CleanupBussinessBasics',
+  'CleanupBussinessGnrlStus', 'CleanupBussinessOutline', 'CleanupBussinessStus',
+  'CleanupBussinessList', 'CleanupBussinessMst', 'CleanupBussinessSmry',
+  'CleanupBussinessCurrent', 'CleanupBussinessGenStts', 'CleanupBussinessStatus',
+  'CleanupBussiness', 'CleanupBussinessArea', 'CleanupBussinessZone',
+];
+
+async function discoverBizNameApi(seoulKey) {
+  console.log('[BIZ-NAME] 사업명 매핑용 형제 서비스 탐색 시작...');
+  for (const svc of BIZ_NAME_CANDIDATES) {
+    try {
+      const url = `http://openapi.seoul.go.kr:8088/${seoulKey}/json/${svc}/1/3/`;
+      const res  = await fetchWithTimeout(url, 12000);
+      const json = await res.json();
+      const root = json[svc] || json;
+      const code = root.RESULT?.CODE || '';
+      if (code.includes('INFO-000') && root.row?.length > 0) {
+        console.log(`[BIZ-NAME] ✓ 발견: "${svc}" — ${root.list_total_count}건`);
+        console.log(`[BIZ-NAME FIELDS] ${Object.keys(root.row[0]).join(', ')}`);
+        console.log(`[BIZ-NAME SAMPLE] ${JSON.stringify(root.row[0])}`);
+      } else {
+        console.log(`[BIZ-NAME] ✗ ${svc}: ${code} ${root.RESULT?.MESSAGE || ''}`);
+      }
+    } catch (e) {
+      console.log(`[BIZ-NAME] ✗ ${svc}: ${e.message.substring(0, 80)}`);
+    }
+  }
+  console.log('[BIZ-NAME] 탐색 완료');
 }
 
 // ── openapi.gg.go.kr 경기도 API 페이지 요청 ─────────────────────────────────
@@ -416,6 +453,7 @@ async function main() {
 
   if (SEOUL_KEY && seoulProjects.some(p => p.id?.startsWith('api_'))) {
     const bizMap = await fetchProgressStages(SEOUL_KEY);
+    await discoverBizNameApi(SEOUL_KEY);
     if (bizMap) {
       const sampleKeys = seoulProjects.slice(0, 3).map(p => p._prjcCd);
       const bizKeys    = Object.keys(bizMap).slice(0, 3);
