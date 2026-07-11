@@ -304,7 +304,7 @@ function rowToProject(r, idx, region = '서울') {
     hangang:        false,
     completion_est: '',
     ref_note:       '',
-    _prjcCd:        r.PRJC_CD || '',
+    _prjcCd:        r.RPT_MNG_CD || r.PRJC_CD || '',
   };
 }
 
@@ -340,7 +340,10 @@ async function fetchSeoul(existing) {
       console.log(`[SEOUL API] ✓ upisRebuild 성공 — ${rawRows.length}건`);
       console.log(`[FIELDS] ${Object.keys(rawRows[0]).join(', ')}`);
       const s = rawRows[0];
-      console.log(`[SAMPLE] RGN_NM="${s.RGN_NM}" LOGVM="${s.LOGVM}" PRJC_CD="${s.PRJC_CD}" LCLSF="${s.LCLSF}" MCLSF="${s.MCLSF}" SCLSF="${s.SCLSF}"`);
+      console.log(`[SAMPLE] RGN_NM="${s.RGN_NM}" RPT_MNG_CD="${s.RPT_MNG_CD}" PRJC_CD="${s.PRJC_CD}" DCSN_ANCMNT_MNG_CD="${s.DCSN_ANCMNT_MNG_CD}" SCLSF="${s.SCLSF}"`);
+      // Log a few more to see RPT_MNG_CD format across records
+      for (const r of rawRows.slice(1, 4))
+        console.log(`  MORE: RPT_MNG_CD="${r.RPT_MNG_CD}" PRJC_CD="${r.PRJC_CD}" RGN_NM="${r.RGN_NM}"`);
     }
   } catch (e) {
     console.warn(`[SEOUL] 실패: ${e.message} — 기존 데이터 유지`);
@@ -410,6 +413,10 @@ async function main() {
   if (SEOUL_KEY && seoulProjects.some(p => p.id?.startsWith('api_'))) {
     const bizMap = await fetchProgressStages(SEOUL_KEY);
     if (bizMap) {
+      const sampleKeys = seoulProjects.slice(0, 3).map(p => p._prjcCd);
+      const bizKeys    = Object.keys(bizMap).slice(0, 3);
+      console.log(`[JOIN] 프로젝트 키 샘플: ${sampleKeys.join(' | ')}`);
+      console.log(`[JOIN] BIZ_NO 샘플:    ${bizKeys.join(' | ')}`);
       let matched = 0;
       for (const p of seoulProjects) {
         const entry = p._prjcCd ? bizMap[p._prjcCd] : null;
