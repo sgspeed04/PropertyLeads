@@ -1,47 +1,62 @@
 {
   "updated_at": "2026-07-11",
-  "source": "sample",
-  "note": "샘플 데이터. scripts/fetch-nohuodo.js 실행 시 국토부 건축물대장 API 기반 실데이터로 갱신됩니다.",
+  "source": "data_go_kr",
+  "note": "국토교통부 건축물대장 기본개요 API 기반 실데이터 (연 1회 갱신)",
   "dongs": [
     {
       "dong": "한남동",
       "district": "용산구",
+      "sigunguCd": "11170",
+      "bjdongCd": "10500",
       "lat": 37.5345,
       "lng": 127.0016,
-      "pct_30y": 71,
-      "avg_age_y": 39
+      "pct_30y": 92,
+      "avg_age_y": 64,
+      "total_buildings": 100
     },
     {
       "dong": "청파동",
       "district": "용산구",
+      "sigunguCd": "11170",
+      "bjdongCd": "10100",
       "lat": 37.5442,
       "lng": 126.9714,
-      "pct_30y": 65,
-      "avg_age_y": 36
+      "pct_30y": 57,
+      "avg_age_y": 44,
+      "total_buildings": 100
     },
     {
       "dong": "이촌동",
       "district": "용산구",
+      "sigunguCd": "11170",
+      "bjdongCd": "10600",
       "lat": 37.5195,
       "lng": 126.9701,
-      "pct_30y": 55,
-      "avg_age_y": 32
+      "pct_30y": 40,
+      "avg_age_y": 26,
+      "total_buildings": 10
     },
     {
       "dong": "흑석동",
       "district": "동작구",
+      "sigunguCd": "11590",
+      "bjdongCd": "10900",
       "lat": 37.5098,
       "lng": 126.9635,
-      "pct_30y": 63,
-      "avg_age_y": 35
+      "pct_30y": 51,
+      "avg_age_y": 28,
+      "total_buildings": 100
     },
     {
       "dong": "노량진동",
       "district": "동작구",
+      "sigunguCd": "11590",
+      "bjdongCd": "10100",
       "lat": 37.5136,
       "lng": 126.9429,
-      "pct_30y": 68,
-      "avg_age_y": 37
+      "pct_30y": 62,
+      "avg_age_y": 38,
+      "total_buildings": 100
     },
     {
       "dong": "봉천동",
@@ -62,26 +77,35 @@
     {
       "dong": "아현동",
       "district": "마포구",
+      "sigunguCd": "11440",
+      "bjdongCd": "10700",
       "lat": 37.5567,
       "lng": 126.9558,
-      "pct_30y": 73,
-      "avg_age_y": 40
+      "pct_30y": 64,
+      "avg_age_y": 42,
+      "total_buildings": 100
     },
     {
       "dong": "염리동",
       "district": "마포구",
+      "sigunguCd": "11440",
+      "bjdongCd": "10800",
       "lat": 37.5497,
       "lng": 126.9498,
-      "pct_30y": 69,
-      "avg_age_y": 38
+      "pct_30y": 85,
+      "avg_age_y": 45,
+      "total_buildings": 100
     },
     {
       "dong": "미아동",
       "district": "강북구",
+      "sigunguCd": "11305",
+      "bjdongCd": "10100",
       "lat": 37.641,
       "lng": 127.027,
-      "pct_30y": 74,
-      "avg_age_y": 41
+      "pct_30y": 79,
+      "avg_age_y": 40,
+      "total_buildings": 100
     },
     {
       "dong": "수유동",
@@ -94,90 +118,112 @@
     {
       "dong": "장위동",
       "district": "성북구",
+      "sigunguCd": "11290",
+      "bjdongCd": "11900",
       "lat": 37.6075,
       "lng": 127.0474,
-      "pct_30y": 71,
-      "avg_age_y": 39
+      "pct_30y": 56,
+      "avg_age_y": 41,
+      "total_buildings": 100
     },
     {
       "dong": "길음동",
       "district": "성북구",
+      "sigunguCd": "11290",
+      "bjdongCd": "10700",
       "lat": 37.6038,
       "lng": 127.0263,
-      "pct_30y": 60,
-      "avg_age_y": 33
+      "pct_30y": 26,
+      "avg_age_y": 29,
+      "total_buildings": 100
     },
     {
       "dong": "가리봉동",
       "district": "구로구",
+      "sigunguCd": "11530",
+      "bjdongCd": "10800",
       "lat": 37.4805,
       "lng": 126.8832,
-      "pct_30y": 76,
-      "avg_age_y": 43
+      "pct_30y": 62,
+      "avg_age_y": 34,
+      "total_buildings": 100
     },
     {
       "dong": "신길동",
       "district": "영등포구",
+      "sigunguCd": "11560",
+      "bjdongCd": "11600",
       "lat": 37.5154,
       "lng": 126.9098,
       "pct_30y": 70,
-      "avg_age_y": 38
+      "avg_age_y": 37,
+      "total_buildings": 100
     },
     {
       "dong": "대림동",
       "district": "영등포구",
+      "sigunguCd": "11560",
+      "bjdongCd": "10900",
       "lat": 37.4953,
       "lng": 126.8959,
-      "pct_30y": 72,
-      "avg_age_y": 40
-    },
-    {
-      "dong": "영등포동",
-      "district": "영등포구",
-      "lat": 37.5258,
-      "lng": 126.8975,
-      "pct_30y": 64,
-      "avg_age_y": 35
+      "pct_30y": 48,
+      "avg_age_y": 37,
+      "total_buildings": 100
     },
     {
       "dong": "잠실동",
       "district": "송파구",
+      "sigunguCd": "11710",
+      "bjdongCd": "10800",
       "lat": 37.5133,
       "lng": 127.099,
-      "pct_30y": 72,
-      "avg_age_y": 39
+      "pct_30y": 42,
+      "avg_age_y": 26,
+      "total_buildings": 100
     },
     {
       "dong": "대치동",
       "district": "강남구",
+      "sigunguCd": "11680",
+      "bjdongCd": "10600",
       "lat": 37.5044,
       "lng": 127.0594,
-      "pct_30y": 57,
-      "avg_age_y": 31
+      "pct_30y": 76,
+      "avg_age_y": 39,
+      "total_buildings": 100
     },
     {
       "dong": "압구정동",
       "district": "강남구",
+      "sigunguCd": "11680",
+      "bjdongCd": "10300",
       "lat": 37.527,
       "lng": 127.0296,
-      "pct_30y": 78,
-      "avg_age_y": 44
+      "pct_30y": 50,
+      "avg_age_y": 28,
+      "total_buildings": 100
     },
     {
       "dong": "개포동",
       "district": "강남구",
+      "sigunguCd": "11680",
+      "bjdongCd": "10700",
       "lat": 37.4834,
       "lng": 127.0523,
-      "pct_30y": 46,
-      "avg_age_y": 28
+      "pct_30y": 64,
+      "avg_age_y": 33,
+      "total_buildings": 100
     },
     {
       "dong": "반포동",
       "district": "서초구",
+      "sigunguCd": "11650",
+      "bjdongCd": "10600",
       "lat": 37.5085,
       "lng": 126.999,
-      "pct_30y": 70,
-      "avg_age_y": 38
+      "pct_30y": 62,
+      "avg_age_y": 30,
+      "total_buildings": 100
     },
     {
       "dong": "목동",
@@ -188,36 +234,37 @@
       "avg_age_y": 32
     },
     {
-      "dong": "신정동",
-      "district": "양천구",
-      "lat": 37.5311,
-      "lng": 126.8625,
-      "pct_30y": 52,
-      "avg_age_y": 30
-    },
-    {
       "dong": "천호동",
       "district": "강동구",
+      "sigunguCd": "11740",
+      "bjdongCd": "10200",
       "lat": 37.5408,
       "lng": 127.1242,
-      "pct_30y": 65,
-      "avg_age_y": 36
+      "pct_30y": 73,
+      "avg_age_y": 30,
+      "total_buildings": 100
     },
     {
       "dong": "둔촌동",
       "district": "강동구",
+      "sigunguCd": "11740",
+      "bjdongCd": "10300",
       "lat": 37.5447,
       "lng": 127.1303,
-      "pct_30y": 48,
-      "avg_age_y": 29
+      "pct_30y": 51,
+      "avg_age_y": 25,
+      "total_buildings": 100
     },
     {
       "dong": "고덕동",
       "district": "강동구",
+      "sigunguCd": "11740",
+      "bjdongCd": "10500",
       "lat": 37.557,
       "lng": 127.1466,
-      "pct_30y": 62,
-      "avg_age_y": 34
+      "pct_30y": 64,
+      "avg_age_y": 31,
+      "total_buildings": 100
     },
     {
       "dong": "상계동",
@@ -230,50 +277,24 @@
     {
       "dong": "금호동",
       "district": "성동구",
+      "sigunguCd": "11200",
+      "bjdongCd": "10600",
       "lat": 37.5543,
       "lng": 127.0199,
-      "pct_30y": 66,
-      "avg_age_y": 37
-    },
-    {
-      "dong": "하왕십리동",
-      "district": "성동구",
-      "lat": 37.5617,
-      "lng": 127.0299,
-      "pct_30y": 58,
-      "avg_age_y": 32
+      "pct_30y": 97,
+      "avg_age_y": 52,
+      "total_buildings": 100
     },
     {
       "dong": "자양동",
       "district": "광진구",
+      "sigunguCd": "11215",
+      "bjdongCd": "10300",
       "lat": 37.5413,
       "lng": 127.0789,
-      "pct_30y": 59,
-      "avg_age_y": 32
-    },
-    {
-      "dong": "화양동",
-      "district": "광진구",
-      "lat": 37.5431,
-      "lng": 127.0681,
-      "pct_30y": 54,
-      "avg_age_y": 31
-    },
-    {
-      "dong": "노량진동",
-      "district": "동작구",
-      "lat": 37.5108,
-      "lng": 126.9451,
-      "pct_30y": 68,
-      "avg_age_y": 37
-    },
-    {
-      "dong": "한강진동",
-      "district": "용산구",
-      "lat": 37.5354,
-      "lng": 127.0019,
-      "pct_30y": 62,
-      "avg_age_y": 34
+      "pct_30y": 46,
+      "avg_age_y": 27,
+      "total_buildings": 100
     }
   ]
 }
