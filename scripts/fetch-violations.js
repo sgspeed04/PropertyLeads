@@ -190,6 +190,45 @@ function matchesViolationKeyword(title) {
   return VIOLATION_KEYWORDS.some(k => title.includes(k));
 }
 
+// ── 상세 페이지에서 주소·담당부서·연락처를 뽑아낸다 ──────────────────────────
+// 목록 제목만으로는 리드를 실행할 수 없다(어느 건물인지, 누구에게 연락할지
+// 모름). 매칭된 공고 수가 적으므로(하루 몇 건) 상세 페이지까지 들어가서
+// 본문 텍스트에서 정규식으로 최대한 뽑아내고, 실패하면 스니펫을 남겨
+// 사람이 직접 확인할 수 있게 한다.
+function extractAddress(text) {
+  const m = text.match(/([가-힣]+(?:시|도)\s*[가-힣0-9]+(?:시|군|구)\s*[가-힣0-9]+(?:동|읍|면|리)\s*[0-9]+(?:-[0-9]+)?(?:번지)?)/);
+  if (m) return m[0].replace(/\s+/g, ' ').trim();
+  const m2 = text.match(/([가-힣0-9]+(?:동|읍|면|리))\s*([0-9]+(?:-[0-9]+)?)\s*번지/);
+  if (m2) return `${m2[1]} ${m2[2]}번지`;
+  return null;
+}
+function extractPhone(text) {
+  const m = text.match(/(0\d{1,2}[-.\s]?\d{3,4}[-.\s]?\d{4})/);
+  return m ? m[0].replace(/\s+/g, '') : null;
+}
+function extractDept(text) {
+  const m = text.match(/([가-힣]{2,10}(?:건축과|주택과|주택관리과|건축지도과|안전건축과))/);
+  return m ? m[0] : null;
+}
+
+async function fetchDetail(url) {
+  try {
+    const html = await fetchPage(url);
+    const $ = cheerio.load(html);
+    $('script,style,nav,header,footer').remove();
+    const bodyText = $('body').text().replace(/[ \t]+/g, ' ').replace(/\n+/g, '\n').trim();
+    return {
+      address: extractAddress(bodyText),
+      contact_phone: extractPhone(bodyText),
+      contact_dept: extractDept(bodyText),
+      detail_snippet: bodyText.slice(0, 400),
+    };
+  } catch (e) {
+    console.warn(`    상세 페이지 실패 (${url}): ${e.message}`);
+    return { address: null, contact_phone: null, contact_dept: null, detail_snippet: null };
+  }
+}
+
 async function main() {
   let existing = { updated_at: TODAY, notices: [] };
   if (fs.existsSync(DATA_FILE)) {
@@ -218,6 +257,21 @@ async function main() {
 
   if (matched.length === 0) {
     console.log('[DONE] 게시판은 정상 수집됐지만 위반건축물 관련 공고는 없었습니다. updated_at만 갱신.');
+  }
+
+  // 상세 페이지 보강 — 이미 상세 정보가 있는 기존 공고는 다시 안 긁는다(요청 절약 + 수기 수정 보존).
+  const existingByUrl = new Map(existing.notices.map(n => [n.url, n]));
+  for (const n of matched) {
+    const already = existingByUrl.get(n.url);
+    if (already && already.detail_snippet) { Object.assign(n, {
+      address: already.address, contact_phone: already.contact_phone,
+      contact_dept: already.contact_dept, detail_snippet: already.detail_snippet,
+    }); continue; }
+    console.log(`  [상세] ${n.district} — ${n.title}`);
+    const detail = await fetchDetail(n.url);
+    Object.assign(n, detail);
+    console.log(`    주소: ${detail.address || '(추출 실패)'} / 담당부서: ${detail.contact_dept || '-'} / 연락처: ${detail.contact_phone || '-'}`);
+    await new Promise(r => setTimeout(r, 300));
   }
 
   // 기존 공고와 URL 기준 병합 (중복 제거, 최신 수집 결과 우선)
