@@ -175,6 +175,10 @@ async function fetchProgressStages(seoulKey) {
     total = parseInt(root.list_total_count || 0);
     allRows.push(...(root.row || []));
     console.log(`[STAGE API] CleanupBussinessProgress: 전체 ${total}건`);
+    if (allRows[0]) {
+      console.log(`[STAGE FIELDS] ${Object.keys(allRows[0]).join(', ')}`);
+      console.log(`[STAGE SAMPLE ROW] ${JSON.stringify(allRows[0])}`);
+    }
   } catch (e) {
     console.warn(`[STAGE API] 접근 실패: ${e.message} — stage_idx 미갱신`);
     return null;
