@@ -44,7 +44,7 @@
 - LCLSF 필드 기반으로 재개발/재건축 유형 분류, 구 이름 정규화(예: "서울특별시 광진구" → "광진구")
 - `scripts/fetch-redevelopment.js`가 `.github/workflows/update-redevelopment.yml`을 통해 매일 00:00 KST 자동 실행 (서울 upisRebuild API + 경기도 data.go.kr API)
 - `scripts/fetch-nohuodo.js`는 노후도 데이터를 매년 1월 1일 09:00 KST 1회만 갱신 (`data/nohuodo.json`)
-- 추진단계(stage_idx) 데이터는 OA-2254 API가 별도 백엔드라 클라우드 러너(Azure)에서 TCP 차단됨 — 현재 전체 0으로 표시, 해결하려면 한국 리전 러너 또는 대체 소스(cleanhome.or.kr) 필요
+- 추진단계(stage_idx) 데이터: CleanupBussinessProgress(OA-2254, HTTP:8088)는 Azure 러너에서도 접근 가능한 것으로 확인됨(TCP 차단 아니었음). 다만 이 API의 BIZ_NO는 upisRebuild의 PRJC_CD/RPT_MNG_CD와 채번 체계가 전혀 달라(둘 다 앞 5자리 구 코드만 공통) 코드로 조인 불가 — 형제 서비스(사업명 반환 API)도 존재하지 않음. 대신 TTL(공고 제목)·DTL_CN(상세내용) 필드에 구역명이 텍스트로 실려있는 것을 이용해, `normalizeProjectName()`으로 양쪽 이름에서 행정 접미어(구역/지구/재개발 등)를 제거한 뒤 같은 구 코드 내에서 부분일치시키는 방식으로 매칭 (`fetchProgressStages` + `main()`의 조인 로직, `scripts/fetch-redevelopment.js`). 서울 761개 구역 중 약 128개(~17%)만 CleanupBussinessProgress에 진행 이력이 있어 매칭됨 — 나머지는 구역지정(stage_idx=0) 단계에 머물러 있거나 조합 결성 전이라 추진경과 데이터 자체가 없는 경우로, 매칭 알고리즘의 한계가 아니라 데이터 커버리지의 한계임
 - git 자동커밋 시 `git reset --hard origin/main` 후 새 데이터만 복원하는 방식으로 push 충돌 방지
 
 ## 필요한 GitHub Actions Secrets
