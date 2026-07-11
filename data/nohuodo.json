@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-07-10",
+  "updated_at": "2026-07-11",
   "source": "sample",
   "note": "샘플 데이터. scripts/fetch-nohuodo.js 실행 시 국토부 건축물대장 API 기반 실데이터로 갱신됩니다.",
   "dongs": [
