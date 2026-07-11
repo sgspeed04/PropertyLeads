@@ -8,9 +8,12 @@
  * ── 사용 API ──────────────────────────────────────────────────────────────────
  *  [서울] openapi.seoul.go.kr
  *    OA-2253 upisRebuild (HTTPS:443)        : 정비구역 현황 — 구역 위치·유형·PRJC_CD
- *    OA-2254 CleanupBussinessProgress (HTTP:8088) : 추진경과 — BIZ_NO/SE_NM/SE_CD/DAY
- *      BIZ_NO ≈ PRJC_CD ({district_code}-{seq}), SE_CD 최고값 = 현재 단계
- *      서비스명 출처: github.com/c-yeonwoo/signal-apt (redev.py)
+ *    OA-2254 CleanupBussinessProgress (HTTP:8088) : 추진경과 — BIZ_NO/SE_NM/SE_CD/DAY/TTL/DTL_CN
+ *      ※ BIZ_NO({district_code}-{seq})는 PRJC_CD/RPT_MNG_CD와 채번 체계가 전혀 달라
+ *        코드로는 조인 불가 (둘 다 앞 5자리 구 코드만 공통).
+ *        대신 TTL(공고 제목)·DTL_CN(상세내용)에 실린 구역명 텍스트를
+ *        normalizeProjectName()으로 정규화해 upisRebuild의 RGN_NM과
+ *        같은 구 코드 내에서 부분일치시켜 매칭한다 (fetchProgressStages 참고).
  *  [경기] openapi.gg.go.kr  GenrlImprvBizpropls / TBGRISSMSCLBSNSM
  *    ※ 경기도 API도 Azure에서 TCP 차단 — 기존 데이터 유지.
  * ─────────────────────────────────────────────────────────────────────────────
@@ -43,6 +46,14 @@ function getStageIdx(name = '') {
     if (name.includes(key)) return idx;
   }
   return 0;
+}
+
+// ── 구역명 정규화 (BIZ_NO 텍스트 매칭용) ────────────────────────────────────
+// "천호A1-1구역", "전농7재정비촉진구역" 등에서 행정 접미어를 제거해
+// "천호A11", "전농7" 같은 핵심 식별자만 남긴다.
+const NAME_SUFFIX_RE = /(재정비촉진구역|도시환경정비지구|주택재개발정비구역|주택재건축정비구역|재개발사업구역|재건축사업구역|정비촉진구역|정비촉진지구|재개발구역|재건축구역|재개발지구|재건축지구|정비구역|정비지구|촉진구역|촉진지구|재개발|재건축|정비사업|지구|구역|사업)/g;
+function normalizeProjectName(s = '') {
+  return s.replace(/[^가-힣0-9A-Za-z]/g, '').replace(NAME_SUFFIX_RE, '');
 }
 
 function normCoord(v) {
@@ -159,7 +170,8 @@ async function fetchSeoulAllPages(serviceName) {
 
 // ── 추진경과 단계 수집 (CleanupBussinessProgress, HTTP:8088만 접근 가능) ────────
 // BIZ_NO = {district_code}-{seq}, SE_NM = 단계명, SE_CD = 단계코드(숫자 클수록 진행)
-// 출처: github.com/c-yeonwoo/signal-apt (redev.py)
+// TTL(공고 제목)/DTL_CN(상세내용)에 실린 구역명 텍스트를 코퍼스로 모아
+// upisRebuild의 RGN_NM과 텍스트 매칭시킨다 (BIZ_NO는 PRJC_CD와 직접 조인 불가).
 
 async function fetchProgressStages(seoulKey) {
   const BASE = `http://openapi.seoul.go.kr:8088/${seoulKey}/json/CleanupBussinessProgress`;
@@ -175,15 +187,6 @@ async function fetchProgressStages(seoulKey) {
     total = parseInt(root.list_total_count || 0);
     allRows.push(...(root.row || []));
     console.log(`[STAGE API] CleanupBussinessProgress: 전체 ${total}건`);
-    if (allRows[0]) {
-      console.log(`[STAGE FIELDS] ${Object.keys(allRows[0]).join(', ')}`);
-      console.log(`[STAGE SAMPLE ROW] ${JSON.stringify(allRows[0])}`);
-    }
-    const withTtl = allRows.filter(r => (r.TTL || '').trim());
-    const withDtl = allRows.filter(r => (r.DTL_CN || '').trim());
-    console.log(`[STAGE TTL/DTL_CN] TTL 있음: ${withTtl.length}건, DTL_CN 있음: ${withDtl.length}건 (첫 페이지 ${allRows.length}건 중)`);
-    for (const r of withTtl.slice(0, 5)) console.log(`  TTL SAMPLE: BIZ_NO=${r.BIZ_NO} TTL="${r.TTL}"`);
-    for (const r of withDtl.slice(0, 5)) console.log(`  DTL_CN SAMPLE: BIZ_NO=${r.BIZ_NO} DTL_CN="${r.DTL_CN}"`);
   } catch (e) {
     console.warn(`[STAGE API] 접근 실패: ${e.message} — stage_idx 미갱신`);
     return null;
@@ -206,54 +209,25 @@ async function fetchProgressStages(seoulKey) {
     await new Promise(r => setTimeout(r, 200));
   }
 
-  // BIZ_NO별 최고 SE_CD(가장 진행된 단계) 선택
+  // BIZ_NO별 최고 SE_CD(가장 진행된 단계) + TTL/DTL_CN 텍스트 코퍼스 수집
   const bizMap = {};
   for (const row of allRows) {
     const bizNo = row.BIZ_NO;
     if (!bizNo) continue;
+    if (!bizMap[bizNo]) bizMap[bizNo] = { seCD: -Infinity, seNm: '', day: '', corpus: '' };
+    const entry = bizMap[bizNo];
     const seCD = parseInt(row.SE_CD || 0);
-    if (!bizMap[bizNo] || seCD > bizMap[bizNo].seCD)
-      bizMap[bizNo] = { seCD, seNm: row.SE_NM || '', day: row.DAY || '' };
+    if (seCD > entry.seCD) { entry.seCD = seCD; entry.seNm = row.SE_NM || ''; entry.day = row.DAY || ''; }
+    const text = `${row.TTL || ''} ${row.DTL_CN || ''}`.trim();
+    if (text) entry.corpus += ' ' + text;
+  }
+  for (const bizNo of Object.keys(bizMap)) {
+    bizMap[bizNo].corpusNorm = normalizeProjectName(bizMap[bizNo].corpus);
   }
 
-  const uniq = Object.keys(bizMap).length;
-  console.log(`[STAGE API] 고유 BIZ_NO: ${uniq}건`);
-  const samples = Object.entries(bizMap).slice(0, 3);
-  for (const [bizNo, v] of samples)
-    console.log(`  BIZ_NO="${bizNo}" SE_CD=${v.seCD} SE_NM="${v.seNm}" DAY="${v.day}"`);
+  const withCorpus = Object.values(bizMap).filter(v => v.corpusNorm).length;
+  console.log(`[STAGE API] 고유 BIZ_NO: ${Object.keys(bizMap).length}건 (구역명 텍스트 보유 ${withCorpus}건)`);
   return bizMap;
-}
-
-// ── BIZ_NO ↔ 사업명 매핑용 형제 서비스 탐색 (임시 진단) ────────────────────────
-const BIZ_NAME_CANDIDATES = [
-  'CleanupBussinessInfo', 'CleanupBussinessBasic', 'CleanupBussinessBasics',
-  'CleanupBussinessGnrlStus', 'CleanupBussinessOutline', 'CleanupBussinessStus',
-  'CleanupBussinessList', 'CleanupBussinessMst', 'CleanupBussinessSmry',
-  'CleanupBussinessCurrent', 'CleanupBussinessGenStts', 'CleanupBussinessStatus',
-  'CleanupBussiness', 'CleanupBussinessArea', 'CleanupBussinessZone',
-];
-
-async function discoverBizNameApi(seoulKey) {
-  console.log('[BIZ-NAME] 사업명 매핑용 형제 서비스 탐색 시작...');
-  for (const svc of BIZ_NAME_CANDIDATES) {
-    try {
-      const url = `http://openapi.seoul.go.kr:8088/${seoulKey}/json/${svc}/1/3/`;
-      const res  = await fetchWithTimeout(url, 12000);
-      const json = await res.json();
-      const root = json[svc] || json;
-      const code = root.RESULT?.CODE || '';
-      if (code.includes('INFO-000') && root.row?.length > 0) {
-        console.log(`[BIZ-NAME] ✓ 발견: "${svc}" — ${root.list_total_count}건`);
-        console.log(`[BIZ-NAME FIELDS] ${Object.keys(root.row[0]).join(', ')}`);
-        console.log(`[BIZ-NAME SAMPLE] ${JSON.stringify(root.row[0])}`);
-      } else {
-        console.log(`[BIZ-NAME] ✗ ${svc}: ${code} ${root.RESULT?.MESSAGE || ''}`);
-      }
-    } catch (e) {
-      console.log(`[BIZ-NAME] ✗ ${svc}: ${e.message.substring(0, 80)}`);
-    }
-  }
-  console.log('[BIZ-NAME] 탐색 완료');
 }
 
 // ── openapi.gg.go.kr 경기도 API 페이지 요청 ─────────────────────────────────
@@ -453,25 +427,32 @@ async function main() {
 
   if (SEOUL_KEY && seoulProjects.some(p => p.id?.startsWith('api_'))) {
     const bizMap = await fetchProgressStages(SEOUL_KEY);
-    await discoverBizNameApi(SEOUL_KEY);
     if (bizMap) {
-      const sampleKeys = seoulProjects.slice(0, 3).map(p => p._prjcCd);
-      const bizKeys    = Object.keys(bizMap).slice(0, 3);
-      console.log(`[JOIN] 프로젝트 키 샘플: ${sampleKeys.join(' | ')}`);
-      console.log(`[JOIN] BIZ_NO 샘플:    ${bizKeys.join(' | ')}`);
-      let matched = 0;
-      for (const p of seoulProjects) {
-        const entry = p._prjcCd ? bizMap[p._prjcCd] : null;
-        if (entry) {
-          p.stage_idx  = getStageIdx(entry.seNm);
-          p.stage      = entry.seNm;
-          p.stage_date = entry.day ? entry.day.substring(0, 6) : p.stage_date;
-          matched++;
-        }
+      // 구 코드(5자리, BIZ_NO 접두)별로 후보 그룹핑
+      const byDistrict = {};
+      for (const [bizNo, entry] of Object.entries(bizMap)) {
+        if (!entry.corpusNorm) continue;
+        const distCd = bizNo.split('-')[0];
+        (byDistrict[distCd] ||= []).push({ bizNo, ...entry });
       }
-      console.log(`[STAGE] ${matched}/${seoulProjects.length} 구역 단계 업데이트`);
-      const unmatched = seoulProjects.filter(p => p._prjcCd && !bizMap[p._prjcCd]).slice(0, 3);
-      if (unmatched.length) console.log(`[STAGE] 미매칭 샘플: ${unmatched.map(p => p._prjcCd).join(', ')}`);
+
+      let matched = 0, ambiguous = 0;
+      for (const p of seoulProjects) {
+        const distCd = (p._prjcCd || '').substring(0, 5);
+        const candidates = byDistrict[distCd];
+        if (!candidates) continue;
+        const core = normalizeProjectName(p.name);
+        if (core.length < 2) continue;
+        const hits = candidates.filter(c => c.corpusNorm.includes(core));
+        if (hits.length === 0) continue;
+        if (hits.length > 1) ambiguous++;
+        const best = hits.reduce((a, b) => (b.seCD > a.seCD ? b : a));
+        p.stage_idx  = getStageIdx(best.seNm);
+        p.stage      = best.seNm;
+        p.stage_date = best.day ? best.day.substring(0, 6) : p.stage_date;
+        matched++;
+      }
+      console.log(`[STAGE] ${matched}/${seoulProjects.length} 구역 단계 업데이트 (구역명 텍스트 매칭, 중복후보 ${ambiguous}건)`);
     }
   }
   for (const p of [...seoulProjects, ...ggProjects]) delete p._prjcCd;
