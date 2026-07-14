@@ -16,11 +16,22 @@
  *        같은 구 코드 내에서 부분일치시켜 매칭한다 (fetchProgressStages 참고).
  *  [경기] openapi.gg.go.kr  GenrlImprvBizpropls / TBGRISSMSCLBSNSM
  *    ※ 경기도 API도 Azure에서 TCP 차단 — 기존 데이터 유지.
+ *  [서울] cleanup.seoul.go.kr (정비사업 정보몽땅) — 신속통합기획 후보지
+ *    모아타운/신속통합기획/가로주택정비는 서울 열린데이터광장에 공식 API가
+ *    없다. 대신 정비사업 정보몽땅의 신속통합기획 추진현황 페이지 2개
+ *    (재개발 publicIntgrPlanSttn.do, 재건축 publicIntgrPlanSttn2.do)가
+ *    정적 HTML 테이블이라 크롤링 가능함을 확인함(구/구역명/면적/세대수/
+ *    추진단계/고시일). 좌표가 없어 구 중심좌표에 지터를 줘서 표시하고,
+ *    upisRebuild에 이미 등록된(정식 정비구역 지정된) 동일 구역은
+ *    normalizeProjectName() 기준으로 중복 스킵한다 (fetchSinsoktong 참고).
+ *    가로주택정비(garoHouse.do)는 사업장 목록이 아니라 법령 안내 페이지라
+ *    제외. 모아타운은 이 사이트 메뉴에 없어(별도 시스템으로 추정) 미포함.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
-const fs   = require('fs');
-const path = require('path');
+const fs      = require('fs');
+const path    = require('path');
+const cheerio = require('cheerio');
 
 const DATA_FILE = path.join(__dirname, '..', 'data', 'redevelopment.json');
 const TODAY     = new Date().toISOString().split('T')[0];
@@ -34,9 +45,10 @@ const STAGE_MAP = [
   { key: '착공',       idx: 4 }, { key: '이주',      idx: 4 }, { key: '철거',      idx: 4 },
   { key: '관리처분',   idx: 3 },
   { key: '사업시행',   idx: 2 },
-  { key: '조합설립',   idx: 1 }, { key: '조합인가',  idx: 1 },
+  { key: '조합설립',   idx: 1 }, { key: '조합인가',  idx: 1 }, { key: '시행자지정', idx: 1 },
   { key: '추진위',     idx: 1 }, { key: '준비위',    idx: 1 },
   { key: '정비구역',   idx: 0 }, { key: '구역지정',  idx: 0 }, { key: '구역지',    idx: 0 },
+  { key: '정비계획고시', idx: 0 }, { key: '통심완료', idx: 0 }, { key: '심의', idx: 0 }, { key: '주민공람', idx: 0 },
   { key: '모니터링',   idx: -2 }, { key: '정비예정', idx: -2 }, { key: '관심구역',  idx: -2 },
   { key: '준비단계',   idx: -1 }, { key: '준비위결성',idx: -1 },
 ];
@@ -228,6 +240,76 @@ async function fetchProgressStages(seoulKey) {
   const withCorpus = Object.values(bizMap).filter(v => v.corpusNorm).length;
   console.log(`[STAGE API] 고유 BIZ_NO: ${Object.keys(bizMap).length}건 (구역명 텍스트 보유 ${withCorpus}건)`);
   return bizMap;
+}
+
+// ── 신속통합기획 후보지 수집 (정비사업 정보몽땅, 정적 HTML 테이블) ────────────
+const SINSOKTONG_SOURCES = [
+  { url: 'https://cleanup.seoul.go.kr/cleanup/view/publicIntgrPlanSttn.do',  type: '재개발' },
+  { url: 'https://cleanup.seoul.go.kr/cleanup/view/publicIntgrPlanSttn2.do', type: '재건축' },
+];
+
+async function fetchSinsoktongRows(url) {
+  const res = await fetchWithTimeout(url, 20000);
+  if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+  const html = await res.text();
+  const $ = cheerio.load(html);
+  const rows = [];
+  $('table tbody tr').each((_, el) => {
+    const cells = $(el).find('td').map((_, td) => $(td).text().trim()).get();
+    if (cells.length) rows.push(cells);
+  });
+  return rows;
+}
+
+async function fetchSinsoktong() {
+  const parsed = [];
+  for (const { url, type } of SINSOKTONG_SOURCES) {
+    try {
+      const rows = await fetchSinsoktongRows(url);
+      console.log(`[신통기획] ${type}: ${rows.length}건`);
+      for (const cells of rows) {
+        // 재개발(7열): 연번,자치구,구역명,면적,세대수,추진단계,고시일
+        // 재건축(8열): 연번,구분,자치구,구역명,면적,세대수,추진단계,고시일
+        const isRebuild  = cells.length >= 8;
+        const district    = isRebuild ? cells[2] : cells[1];
+        const name         = isRebuild ? cells[3] : cells[2];
+        const area          = isRebuild ? cells[4] : cells[3];
+        const units          = isRebuild ? cells[5] : cells[4];
+        const stage            = isRebuild ? cells[6] : cells[5];
+        const noticeDate         = isRebuild ? cells[7] : cells[6];
+        if (!district || !name || !DISTRICT_COORD[district]) continue;
+        parsed.push({ district, name, area, units, stage, noticeDate, type });
+      }
+    } catch (e) {
+      console.warn(`[신통기획] ${type} 접근 실패: ${e.message}`);
+    }
+  }
+  return parsed;
+}
+
+function sinsoktongToProject(row, idx) {
+  const center = DISTRICT_COORD[row.district];
+  return {
+    id:             `snt_${idx}`,
+    name:           row.name,
+    region:         '서울',
+    district:       row.district,
+    dong:           '',
+    type:           row.type,
+    stage:          row.stage,
+    stage_idx:      getStageIdx(row.stage),
+    lat:            center[0] + (Math.random() - 0.5) * 0.02,
+    lng:            center[1] + (Math.random() - 0.5) * 0.02,
+    area_m2:        parseInt((row.area || '0').replace(/,/g, '')) || 0,
+    units:          parseInt((row.units || '0').replace(/,/g, '')) || 0,
+    contractor:     '',
+    stage_date:     (row.noticeDate || '').replace(/-/g, '').substring(0, 6),
+    notes:          '',
+    subway:         '',
+    hangang:        false,
+    completion_est: '',
+    ref_note:       '신속통합기획 후보지 (정비사업 정보몽땅)',
+  };
 }
 
 // ── openapi.gg.go.kr 경기도 API 페이지 요청 ─────────────────────────────────
@@ -456,6 +538,30 @@ async function main() {
     }
   }
   for (const p of [...seoulProjects, ...ggProjects]) delete p._prjcCd;
+
+  // 신속통합기획 후보지 — 이미 정비구역 지정되어 upisRebuild에 있는 구역은 중복 스킵
+  try {
+    const sntRows = await fetchSinsoktong();
+    const namesByDistrict = {};
+    for (const p of seoulProjects) {
+      (namesByDistrict[p.district] ||= []).push(normalizeProjectName(p.name));
+    }
+    let sntAdded = 0, sntSkipped = 0;
+    const sntProjects = [];
+    for (const row of sntRows) {
+      const core = normalizeProjectName(row.name);
+      if (core.length < 2) continue;
+      const existingNames = namesByDistrict[row.district] || [];
+      const isDup = existingNames.some(n => n.includes(core) || core.includes(n));
+      if (isDup) { sntSkipped++; continue; }
+      sntProjects.push(sinsoktongToProject(row, sntProjects.length));
+      sntAdded++;
+    }
+    console.log(`[신통기획] 신규 ${sntAdded}건 추가, 기존 구역과 중복 ${sntSkipped}건 스킵`);
+    seoulProjects.push(...sntProjects);
+  } catch (e) {
+    console.warn(`[신통기획] 처리 실패: ${e.message}`);
+  }
 
   const merged     = [...seoulProjects, ...ggProjects];
   const seoulCount = seoulProjects.length;
