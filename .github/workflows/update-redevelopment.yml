@@ -21,6 +21,9 @@ jobs:
         with:
           node-version: '24'
 
+      - name: Install dependencies
+        run: npm install
+
       - name: Fetch & Update 정비사업 현황
         env:
           SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
