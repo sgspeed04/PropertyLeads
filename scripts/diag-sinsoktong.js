@@ -1,13 +1,8 @@
 /**
- * 진단용 임시 스크립트 (2단계) — 신속통합기획 지도 ajax 엔드포인트 탐색 +
- * 모아타운 페이지 URL을 메뉴 구조에서 찾기.
- *
- * 1단계(정적 HTML 확인)는 완료: publicIntgrPlanSttn.do가 정적 테이블로
- * 크롤링 가능함을 확인함. 이번엔:
- *  1. publicIntgrPlanArea.do의 인라인 스크립트에서 ajax 호출 URL 추출
- *     (좌표까지 나오는 JSON API인지 확인)
- *  2. cleanup.seoul.go.kr 메인/사업유형 페이지에서 "모아"가 들어간
- *     링크를 찾아 모아타운 목록 페이지 URL을 알아냄
+ * 진단용 임시 스크립트 (3단계) — 새로 발견한 두 페이지가 정적 테이블인지 확인.
+ *  - publicIntgrPlanSttn2.do : 신속통합기획 "재건축" 추진현황
+ *  - garoHouse.do            : 가로주택정비
+ * (1단계에서 publicIntgrPlanSttn.do가 정적 테이블임은 이미 확인함)
  */
 
 const cheerio = require('cheerio');
@@ -18,11 +13,16 @@ const HEADERS = {
   'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
 };
 
-async function fetchWithTimeout(url, timeoutMs = 20000, extraHeaders = {}) {
+const TARGETS = [
+  { name: '신속통합기획 재건축 추진현황', url: 'https://cleanup.seoul.go.kr/cleanup/view/publicIntgrPlanSttn2.do' },
+  { name: '가로주택정비',                url: 'https://cleanup.seoul.go.kr/cleanup/view/garoHouse.do' },
+];
+
+async function fetchWithTimeout(url, timeoutMs = 20000) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const res = await fetch(url, { headers: { ...HEADERS, ...extraHeaders }, signal: controller.signal });
+    const res = await fetch(url, { headers: HEADERS, signal: controller.signal });
     clearTimeout(timer);
     return res;
   } catch (e) {
@@ -31,68 +31,45 @@ async function fetchWithTimeout(url, timeoutMs = 20000, extraHeaders = {}) {
   }
 }
 
-async function findAjaxEndpoints() {
-  const url = 'https://cleanup.seoul.go.kr/cleanup/view/publicIntgrPlanArea.do';
-  console.log(`\n=== ajax 엔드포인트 탐색: ${url} ===`);
-  const res = await fetchWithTimeout(url);
+async function diagnose({ name, url }) {
+  console.log(`\n=== ${name} (${url}) ===`);
+  let res;
+  try {
+    res = await fetchWithTimeout(url);
+  } catch (e) {
+    console.log(`  ✗ 요청 실패: ${e.message}`);
+    return;
+  }
+  console.log(`  HTTP ${res.status} ${res.statusText}`);
+  if (!res.ok) return;
+
   const html = await res.text();
   const $ = cheerio.load(html);
-  const scripts = $('script:not([src])').map((_, el) => $(el).html() || '').get().join('\n');
+  const rowCount = $('table tbody tr').length;
+  console.log(`  응답 길이: ${html.length}자, <table tbody tr>: ${rowCount}개`);
 
-  // ajax({url: '...'}) 또는 ajax('...') 패턴, 그리고 .do/.json 확장자를 가진 문자열 리터럴 전체 수집
-  const urlLikeMatches = [...scripts.matchAll(/['"]([^'"]*\.(?:do|json)(?:\?[^'"]*)?)['"]/g)].map(m => m[1]);
-  const uniqueUrls = [...new Set(urlLikeMatches)];
-  console.log(`  스크립트 내 .do/.json 문자열 ${uniqueUrls.length}개:`);
-  for (const u of uniqueUrls.slice(0, 30)) console.log(`    ${u}`);
-
-  // ajax( 호출 주변 컨텍스트도 몇 개 보여주기
-  const ajaxIdx = [];
-  let idx = scripts.indexOf('ajax(');
-  while (idx !== -1 && ajaxIdx.length < 5) {
-    ajaxIdx.push(idx);
-    idx = scripts.indexOf('ajax(', idx + 1);
-  }
-  for (const i of ajaxIdx) {
-    console.log(`  --- ajax( 호출 컨텍스트 ---`);
-    console.log('  ' + scripts.substring(i, i + 300).replace(/\s+/g, ' '));
+  if (rowCount === 0) {
+    // 테이블이 없으면 ul/li나 다른 반복 구조가 있는지, ajax 흔적이 있는지 확인
+    console.log(`  <ul li>: ${$('ul li').length}개, <div class*="list">: ${$('[class*="list"]').length}개`);
+    const scripts = $('script:not([src])').map((_, el) => $(el).html() || '').get().join('\n');
+    console.log(`  ajax( 포함 여부: ${scripts.includes('ajax(')}`);
+    return;
   }
 
-  return uniqueUrls;
-}
+  // 헤더 행(th) 확인
+  const headers = $('table thead th, table tr th').map((_, el) => $(el).text().trim()).get();
+  console.log(`  헤더: ${JSON.stringify(headers)}`);
 
-async function findMoaTownLinks() {
-  const pages = [
-    'https://cleanup.seoul.go.kr/cleanup/mainPage.do',
-    'https://cleanup.seoul.go.kr/cleanup/view/redevelop.do',
-  ];
-  for (const url of pages) {
-    console.log(`\n=== 모아타운 링크 탐색: ${url} ===`);
-    try {
-      const res = await fetchWithTimeout(url);
-      console.log(`  HTTP ${res.status}`);
-      if (!res.ok) continue;
-      const html = await res.text();
-      const $ = cheerio.load(html);
-      const links = $('a[href]').map((_, el) => ({ href: $(el).attr('href'), text: $(el).text().trim() })).get();
-      const moaLinks = links.filter(l => /모아|moa/i.test(l.text) || /moa/i.test(l.href || ''));
-      console.log(`  "모아" 관련 링크 ${moaLinks.length}개:`);
-      for (const l of moaLinks.slice(0, 20)) console.log(`    "${l.text}" -> ${l.href}`);
-      if (moaLinks.length === 0) {
-        // 전체 view/*.do 링크 목록을 훑어서 후보를 유추
-        const viewLinks = links.filter(l => (l.href || '').includes('/cleanup/view/'));
-        const uniqueViewLinks = [...new Map(viewLinks.map(l => [l.href, l])).values()];
-        console.log(`  (모아 링크 없음 — 전체 view/*.do 링크 ${uniqueViewLinks.length}개)`);
-        for (const l of uniqueViewLinks.slice(0, 30)) console.log(`    "${l.text}" -> ${l.href}`);
-      }
-    } catch (e) {
-      console.log(`  ✗ 실패: ${e.message}`);
-    }
-  }
+  const rows = $('table tbody tr').slice(0, 5);
+  rows.each((i, el) => {
+    const cells = $(el).find('td').map((_, td) => $(td).text().trim()).get();
+    console.log(`  ROW[${i}]: ${JSON.stringify(cells)}`);
+  });
+  console.log(`  총 ${rowCount}건`);
 }
 
 async function main() {
-  await findAjaxEndpoints();
-  await findMoaTownLinks();
+  for (const t of TARGETS) await diagnose(t);
 }
 
 main().catch(e => { console.error('오류:', e); process.exit(1); });
