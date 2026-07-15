@@ -1,0 +1,22 @@
+name: 진단 — upisRebuild 좌표/주소 필드 확인
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 좌표/주소 필드 진단
+        env:
+          SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
+        run: node scripts/diag-coords.js
