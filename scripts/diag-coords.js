@@ -29,30 +29,40 @@ async function main() {
   const key = process.env.SEOUL_API_KEY;
   if (!key) { console.error('SEOUL_API_KEY 없음'); process.exit(1); }
 
-  const urls = [
-    `https://openapi.seoul.go.kr:443/rest/${key}/json/upisRebuild/1/10/`,
-    `http://openapi.seoul.go.kr:8088/${key}/json/upisRebuild/1/10/`,
-  ];
-  let res, lastErr;
-  for (const url of urls) {
-    try {
-      res = await fetchWithTimeout(url, 30000, { Referer: 'https://data.seoul.go.kr/' });
-      break;
-    } catch (e) { lastErr = e; console.warn(`  ✗ ${url}: ${e.message}`); }
+  async function fetchRange(start, end) {
+    const urls = [
+      `https://openapi.seoul.go.kr:443/rest/${key}/json/upisRebuild/${start}/${end}/`,
+      `http://openapi.seoul.go.kr:8088/${key}/json/upisRebuild/${start}/${end}/`,
+    ];
+    let res, lastErr;
+    for (const url of urls) {
+      try {
+        res = await fetchWithTimeout(url, 30000, { Referer: 'https://data.seoul.go.kr/' });
+        break;
+      } catch (e) { lastErr = e; console.warn(`  ✗ ${url}: ${e.message}`); }
+    }
+    if (!res) throw lastErr;
+    const json = await res.json();
+    const root = json.upisRebuild || json;
+    return { rows: root.row || [], total: root.list_total_count };
   }
-  if (!res) throw lastErr;
-  const json = await res.json();
-  const root = json.upisRebuild || json;
-  const rows = root.row || [];
 
-  console.log(`전체 ${root.list_total_count}건 중 ${rows.length}건 샘플\n`);
-  for (const r of rows) {
-    console.log('--- row ---');
-    console.log('RGN_NM   :', r.RGN_NM);
-    console.log('LOGVM    :', r.LOGVM);
-    console.log('PSTN_NM  :', r.PSTN_NM);
-    console.log('전체 필드:', JSON.stringify(r));
-    console.log();
+  // 서로 다른 구간(오래된/중간/최신 항목) 샘플링 — LOGVM 값 패턴이 시기별로
+  // 다를 수 있어 앞부분만 보면 오판할 수 있음
+  const ranges = [[1, 5], [3000, 3005], [6570, 6579]];
+  for (const [start, end] of ranges) {
+    console.log(`\n########## 구간 ${start}-${end} ##########`);
+    const { rows, total } = await fetchRange(start, end);
+    if (start === 1) console.log(`전체 ${total}건`);
+    for (const r of rows) {
+      console.log('--- row ---');
+      console.log('RGN_NM   :', r.RGN_NM);
+      console.log('LOGVM    :', r.LOGVM);
+      console.log('PSTN_NM  :', r.PSTN_NM);
+      console.log('전체 필드:', JSON.stringify(r));
+      console.log();
+    }
+    await new Promise(r => setTimeout(r, 300));
   }
 }
 
