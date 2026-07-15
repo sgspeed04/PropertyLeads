@@ -29,8 +29,18 @@ async function main() {
   const key = process.env.SEOUL_API_KEY;
   if (!key) { console.error('SEOUL_API_KEY 없음'); process.exit(1); }
 
-  const url = `https://openapi.seoul.go.kr:443/rest/${key}/json/upisRebuild/1/10/`;
-  const res = await fetchWithTimeout(url, 30000, { Referer: 'https://data.seoul.go.kr/' });
+  const urls = [
+    `https://openapi.seoul.go.kr:443/rest/${key}/json/upisRebuild/1/10/`,
+    `http://openapi.seoul.go.kr:8088/${key}/json/upisRebuild/1/10/`,
+  ];
+  let res, lastErr;
+  for (const url of urls) {
+    try {
+      res = await fetchWithTimeout(url, 30000, { Referer: 'https://data.seoul.go.kr/' });
+      break;
+    } catch (e) { lastErr = e; console.warn(`  ✗ ${url}: ${e.message}`); }
+  }
+  if (!res) throw lastErr;
   const json = await res.json();
   const root = json.upisRebuild || json;
   const rows = root.row || [];
