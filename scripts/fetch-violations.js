@@ -207,21 +207,51 @@ function extractPhone(text) {
   return m ? m[0].replace(/\s+/g, '') : null;
 }
 function extractDept(text) {
-  const m = text.match(/([가-힣]{2,10}(?:건축과|주택과|주택관리과|건축지도과|안전건축과))/);
+  const m = text.match(/([가-힣]{2,10}(?:건축과|주택과|주택관리과|건축지도과|안전건축과|건설과|도시관리과|도시계획과))/);
   return m ? m[0] : null;
 }
+
+// 실제 게시글 본문이 있을 법한 영역을 우선순위대로 찾는다.
+const CONTENT_SELECTORS = [
+  '.bbs_content', '.board_content', '.view_cont', '.viewCont', '.bbsV_content',
+  'td.content', '.content_view', '.board-view-content', '.view-content',
+  '.bbsView', '.bbs-view', 'article',
+];
+// 잡음(메뉴/헤더/푸터 등)은 태그가 아니라 클래스/id로만 구분되는 사이트가 많아 넓게 잡는다.
+const NOISE_SELECTOR = [
+  'script', 'style',
+  '[class*="gnb" i]', '[class*="lnb" i]', '[class*="snb" i]', '[class*="nav" i]',
+  '[class*="menu" i]', '[class*="header" i]', '[class*="footer" i]',
+  '[class*="quick" i]', '[class*="banner" i]', '[class*="skip" i]',
+  '[id*="gnb" i]', '[id*="lnb" i]', '[id*="header" i]', '[id*="footer" i]',
+].join(',');
 
 async function fetchDetail(url) {
   try {
     const html = await fetchPage(url);
     const $ = cheerio.load(html);
-    $('script,style,nav,header,footer').remove();
-    const bodyText = $('body').text().replace(/[ \t]+/g, ' ').replace(/\n+/g, '\n').trim();
+
+    // "본문 바로가기" 접근성 스킵링크가 있으면 그 타겟이 실제 콘텐츠 루트인 경우가 많다 —
+    // 한국 공공기관 사이트는 이 스킵링크가 거의 항상 있어서, gnb/lnb 잡음을 통째로
+    // 건너뛰는 가장 확실한 방법이다.
+    let root = $('body');
+    const skipHref = $('a').filter((_, el) => $(el).text().includes('본문')).first().attr('href');
+    if (skipHref && skipHref.startsWith('#') && $(skipHref).length) root = $(skipHref);
+
+    $(NOISE_SELECTOR, root).remove();
+
+    let contentEl = null;
+    for (const sel of CONTENT_SELECTORS) {
+      const found = root.find(sel).first();
+      if (found.length && found.text().trim().length > 20) { contentEl = found; break; }
+    }
+    const bodyText = (contentEl || root).text().replace(/[ \t]+/g, ' ').replace(/\n+/g, '\n').trim();
+
     return {
       address: extractAddress(bodyText),
       contact_phone: extractPhone(bodyText),
       contact_dept: extractDept(bodyText),
-      detail_snippet: bodyText.slice(0, 400),
+      detail_snippet: bodyText.slice(0, 800),
     };
   } catch (e) {
     console.warn(`    상세 페이지 실패 (${url}): ${e.message}`);
