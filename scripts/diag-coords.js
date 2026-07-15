@@ -43,9 +43,24 @@ async function main() {
       const text = await res.text();
       console.log(`RAW RESPONSE: ${text}`);
     } catch (e) {
+      const cause = e.cause;
       console.log(`✗ 요청 실패: ${e.message}`);
+      if (cause) console.log(`  cause: [${cause.code || cause.constructor?.name || ''}] ${cause.message || JSON.stringify(cause)}`);
     }
     await new Promise(r => setTimeout(r, 300));
+  }
+
+  // http(비TLS) 버전도 시도 — VWorld 옛 문서 예제가 http를 쓰는 경우가 있음
+  console.log('\n\n########## HTTP(비TLS) 버전 시도 ##########');
+  const httpUrl = `http://api.vworld.kr/req/address?service=address&request=getCoord&version=2.0&crs=epsg:4326&address=${encodeURIComponent('서울특별시 성동구 하왕십리동 890')}&format=json&type=PARCEL&key=${key}`;
+  try {
+    const res = await fetchWithTimeout(httpUrl);
+    console.log(`HTTP ${res.status} ${res.statusText}`);
+    console.log(`RAW RESPONSE: ${await res.text()}`);
+  } catch (e) {
+    const cause = e.cause;
+    console.log(`✗ 요청 실패: ${e.message}`);
+    if (cause) console.log(`  cause: [${cause.code || cause.constructor?.name || ''}] ${cause.message || JSON.stringify(cause)}`);
   }
 }
 
