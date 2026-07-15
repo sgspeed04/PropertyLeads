@@ -19,4 +19,5 @@ jobs:
       - name: 좌표/주소 필드 진단
         env:
           SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
+          VWORLD_KEY: ${{ secrets.VWORLD_KEY }}
         run: node scripts/diag-coords.js
