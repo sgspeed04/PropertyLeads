@@ -4,6 +4,15 @@
  * ── GitHub Secrets ────────────────────────────────────────────────────────────
  *  SEOUL_API_KEY   : data.seoul.go.kr   (서울시 열린데이터광장)
  *  GG_API_KEY      : openapi.gg.go.kr   (경기도 공공데이터포털)
+ *  VWORLD_KEY      : api.vworld.kr      (국토교통부 공간정보 오픈API, 지오코딩용)
+ *    ※ VWorld는 GitHub Actions 러너(Azure 클라우드 IP)에서의 요청을 게이트웨이
+ *      단에서 전부 502로 차단함(주소/검색/데이터 API 공통, 헤더 조정 무관) —
+ *      키 자체는 정상(사용자 휴대폰 등 일반 회선에서는 정상 응답 확인됨).
+ *      따라서 이 자동화 파이프라인에서는 geocodeProjects()가 매일 실패하는 게
+ *      정상이며(지터 좌표 유지로 안전하게 폴백), 실제 지오코딩은 별도로
+ *      사용자 브라우저(비클라우드 IP)에서 1회성 도구를 통해 수행하고 그 결과를
+ *      데이터에 병합하는 방식으로 우회함. rowToProject()가 addr 필드(PSTN_NM)를
+ *      결과 JSON에 영구 보존하는 것도 이 우회 경로를 위함.
  *
  * ── 사용 API ──────────────────────────────────────────────────────────────────
  *  [서울] openapi.seoul.go.kr
@@ -35,8 +44,9 @@ const cheerio = require('cheerio');
 
 const DATA_FILE = path.join(__dirname, '..', 'data', 'redevelopment.json');
 const TODAY     = new Date().toISOString().split('T')[0];
-const SEOUL_KEY = process.env.SEOUL_API_KEY;
-const GG_KEY    = process.env.GG_API_KEY;
+const SEOUL_KEY  = process.env.SEOUL_API_KEY;
+const GG_KEY     = process.env.GG_API_KEY;
+const VWORLD_KEY = process.env.VWORLD_KEY;
 const PAGE_SIZE = 1000;
 
 // ── 단계 매핑 (idx: -2=모니터링, -1=준비위, 0=구역지정, 1=조합, 2=사업시행, 3=관리처분, 4=착공, 5=완료)
@@ -392,6 +402,7 @@ function rowToProject(r, idx, region = '서울') {
     stage_idx:      getStageIdx(stageName),
     lat,
     lng,
+    geo_source:     'jitter',
     area_m2:        parseInt(r.AREA_EXS || r.TOT_AREA || r.ZONE_AR || 0),
     units:          parseInt(r.TOT_HSHLD || r.TOT_HSHLD_CO || r.PLAN_HH || 0),
     contractor:     r.CNSTR_CO_NM || '',
@@ -402,6 +413,7 @@ function rowToProject(r, idx, region = '서울') {
     completion_est: '',
     ref_note:       '',
     _prjcCd:        r.RPT_MNG_CD || r.PRJC_CD || '',
+    addr:           r.PSTN_NM || '',
   };
 }
 
@@ -412,7 +424,7 @@ function mergeWithExisting(apiProjects, existingProjects) {
   return apiProjects.map(ap => {
     const ex = existingMap.get(ap.name.trim());
     if (!ex) return ap;
-    return {
+    const merged = {
       ...ap,
       notes:          ex.notes          || ap.notes,
       subway:         ex.subway         || ap.subway,
@@ -420,7 +432,69 @@ function mergeWithExisting(apiProjects, existingProjects) {
       completion_est: ex.completion_est || ap.completion_est,
       ref_note:       ex.ref_note       || ap.ref_note,
     };
+    // 이전 실행에서 VWorld 지오코딩에 성공한 좌표는 유지 — 매번 새로 지터링되지 않도록
+    if (ex.geo_source === 'vworld') {
+      merged.lat = ex.lat;
+      merged.lng = ex.lng;
+      merged.geo_source = 'vworld';
+    }
+    return merged;
   });
+}
+
+// ── VWorld 지오코더 — PSTN_NM(지번 주소)로 실제 좌표 조회 ───────────────────────
+// 지번 텍스트에 "일대/일원/외 N필지/(부가설명)" 등 정형화되지 않은 표현이 섞여
+// 있어 지오코더가 못 읽는 경우가 많음 — 정리 후 시도.
+function cleanAddress(pstnNm, district) {
+  let s = (pstnNm || '').trim();
+  if (!s) return '';
+  s = s.replace(/\([^)]*\)/g, ' ');           // 괄호 부가설명 제거
+  s = s.replace(/,.*$/, '');                  // 쉼표 이후(복수 동 표기 등) 제거
+  s = s.replace(/외\s*\d+\s*필지/g, ' ');       // "외 214필지" 제거
+  s = s.replace(/(일대|일원)\s*$/g, ' ');       // 꼬리 표현 제거
+  s = s.replace(/\s+/g, ' ').trim();
+  if (district && !s.includes(district)) s = `${district} ${s}`;
+  return `서울특별시 ${s}`.replace(/\s+/g, ' ').trim();
+}
+
+async function geocodeAddress(address) {
+  if (!address) return null;
+  const url = `https://api.vworld.kr/req/address?service=address&request=getCoord&version=2.0&crs=epsg:4326&address=${encodeURIComponent(address)}&format=json&type=PARCEL&key=${VWORLD_KEY}`;
+  try {
+    const res = await fetchWithTimeout(url, 15000);
+    const json = await res.json();
+    const point = json?.response?.result?.point;
+    if (json?.response?.status === 'OK' && point) {
+      return { lat: parseFloat(point.y), lng: parseFloat(point.x) };
+    }
+  } catch (e) {
+    // 개별 주소 실패는 조용히 무시하고 지터 좌표 유지 — 아래에서 카운트만 집계
+  }
+  return null;
+}
+
+async function geocodeProjects(projects) {
+  if (!VWORLD_KEY) {
+    console.log('[GEOCODE] VWORLD_KEY 없음 — 지오코딩 건너뜀 (구 중심좌표 지터 유지)');
+    return;
+  }
+  const targets = projects.filter(p => p.geo_source !== 'vworld' && p.addr);
+  console.log(`[GEOCODE] VWorld 지오코딩 대상 ${targets.length}건 (이미 확보된 ${projects.length - targets.length}건 제외)`);
+  let success = 0, fail = 0;
+  for (const p of targets) {
+    const addr = cleanAddress(p.addr, p.district);
+    const coord = await geocodeAddress(addr);
+    if (coord) {
+      p.lat = coord.lat;
+      p.lng = coord.lng;
+      p.geo_source = 'vworld';
+      success++;
+    } else {
+      fail++;
+    }
+    await new Promise(r => setTimeout(r, 150));
+  }
+  console.log(`[GEOCODE] 성공 ${success}건, 실패(구 중심좌표 지터 유지) ${fail}건`);
 }
 
 // ── 서울 데이터 수집 ─────────────────────────────────────────────────────────
@@ -537,7 +611,10 @@ async function main() {
       console.log(`[STAGE] ${matched}/${seoulProjects.length} 구역 단계 업데이트 (구역명 텍스트 매칭, 중복후보 ${ambiguous}건)`);
     }
   }
-  for (const p of [...seoulProjects, ...ggProjects]) delete p._prjcCd;
+
+  await geocodeProjects(seoulProjects);
+
+  for (const p of [...seoulProjects, ...ggProjects]) { delete p._prjcCd; }
 
   // 신속통합기획 후보지 — 이미 정비구역 지정되어 upisRebuild에 있는 구역은 중복 스킵
   try {

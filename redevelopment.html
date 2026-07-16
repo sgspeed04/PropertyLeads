@@ -48,7 +48,9 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 /* 범례 */
 .legend{position:fixed;bottom:20px;left:14px;z-index:1000;background:rgba(255,255,255,.97);border-radius:12px;padding:12px 14px;box-shadow:0 2px 12px rgba(0,0,0,.13);min-width:190px}
 .legend-title{font-size:10px;font-weight:700;color:#aaa;margin-bottom:8px;letter-spacing:.5px}
-.leg-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}
+.leg-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px;padding:3px 5px;margin-left:-5px;margin-right:-5px;border-radius:6px;cursor:pointer;transition:background .12s}
+.leg-row:hover{background:#f1f5f9}
+.leg-row.active{background:#e0e7ff}
 .leg-left{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500}
 .leg-emoji{font-size:14px;line-height:1;width:18px;text-align:center}
 .leg-apt{font-size:10px;padding:2px 6px;border-radius:6px;font-weight:600;white-space:nowrap}
@@ -190,13 +192,13 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 
 <div class="legend">
   <div class="legend-title">단계 · 입주권</div>
-  <div class="leg-row"><div class="leg-left"><span class="leg-emoji">⚪</span>정비예정</div><span class="leg-apt apt-watch">모니터링</span></div>
-  <div class="leg-row"><div class="leg-left"><span class="leg-emoji">🔵</span>준비위결성</div><span class="leg-apt apt-watch">관심</span></div>
-  <div class="leg-row"><div class="leg-left"><span class="leg-emoji">🔴</span>초기 (구역지정·조합)</div></div>
-  <div class="leg-row"><div class="leg-left"><span class="leg-emoji">🟡</span>사업시행인가</div><span class="leg-apt apt-ok">취득가능 ✅</span></div>
-  <div class="leg-row"><div class="leg-left"><span class="leg-emoji">🔑</span>관리처분인가</div><span class="leg-apt apt-last">마지막! ⚠️</span></div>
-  <div class="leg-row"><div class="leg-left"><span class="leg-emoji">🏗️</span>착공중</div><span class="leg-apt apt-no">불가 ❌</span></div>
-  <div class="leg-row"><div class="leg-left"><span class="leg-emoji">🏠</span>준공완료</div></div>
+  <div class="leg-row" data-stages="-2"><div class="leg-left"><span class="leg-emoji">⚪</span>정비예정</div><span class="leg-apt apt-watch">모니터링</span></div>
+  <div class="leg-row" data-stages="-1"><div class="leg-left"><span class="leg-emoji">🔵</span>준비위결성</div><span class="leg-apt apt-watch">관심</span></div>
+  <div class="leg-row" data-stages="0,1"><div class="leg-left"><span class="leg-emoji">🔴</span>초기 (구역지정·조합)</div></div>
+  <div class="leg-row" data-stages="2"><div class="leg-left"><span class="leg-emoji">🟡</span>사업시행인가</div><span class="leg-apt apt-ok">취득가능 ✅</span></div>
+  <div class="leg-row" data-stages="3"><div class="leg-left"><span class="leg-emoji">🔑</span>관리처분인가</div><span class="leg-apt apt-last">마지막! ⚠️</span></div>
+  <div class="leg-row" data-stages="4"><div class="leg-left"><span class="leg-emoji">🏗️</span>착공중</div><span class="leg-apt apt-no">불가 ❌</span></div>
+  <div class="leg-row" data-stages="5"><div class="leg-left"><span class="leg-emoji">🏠</span>준공완료</div></div>
   <div class="nohuodo-toggle" id="nohuodoToggle">
     <span class="nohuodo-label">🏚️ 노후도 오버레이</span>
     <div class="nohuodo-sw" id="nohuodoSw"></div>
@@ -341,6 +343,7 @@ let activeId = null;
 let compareList = [];
 let selectedDistricts = new Set();
 let selectedRegion = '';
+let selectedStages = null; // null = 전체, 아니면 stage_idx Set
 
 // 구/시별 지도 중심 좌표 (서울 + 경기)
 const DISTRICT_COORDS = {
@@ -476,11 +479,28 @@ function applyFilter() {
   filtered=allProjects.filter(p=>
     (!selectedRegion || (p.region||'서울')===selectedRegion) &&
     (selectedDistricts.size===0||selectedDistricts.has(p.district)) &&
-    (!t||p.type===t)
+    (!t||p.type===t) &&
+    (!selectedStages||selectedStages.has(p.stage_idx))
   );
   renderMarkers();
   if(activeId && !filtered.find(p=>p.id===activeId)) closeSheet();
 }
+
+function toggleStageFilter(row) {
+  const stages = new Set(row.dataset.stages.split(',').map(Number));
+  const isSame = selectedStages && selectedStages.size===stages.size && [...stages].every(s=>selectedStages.has(s));
+  document.querySelectorAll('.leg-row[data-stages]').forEach(r=>r.classList.remove('active'));
+  if (isSame) {
+    selectedStages = null;
+  } else {
+    selectedStages = stages;
+    row.classList.add('active');
+  }
+  applyFilter();
+}
+document.querySelectorAll('.leg-row[data-stages]').forEach(row=>{
+  row.addEventListener('click', () => toggleStageFilter(row));
+});
 
 function updateDistrictBtn() {
   const btn=document.getElementById('districtBtn');

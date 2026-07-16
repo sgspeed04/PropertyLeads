@@ -29,6 +29,7 @@ jobs:
           SEOUL_API_KEY: ${{ secrets.SEOUL_API_KEY }}
           GG_API_KEY: ${{ secrets.GG_API_KEY }}
           DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
+          VWORLD_KEY: ${{ secrets.VWORLD_KEY }}
         run: node scripts/fetch-redevelopment.js
 
       - name: Fetch & Update 노후도 (연 1회)
