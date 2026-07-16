@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>재개발 구역 좌표 변환</title>
+<style>
+  :root {
+    --bg: #f6f3ee;
+    --surface: #ffffff;
+    --border: #e4ddd0;
+    --text: #211d18;
+    --muted: #726b5c;
+    --accent: #1f6f6b;
+    --accent-strong: #164f4c;
+    --accent-tint: #e4f0ef;
+    --success: #2f7d4f;
+    --success-tint: #e6f3ea;
+    --error: #b54638;
+    --error-tint: #fbebe8;
+    --track: #ece6d9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16191a;
+      --surface: #1f2324;
+      --border: #33383a;
+      --text: #ece8e0;
+      --muted: #9c9689;
+      --accent: #4fa8a2;
+      --accent-strong: #6fc2bb;
+      --accent-tint: #1c2e2d;
+      --success: #5cb37e;
+      --success-tint: #1b2e22;
+      --error: #e08376;
+      --error-tint: #351f1c;
+      --track: #2a2e2f;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 28px 16px 60px;
+  }
+  .mono { font-family: ui-monospace, "SFMono-Regular", Consolas, "Noto Sans Mono", monospace; font-variant-numeric: tabular-nums; }
+
+  .card {
+    width: 100%;
+    max-width: 440px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  header h1 {
+    font-size: 21px;
+    font-weight: 700;
+    margin: 0 0 6px;
+    text-wrap: balance;
+  }
+  header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .step-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent-strong);
+    letter-spacing: 0.02em;
+  }
+  .step-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent-tint);
+    color: var(--accent-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    letter-spacing: 0.02em;
+  }
+  input[type="text"]:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+  .hint { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+
+  button {
+    border: none;
+    border-radius: 10px;
+    padding: 13px 18px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  button:focus-visible { outline: 2px solid var(--accent-strong); outline-offset: 2px; }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:disabled {
+    background: var(--track);
+    color: var(--muted);
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: var(--accent-tint);
+    color: var(--accent-strong);
+  }
+
+  .progress-track {
+    height: 10px;
+    border-radius: 999px;
+    background: var(--track);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: width 0.2s ease;
+  }
+  .progress-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .progress-row .count { color: var(--text); font-weight: 600; }
+
+  .tally {
+    display: flex;
+    gap: 10px;
+  }
+  .tally-chip {
+    flex: 1;
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .tally-chip.success { background: var(--success-tint); }
+  .tally-chip.fail { background: var(--error-tint); }
+  .tally-chip .n { font-size: 20px; font-weight: 700; }
+  .tally-chip.success .n { color: var(--success); }
+  .tally-chip.fail .n { color: var(--error); }
+  .tally-chip .l { font-size: 12px; color: var(--muted); }
+
+  .current-addr {
+    font-size: 12.5px;
+    color: var(--muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 110px;
+    resize: vertical;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+    font-size: 12px;
+    padding: 10px 12px;
+    line-height: 1.5;
+  }
+
+  .result-actions { display: flex; gap: 10px; }
+  .result-actions button { flex: 1; }
+
+  .status-line {
+    font-size: 13px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    line-height: 1.5;
+  }
+  .status-line.ok { background: var(--success-tint); color: var(--success); }
+  .status-line.err { background: var(--error-tint); color: var(--error); }
+  .status-line.info { background: var(--accent-tint); color: var(--accent-strong); }
+
+  .step[hidden] { display: none; }
+
+  footer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <header>
+    <h1>재개발 구역 좌표 변환 도구</h1>
+    <p>upisRebuild에 저장된 지번 주소를 VWorld로 실제 좌표로 바꿔줍니다. 이 페이지는 본인 휴대폰/PC에서 딱 한 번만 실행하면 됩니다.</p>
+  </header>
+
+  <div class="step" id="step-key">
+    <div class="step-label"><span class="step-num">1</span>VWorld 인증키 입력</div>
+    <input type="text" id="key-input" placeholder="예: 2FD6D861-803B-332D-BCB3-F1C6620D20B1" autocomplete="off" autocapitalize="off" spellcheck="false" />
+    <div class="hint">VWorld 개발자센터에서 발급받은 36자리 인증키를 붙여넣어 주세요. 이 페이지 밖으로 전송되지 않고, 좌표변환 요청에만 사용됩니다.</div>
+  </div>
+
+  <div class="step" id="step-start">
+    <div class="step-label"><span class="step-num">2</span>변환 시작</div>
+    <button class="btn-primary" id="start-btn">변환 시작하기</button>
+    <div class="hint">주소 목록을 먼저 불러온 뒤 하나씩 순서대로 변환합니다. 대략 5~10분 걸려요. 진행 중에는 화면이 꺼지지 않게 해주세요.</div>
+    <div id="load-status"></div>
+  </div>
+
+  <div class="step" id="step-progress" hidden>
+    <div class="step-label"><span class="step-num">3</span>진행 상황</div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-row">
+      <span>진행률</span>
+      <span class="count mono" id="progress-count">0 / 0</span>
+    </div>
+    <div class="tally">
+      <div class="tally-chip success">
+        <span class="n mono" id="success-count">0</span>
+        <span class="l">성공</span>
+      </div>
+      <div class="tally-chip fail">
+        <span class="n mono" id="fail-count">0</span>
+        <span class="l">실패</span>
+      </div>
+    </div>
+    <div class="current-addr mono" id="current-addr">&nbsp;</div>
+  </div>
+
+  <div class="step" id="step-result" hidden>
+    <div class="step-label"><span class="step-num">4</span>결과 보내기</div>
+    <div id="result-status"></div>
+    <textarea id="result-text" readonly></textarea>
+    <div class="result-actions">
+      <button class="btn-secondary" id="copy-btn">전체 복사</button>
+      <button class="btn-secondary" id="download-btn">파일로 저장</button>
+    </div>
+    <div class="hint">위 내용을 복사해서 채팅으로 붙여넣기 해주시거나, 저장한 파일을 첨부해서 보내주세요.</div>
+  </div>
+
+  <footer>data/redevelopment.json · api.vworld.kr geocoder · 1회성 도구</footer>
+</div>
+
+<script>
+(function () {
+  var DATA_URL = './data/redevelopment.json';
+  var DELAY_MS = 150;
+  var TIMEOUT_MS = 12000;
+
+  var keyInput = document.getElementById('key-input');
+  var startBtn = document.getElementById('start-btn');
+  var loadStatus = document.getElementById('load-status');
+  var stepProgress = document.getElementById('step-progress');
+  var stepResult = document.getElementById('step-result');
+  var progressFill = document.getElementById('progress-fill');
+  var progressCount = document.getElementById('progress-count');
+  var successCountEl = document.getElementById('success-count');
+  var failCountEl = document.getElementById('fail-count');
+  var currentAddrEl = document.getElementById('current-addr');
+  var resultStatus = document.getElementById('result-status');
+  var resultText = document.getElementById('result-text');
+  var copyBtn = document.getElementById('copy-btn');
+  var downloadBtn = document.getElementById('download-btn');
+
+  function setStatus(el, msg, kind) {
+    el.innerHTML = '';
+    if (!msg) return;
+    var div = document.createElement('div');
+    div.className = 'status-line ' + (kind || 'info');
+    div.textContent = msg;
+    el.appendChild(div);
+  }
+
+  // scripts/fetch-redevelopment.js의 cleanAddress()와 동일한 로직
+  function cleanAddress(pstnNm, district) {
+    var s = (pstnNm || '').trim();
+    if (!s) return '';
+    s = s.replace(/\([^)]*\)/g, ' ');
+    s = s.replace(/,.*$/, '');
+    s = s.replace(/외\s*\d+\s*필지/g, ' ');
+    s = s.replace(/(일대|일원)\s*$/g, ' ');
+    s = s.replace(/\s+/g, ' ').trim();
+    if (district && s.indexOf(district) === -1) s = district + ' ' + s;
+    return ('서울특별시 ' + s).replace(/\s+/g, ' ').trim();
+  }
+
+  function fetchWithTimeout(url, ms) {
+    var controller = new AbortController();
+    var timer = setTimeout(function () { controller.abort(); }, ms);
+    return fetch(url, { signal: controller.signal }).finally(function () { clearTimeout(timer); });
+  }
+
+  function geocode(address, key) {
+    var url = 'https://api.vworld.kr/req/address?service=address&request=getCoord&version=2.0&crs=epsg:4326&address=' +
+      encodeURIComponent(address) + '&format=json&type=PARCEL&key=' + encodeURIComponent(key);
+    return fetchWithTimeout(url, TIMEOUT_MS)
+      .then(function (res) { return res.json(); })
+      .then(function (json) {
+        var point = json && json.response && json.response.result && json.response.result.point;
+        if (json && json.response && json.response.status === 'OK' && point) {
+          return { lat: parseFloat(point.y), lng: parseFloat(point.x) };
+        }
+        return null;
+      })
+      .catch(function () { return null; });
+  }
+
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  var running = false;
+
+  startBtn.addEventListener('click', function () {
+    if (running) return;
+    var key = keyInput.value.trim();
+    if (!key) {
+      setStatus(loadStatus, 'VWorld 인증키를 먼저 입력해 주세요.', 'err');
+      return;
+    }
+    running = true;
+    startBtn.disabled = true;
+    startBtn.textContent = '불러오는 중…';
+    setStatus(loadStatus, null);
+
+    fetch(DATA_URL)
+      .then(function (res) {
+        if (!res.ok) throw new Error('데이터를 불러오지 못했습니다 (HTTP ' + res.status + ')');
+        return res.json();
+      })
+      .then(function (data) {
+        var all = data.projects || [];
+        var targets = all.filter(function (p) {
+          return p.id && p.id.indexOf('api_') === 0 && p.addr && p.geo_source !== 'vworld';
+        });
+        if (targets.length === 0) {
+          setStatus(loadStatus, '변환이 필요한 주소가 없습니다. 이미 모두 완료된 것 같아요.', 'ok');
+          startBtn.disabled = false;
+          startBtn.textContent = '변환 시작하기';
+          running = false;
+          return;
+        }
+        setStatus(loadStatus, targets.length + '건의 주소를 불러왔습니다. 변환을 시작합니다.', 'ok');
+        stepProgress.hidden = false;
+        runBatch(targets, key);
+      })
+      .catch(function (e) {
+        setStatus(loadStatus, '오류: ' + e.message, 'err');
+        startBtn.disabled = false;
+        startBtn.textContent = '변환 시작하기';
+        running = false;
+      });
+  });
+
+  function runBatch(targets, key) {
+    var results = [];
+    var success = 0, fail = 0;
+    var total = targets.length;
+    var i = 0;
+
+    function step() {
+      if (i >= total) { return finish(); }
+      var p = targets[i];
+      var addr = cleanAddress(p.addr, p.district);
+      currentAddrEl.textContent = addr;
+      geocode(addr, key).then(function (coord) {
+        if (coord) {
+          results.push({ id: p.id, lat: coord.lat, lng: coord.lng });
+          success++;
+        } else {
+          fail++;
+        }
+        i++;
+        progressCount.textContent = i + ' / ' + total;
+        progressFill.style.width = Math.round((i / total) * 100) + '%';
+        successCountEl.textContent = String(success);
+        failCountEl.textContent = String(fail);
+        sleep(DELAY_MS).then(step);
+      });
+    }
+
+    function finish() {
+      currentAddrEl.textContent = '완료';
+      startBtn.textContent = '완료됨';
+      stepResult.hidden = false;
+      var kind = success > 0 ? 'ok' : 'err';
+      setStatus(resultStatus, success + '건 성공, ' + fail + '건 실패. 아래 내용을 복사하거나 파일로 저장해서 보내주세요.', kind);
+      resultText.value = JSON.stringify(results);
+      running = false;
+    }
+
+    step();
+  }
+
+  copyBtn.addEventListener('click', function () {
+    resultText.select();
+    navigator.clipboard.writeText(resultText.value).then(function () {
+      setStatus(resultStatus, '복사되었습니다. 채팅창에 붙여넣기 해주세요.', 'ok');
+    }).catch(function () {
+      setStatus(resultStatus, '복사에 실패했습니다. 아래 텍스트를 길게 눌러 직접 복사해 주세요.', 'err');
+    });
+  });
+
+  downloadBtn.addEventListener('click', function () {
+    var blob = new Blob([resultText.value], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'vworld-geocode-result.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+})();
+</script>
+</body>
+</html>
