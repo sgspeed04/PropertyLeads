@@ -87,15 +87,27 @@ function extractDate(text) {
   return `${m[1]}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}`;
 }
 
-async function fetchPage(url) {
-  const res = await fetch(url, {
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
-      'Accept-Language': 'ko-KR,ko;q=0.9',
-    },
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return res.text();
+const FETCH_RETRIES = 3;
+const FETCH_TIMEOUT_MS = 15000;
+
+async function fetchPage(url, attempt = 1) {
+  try {
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+        'Accept-Language': 'ko-KR,ko;q=0.9',
+      },
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.text();
+  } catch (e) {
+    if (attempt >= FETCH_RETRIES) throw e;
+    const delay = attempt * 3000;
+    console.warn(`    요청 실패(${attempt}/${FETCH_RETRIES}, ${e.message}) — ${delay}ms 후 재시도: ${url}`);
+    await new Promise(r => setTimeout(r, delay));
+    return fetchPage(url, attempt + 1);
+  }
 }
 
 function parseListHtml(html, baseUrl) {
