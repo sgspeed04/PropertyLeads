@@ -208,10 +208,21 @@ function matchesViolationKeyword(title) {
 // 본문 텍스트에서 정규식으로 최대한 뽑아내고, 실패하면 스니펫을 남겨
 // 사람이 직접 확인할 수 있게 한다.
 function extractAddress(text) {
-  const m = text.match(/([가-힣]+(?:시|도)\s*[가-힣0-9]+(?:시|군|구)\s*[가-힣0-9]+(?:동|읍|면|리)\s*[0-9]+(?:-[0-9]+)?(?:번지)?)/);
-  if (m) return m[0].replace(/\s+/g, ' ').trim();
+  // 시/도+구+동+번지 전체형 ("서울특별시 광진구 자양동 123-45번지")
+  const full = text.match(/([가-힣]+(?:시|도)\s*[가-힣0-9]+(?:시|군|구)\s*[가-힣0-9]+(?:동|읍|면|리)\s*[0-9]+(?:-[0-9]+)?(?:번지)?)/);
+  if (full) return full[0].replace(/\s+/g, ' ').trim();
+
   const m2 = text.match(/([가-힣0-9]+(?:동|읍|면|리))\s*([0-9]+(?:-[0-9]+)?)\s*번지/);
   if (m2) return `${m2[1]} ${m2[2]}번지`;
+
+  // 공시송달 공고는 표를 텍스트로 펼치면 "위반 물건지"/"건축물 위치" 같은 라벨 뒤에
+  // "OO동\n123-45"처럼 번지 단어 없이 줄바꿈으로만 구분된 형태로 나온다. 개인정보
+  // 보호를 위해 번지 뒷자리가 ○나 *로 마스킹된 경우도 있어 그 문자도 허용한다.
+  const labelIdx = text.search(/위반\s*물건지|건축물\s*위치|건축물위치/);
+  const searchText = labelIdx >= 0 ? text.slice(labelIdx) : text;
+  const m3 = searchText.match(/([가-힣0-9]{1,6}(?:동|읍|면|리))\s*\n?\s*([0-9○*]+(?:-[0-9○*]+)?)/);
+  if (m3) return `${m3[1]} ${m3[2]}`.replace(/\s+/g, ' ').trim();
+
   return null;
 }
 function extractPhone(text) {
@@ -219,8 +230,11 @@ function extractPhone(text) {
   return m ? m[0].replace(/\s+/g, '') : null;
 }
 function extractDept(text) {
-  const m = text.match(/([가-힣]{2,10}(?:건축과|주택과|주택관리과|건축지도과|안전건축과|건설과|도시관리과|도시계획과))/);
-  return m ? m[0] : null;
+  // "부서\n주택과"처럼 라벨 뒤에 단독으로 나오는 경우가 흔해서 먼저 시도
+  const m1 = text.match(/부서\s*\n?\s*([가-힣]{2,10}(?:과|팀|센터))/);
+  if (m1) return m1[1];
+  const m2 = text.match(/([가-힣]{2,10}(?:건축과|주택과|주택관리과|건축지도과|안전건축과|건설과|도시관리과|도시계획과))/);
+  return m2 ? m2[0] : null;
 }
 
 // 실제 게시글 본문이 있을 법한 영역을 우선순위대로 찾는다.
