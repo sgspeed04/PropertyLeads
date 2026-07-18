@@ -469,8 +469,14 @@ function cleanAddress(pstnNm, district) {
   s = s.replace(/,.*$/, '');                  // 쉼표 이후(복수 지번 표기 등) 제거
   s = s.replace(/외\s*\d+\s*필지/g, ' ');       // "외 214필지" 제거
   s = s.replace(/(일대|일원)\s*$/g, ' ');       // 꼬리 표현 제거
+  // "신월2동/오류2동" 같은 행정동(동사무소 단위) 표기를 법정동(지번 기준)으로 정규화 —
+  // VWorld PARCEL 지오코더는 법정동 이름을 요구해 숫자 접미사가 있으면 실패함.
+  s = s.replace(/([가-힣]+)\d+동/g, '$1동');
   s = s.replace(/\s+/g, ' ').trim();
-  if (district && !s.includes(district)) s = `${district} ${s}`;
+  // 주소 텍스트에 이미 다른 구 이름이 들어있으면(원본 데이터의 district 필드가
+  // 틀린 경우가 드물게 있음) 텍스트 쪽을 신뢰하고 district를 덧붙이지 않음 —
+  // 그렇지 않으면 "마포구 강동구 고덕동..." 처럼 구가 두 번 겹쳐 실패함.
+  if (district && !/[가-힣]+구/.test(s)) s = `${district} ${s}`;
   return `서울특별시 ${s}`.replace(/\s+/g, ' ').trim();
 }
 
