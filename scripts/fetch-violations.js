@@ -1,5 +1,5 @@
 /**
- * 위반건축물 공시송달 공고 자동 수집 스크립트 (파일럿: 강남·광진·송파·성동·용산구)
+ * 위반건축물 공시송달 공고 자동 수집 스크립트 (강남·광진·송파·성동·용산·강동구)
  *
  * ── 배경 ──────────────────────────────────────────────────────────────────
  *  위반건축물은 서울시/경기도 재개발 데이터(fetch-redevelopment.js)와 달리
@@ -13,11 +13,12 @@
  *  차이). 따라서 이 스크립트는 "매일 최근 게시물 중 신규 위반건축물 공고를
  *  잡아내는" 용도로 설계했다 — 과거 이력 백필용이 아니다.
  *
- *  실전 실행으로 5개 구 모두 검증 완료(광진구는 실제 위반건축물 공고 3건
- *  수집). 강동구는 목록이 자바스크립트로 렌더링되는 방식(CSR)이라 단순
- *  HTTP 요청 + HTML 파싱으로는 목록 자체를 못 읽어와 제외했다 — 필요하면
- *  headless 브라우저(Playwright 등)를 추가해야 하는데, 그러면 이 구 하나
- *  때문에 전체 파이프라인이 무거워져서 우선 보류.
+ *  실전 실행으로 상세페이지 스크래핑(주소·담당부서·연락처 추출)까지 검증
+ *  완료. 강동구만 목록이 자바스크립트로 렌더링되는 방식(CSR)이라 단순
+ *  HTTP 요청으로는 목록 자체를 못 읽어와, 해당 구만 Playwright headless
+ *  브라우저로 렌더링한 뒤 같은 파싱 로직을 태운다(board.renderJs=true).
+ *  다른 5개 구는 계속 가벼운 fetch 방식을 쓴다 — 강동구 하나 때문에 전체
+ *  파이프라인을 무겁게 만들지 않기 위함.
  * ─────────────────────────────────────────────────────────────────────────
  */
 
@@ -64,6 +65,13 @@ const BOARDS = [
     listUrl: 'https://www.yongsan.go.kr/portal/bbs/B0000168/list.do?menuNo=200846',
     pageParam: 'pageIndex',
   },
+  {
+    // 주택도시개발공지 게시판 — 목록이 자바스크립트로 렌더링돼 headless 브라우저 필요
+    district: '강동구',
+    listUrl: 'https://welfare.gangdong.go.kr/web/newportal/bbs/b_111',
+    pageParam: 'pageIndex',
+    renderJs: true,
+  },
 ];
 
 // 리스트 행에서 (제목, 링크)를 뽑아내기 위한 선택자 후보들 — 사이트마다 마크업이
@@ -107,6 +115,40 @@ async function fetchPage(url, attempt = 1) {
     console.warn(`    요청 실패(${attempt}/${FETCH_RETRIES}, ${e.message}) — ${delay}ms 후 재시도: ${url}`);
     await new Promise(r => setTimeout(r, delay));
     return fetchPage(url, attempt + 1);
+  }
+}
+
+// ── 자바스크립트로 목록을 그리는 사이트(강동구)용 headless 브라우저 렌더링 ──
+// 브라우저 인스턴스는 한 번만 띄워서 여러 페이지 요청에 재사용한다(구동 비용이 크므로).
+let browserPromise = null;
+function getBrowser() {
+  if (!browserPromise) {
+    const { chromium } = require('playwright');
+    browserPromise = chromium.launch({ headless: true });
+  }
+  return browserPromise;
+}
+async function closeBrowser() {
+  if (browserPromise) { const b = await browserPromise; await b.close(); browserPromise = null; }
+}
+async function fetchRenderedPage(url, attempt = 1) {
+  let page;
+  try {
+    const browser = await getBrowser();
+    page = await browser.newPage({
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+    });
+    await page.goto(url, { waitUntil: 'networkidle', timeout: FETCH_TIMEOUT_MS });
+    await page.waitForTimeout(1000); // 네트워크idle 이후에도 늦게 그려지는 목록 대비
+    return await page.content();
+  } catch (e) {
+    if (attempt >= FETCH_RETRIES) throw e;
+    const delay = attempt * 3000;
+    console.warn(`    렌더링 실패(${attempt}/${FETCH_RETRIES}, ${e.message}) — ${delay}ms 후 재시도: ${url}`);
+    await new Promise(r => setTimeout(r, delay));
+    return fetchRenderedPage(url, attempt + 1);
+  } finally {
+    if (page) await page.close();
   }
 }
 
@@ -176,7 +218,7 @@ async function fetchBoard(board) {
     const url = `${board.listUrl}${board.listUrl.includes('?') ? '&' : '?'}${board.pageParam}=${page}`;
     let html;
     try {
-      html = await fetchPage(url);
+      html = board.renderJs ? await fetchRenderedPage(url) : await fetchPage(url);
     } catch (e) {
       console.warn(`  [${board.district}] 페이지 ${page} 요청 실패: ${e.message}`);
       break;
@@ -252,9 +294,9 @@ const NOISE_SELECTOR = [
   '[id*="gnb" i]', '[id*="lnb" i]', '[id*="header" i]', '[id*="footer" i]',
 ].join(',');
 
-async function fetchDetail(url) {
+async function fetchDetail(url, renderJs) {
   try {
-    const html = await fetchPage(url);
+    const html = renderJs ? await fetchRenderedPage(url) : await fetchPage(url);
     const $ = cheerio.load(html);
 
     // "본문 바로가기" 접근성 스킵링크가 있으면 그 타겟이 실제 콘텐츠 루트인 경우가 많다 —
@@ -324,11 +366,14 @@ async function main() {
       contact_dept: already.contact_dept, detail_snippet: already.detail_snippet,
     }); continue; }
     console.log(`  [상세] ${n.district} — ${n.title}`);
-    const detail = await fetchDetail(n.url);
+    const board = BOARDS.find(b => b.district === n.district);
+    const detail = await fetchDetail(n.url, board && board.renderJs);
     Object.assign(n, detail);
     console.log(`    주소: ${detail.address || '(추출 실패)'} / 담당부서: ${detail.contact_dept || '-'} / 연락처: ${detail.contact_phone || '-'}`);
     await new Promise(r => setTimeout(r, 300));
   }
+
+  await closeBrowser();
 
   // 기존 공고와 URL 기준 병합 (중복 제거, 최신 수집 결과 우선)
   const byUrl = new Map(existing.notices.map(n => [n.url, n]));
@@ -339,4 +384,4 @@ async function main() {
   console.log(`[DONE] 위반건축물 관련 공고 누계 ${merged.notices.length}건 저장 완료 (이번 실행 신규 매칭 ${matched.length}건)`);
 }
 
-main().catch(e => { console.error('오류:', e); process.exit(1); });
+main().catch(async e => { console.error('오류:', e); await closeBrowser(); process.exit(1); });
