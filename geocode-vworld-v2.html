@@ -330,8 +330,11 @@
     s = s.replace(/,.*$/, '');
     s = s.replace(/외\s*\d+\s*필지/g, ' ');
     s = s.replace(/(일대|일원)\s*$/g, ' ');
+    // "신월2동/오류2동" 같은 행정동 표기를 법정동으로 정규화
+    s = s.replace(/([가-힣]+)\d+동/g, '$1동');
     s = s.replace(/\s+/g, ' ').trim();
-    if (district && s.indexOf(district) === -1) s = district + ' ' + s;
+    // 텍스트에 이미 다른 구 이름이 있으면 그쪽을 신뢰 (district 필드가 틀린 경우 대비)
+    if (district && !/[가-힣]+구/.test(s)) s = district + ' ' + s;
     return ('서울특별시 ' + s).replace(/\s+/g, ' ').trim();
   }
 
