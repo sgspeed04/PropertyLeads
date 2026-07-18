@@ -312,17 +312,31 @@
     el.appendChild(div);
   }
 
-  // scripts/fetch-redevelopment.js의 cleanAddress()와 동일한 로직
+  // scripts/fetch-redevelopment.js의 cleanAddress()/looksLikeParcel()/toDongOnly()와 동일한 로직
+  function looksLikeParcel(s) {
+    return /[가-힣]+동\s*\d+(-\d+)?/.test(s);
+  }
+
   function cleanAddress(pstnNm, district) {
     var s = (pstnNm || '').trim();
     if (!s) return '';
-    s = s.replace(/\([^)]*\)/g, ' ');
+    s = s.replace(/및.*$/, ' ');
+    var parenMatch = s.match(/\(([^)]*)\)/);
+    if (parenMatch) {
+      var inner = parenMatch[1];
+      var outer = s.replace(/\([^)]*\)/g, ' ');
+      s = (looksLikeParcel(inner) && !looksLikeParcel(outer)) ? inner : outer;
+    }
     s = s.replace(/,.*$/, '');
     s = s.replace(/외\s*\d+\s*필지/g, ' ');
     s = s.replace(/(일대|일원)\s*$/g, ' ');
     s = s.replace(/\s+/g, ' ').trim();
     if (district && s.indexOf(district) === -1) s = district + ' ' + s;
     return ('서울특별시 ' + s).replace(/\s+/g, ' ').trim();
+  }
+
+  function toDongOnly(cleanedAddress) {
+    return cleanedAddress.replace(/\s*\d[\d-]*\s*(번지)?\s*$/, '').trim();
   }
 
   var jsonpSeq = 0;
@@ -425,6 +439,14 @@
     var i = 0;
     var firstErrorShown = false;
 
+    var dongOnlyCount = 0;
+
+    function recordResult(p, coord, precise) {
+      results.push({ id: p.id, lat: coord.lat, lng: coord.lng, precise: precise });
+      success++;
+      if (!precise) dongOnlyCount++;
+    }
+
     function step() {
       if (i >= total) { return finish(); }
       var p = targets[i];
@@ -432,22 +454,37 @@
       currentAddrEl.textContent = addr;
       geocode(addr, key).then(function (r) {
         if (r.coord) {
-          results.push({ id: p.id, lat: r.coord.lat, lng: r.coord.lng });
-          success++;
-        } else {
-          fail++;
-          if (!firstErrorShown && r.error) {
-            firstErrorShown = true;
-            setStatus(loadStatus, '첫 실패 원인: ' + r.error, 'err');
-          }
+          recordResult(p, r.coord, true);
+          afterAttempt();
+          return;
         }
-        i++;
-        progressCount.textContent = i + ' / ' + total;
-        progressFill.style.width = Math.round((i / total) * 100) + '%';
-        successCountEl.textContent = String(success);
-        failCountEl.textContent = String(fail);
-        sleep(DELAY_MS).then(step);
+        if (!firstErrorShown && r.error) {
+          firstErrorShown = true;
+          setStatus(loadStatus, '첫 실패 원인: ' + r.error, 'err');
+        }
+        // 정확한 지번으로 실패 — 재개발구역 특성상 지번이 이미 통합/변경된 경우가
+        // 많아 "구 동" 단위로 한 번 더 시도 (지터보다는 훨씬 정확)
+        var dongAddr = toDongOnly(addr);
+        sleep(DELAY_MS).then(function () {
+          return geocode(dongAddr, key);
+        }).then(function (r2) {
+          if (r2.coord) {
+            recordResult(p, r2.coord, false);
+          } else {
+            fail++;
+          }
+          afterAttempt();
+        });
       });
+    }
+
+    function afterAttempt() {
+      i++;
+      progressCount.textContent = i + ' / ' + total;
+      progressFill.style.width = Math.round((i / total) * 100) + '%';
+      successCountEl.textContent = String(success);
+      failCountEl.textContent = String(fail);
+      sleep(DELAY_MS).then(step);
     }
 
     function finish() {
@@ -455,7 +492,8 @@
       startBtn.textContent = '완료됨';
       stepResult.hidden = false;
       var kind = success > 0 ? 'ok' : 'err';
-      setStatus(resultStatus, success + '건 성공, ' + fail + '건 실패. 아래 내용을 복사하거나 파일로 저장해서 보내주세요.', kind);
+      var preciseCount = success - dongOnlyCount;
+      setStatus(resultStatus, preciseCount + '건 지번 성공, ' + dongOnlyCount + '건 동 단위 성공, ' + fail + '건 실패. 아래 내용을 복사하거나 파일로 저장해서 보내주세요.', kind);
       resultText.value = JSON.stringify(results);
       running = false;
     }
