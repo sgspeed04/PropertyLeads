@@ -335,15 +335,20 @@
     var url = 'https://api.vworld.kr/req/address?service=address&request=getCoord&version=2.0&crs=epsg:4326&address=' +
       encodeURIComponent(address) + '&format=json&type=PARCEL&key=' + encodeURIComponent(key);
     return fetchWithTimeout(url, TIMEOUT_MS)
-      .then(function (res) { return res.json(); })
-      .then(function (json) {
-        var point = json && json.response && json.response.result && json.response.result.point;
-        if (json && json.response && json.response.status === 'OK' && point) {
-          return { lat: parseFloat(point.y), lng: parseFloat(point.x) };
-        }
-        return null;
+      .then(function (res) {
+        if (!res.ok) return { coord: null, error: 'HTTP ' + res.status };
+        return res.json().then(function (json) {
+          var point = json && json.response && json.response.result && json.response.result.point;
+          if (json && json.response && json.response.status === 'OK' && point) {
+            return { coord: { lat: parseFloat(point.y), lng: parseFloat(point.x) }, error: null };
+          }
+          var errText = json && json.response && json.response.error && json.response.error.text;
+          return { coord: null, error: errText || ('API status: ' + (json && json.response && json.response.status)) };
+        });
       })
-      .catch(function () { return null; });
+      .catch(function (e) {
+        return { coord: null, error: (e.name || 'Error') + ': ' + (e.message || String(e)) };
+      });
   }
 
   function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
@@ -396,18 +401,23 @@
     var success = 0, fail = 0;
     var total = targets.length;
     var i = 0;
+    var firstErrorShown = false;
 
     function step() {
       if (i >= total) { return finish(); }
       var p = targets[i];
       var addr = cleanAddress(p.addr, p.district);
       currentAddrEl.textContent = addr;
-      geocode(addr, key).then(function (coord) {
-        if (coord) {
-          results.push({ id: p.id, lat: coord.lat, lng: coord.lng });
+      geocode(addr, key).then(function (r) {
+        if (r.coord) {
+          results.push({ id: p.id, lat: r.coord.lat, lng: r.coord.lng });
           success++;
         } else {
           fail++;
+          if (!firstErrorShown && r.error) {
+            firstErrorShown = true;
+            setStatus(loadStatus, '첫 실패 원인: ' + r.error, 'err');
+          }
         }
         i++;
         progressCount.textContent = i + ' / ' + total;
