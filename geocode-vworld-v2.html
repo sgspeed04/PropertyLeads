@@ -325,30 +325,52 @@
     return ('서울특별시 ' + s).replace(/\s+/g, ' ').trim();
   }
 
-  function fetchWithTimeout(url, ms) {
-    var controller = new AbortController();
-    var timer = setTimeout(function () { controller.abort(); }, ms);
-    return fetch(url, { signal: controller.signal }).finally(function () { clearTimeout(timer); });
+  var jsonpSeq = 0;
+
+  // VWorld가 브라우저 fetch()의 CORS 요청은 막지만, <script> 태그로 불러오는
+  // JSONP 방식(callback 파라미터)은 허용하는 것으로 확인됨 — 이 방식으로 우회.
+  function geocodeJSONP(address, key) {
+    return new Promise(function (resolve) {
+      jsonpSeq++;
+      var callbackName = 'vwCb' + jsonpSeq + '_' + Date.now();
+      var script = document.createElement('script');
+      var done = false;
+
+      function finish(result) {
+        if (done) return;
+        done = true;
+        clearTimeout(timer);
+        delete window[callbackName];
+        if (script.parentNode) script.parentNode.removeChild(script);
+        resolve(result);
+      }
+
+      var timer = setTimeout(function () {
+        finish({ coord: null, error: 'JSONP 타임아웃 (응답 없음)' });
+      }, TIMEOUT_MS);
+
+      window[callbackName] = function (json) {
+        var point = json && json.response && json.response.result && json.response.result.point;
+        if (json && json.response && json.response.status === 'OK' && point) {
+          finish({ coord: { lat: parseFloat(point.y), lng: parseFloat(point.x) }, error: null });
+        } else {
+          var errText = json && json.response && json.response.error && json.response.error.text;
+          finish({ coord: null, error: errText || ('API status: ' + (json && json.response && json.response.status)) });
+        }
+      };
+
+      var url = 'https://api.vworld.kr/req/address?service=address&request=getCoord&version=2.0&crs=epsg:4326&address=' +
+        encodeURIComponent(address) + '&format=json&type=PARCEL&key=' + encodeURIComponent(key) + '&callback=' + callbackName;
+      script.src = url;
+      script.onerror = function () {
+        finish({ coord: null, error: 'JSONP 스크립트 로드 실패' });
+      };
+      document.head.appendChild(script);
+    });
   }
 
   function geocode(address, key) {
-    var url = 'https://api.vworld.kr/req/address?service=address&request=getCoord&version=2.0&crs=epsg:4326&address=' +
-      encodeURIComponent(address) + '&format=json&type=PARCEL&key=' + encodeURIComponent(key);
-    return fetchWithTimeout(url, TIMEOUT_MS)
-      .then(function (res) {
-        if (!res.ok) return { coord: null, error: 'HTTP ' + res.status };
-        return res.json().then(function (json) {
-          var point = json && json.response && json.response.result && json.response.result.point;
-          if (json && json.response && json.response.status === 'OK' && point) {
-            return { coord: { lat: parseFloat(point.y), lng: parseFloat(point.x) }, error: null };
-          }
-          var errText = json && json.response && json.response.error && json.response.error.text;
-          return { coord: null, error: errText || ('API status: ' + (json && json.response && json.response.status)) };
-        });
-      })
-      .catch(function (e) {
-        return { coord: null, error: (e.name || 'Error') + ': ' + (e.message || String(e)) };
-      });
+    return geocodeJSONP(address, key);
   }
 
   function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
