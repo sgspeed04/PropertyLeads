@@ -66,11 +66,13 @@ const BOARDS = [
     pageParam: 'pageIndex',
   },
   {
-    // 주택도시개발공지 게시판 — 목록이 자바스크립트로 렌더링돼 headless 브라우저 필요
+    // newportal의 "주택도시개발공지"(b_111)는 자바스크립트 렌더링이라 포기했으나,
+    // 실제 고시공고는 별도 시스템인 eminwon(새올전자민원, 전국 다수 지자체가 쓰는
+    // 표준 NTIS 플랫폼)에 있는 것으로 확인됨 — 이쪽은 구식 JSP라 서버 렌더링일
+    // 가능성이 높아 renderJs 없이 먼저 시도
     district: '강동구',
-    listUrl: 'https://welfare.gangdong.go.kr/web/newportal/bbs/b_111',
+    listUrl: 'https://eminwon.gangdong.go.kr/emwp/gov/mogaha/ntis/web/ofr/action/OfrAction.do?jndinm=OfrNotAncmtEJB&context=NTIS&method=selectOfrNotAncmt&methodnm=selectOfrNotAncmtList&not_ancmt_se_code=01,02,04&homepage_pbs_yn=Y&subCheck=Y&ofr_pageSize=10&Key=B_Subject&countYn=Y&list_gubun=N&initValue=Y',
     pageParam: 'pageIndex',
-    renderJs: true,
   },
 ];
 
@@ -83,6 +85,8 @@ const ROW_SELECTORS = [
   'ul.board-list li a[href*="view.do" i]',
   'a[href*="view.do" i]',
   'a[href*="ntt" i]',
+  // eminwon(새올전자민원) 계열 사이트는 상세 링크가 not_ancmt_mgt_no 파라미터를 가진다
+  'a[href*="not_ancmt_mgt_no" i]',
 ];
 
 function absoluteUrl(base, href) {
