@@ -432,11 +432,13 @@ function mergeWithExisting(apiProjects, existingProjects) {
       completion_est: ex.completion_est || ap.completion_est,
       ref_note:       ex.ref_note       || ap.ref_note,
     };
-    // 이전 실행에서 VWorld 지오코딩에 성공한 좌표는 유지 — 매번 새로 지터링되지 않도록
-    if (ex.geo_source === 'vworld') {
+    // 이전 실행에서 VWorld 지오코딩에 성공한 좌표는 유지 — 매번 새로 지터링되지 않도록.
+    // vworld_dong(동 단위 근사치)도 유지하되, geocodeProjects()의 재시도 대상에는
+    // 계속 포함시켜 지번 단위 정확 좌표로 승격될 기회를 남겨둔다.
+    if (ex.geo_source === 'vworld' || ex.geo_source === 'vworld_dong') {
       merged.lat = ex.lat;
       merged.lng = ex.lng;
-      merged.geo_source = 'vworld';
+      merged.geo_source = ex.geo_source;
     }
     return merged;
   });
@@ -445,16 +447,38 @@ function mergeWithExisting(apiProjects, existingProjects) {
 // ── VWorld 지오코더 — PSTN_NM(지번 주소)로 실제 좌표 조회 ───────────────────────
 // 지번 텍스트에 "일대/일원/외 N필지/(부가설명)" 등 정형화되지 않은 표현이 섞여
 // 있어 지오코더가 못 읽는 경우가 많음 — 정리 후 시도.
+// "동 숫자(-숫자)?" 패턴이 있으면 지번 표기로 판단 (괄호 안/밖 중 실제 지번이
+// 어느 쪽인지 판별하는 데 사용 — 도로명 주소엔 이 패턴이 없음).
+function looksLikeParcel(s) {
+  return /[가-힣]+동\s*\d+(-\d+)?/.test(s);
+}
+
 function cleanAddress(pstnNm, district) {
   let s = (pstnNm || '').trim();
   if (!s) return '';
-  s = s.replace(/\([^)]*\)/g, ' ');           // 괄호 부가설명 제거
-  s = s.replace(/,.*$/, '');                  // 쉼표 이후(복수 동 표기 등) 제거
+  s = s.replace(/및.*$/, ' ');                 // "및 의주로1가 1일대" 등 복수 필지 뒷부분 제거
+  const parenMatch = s.match(/\(([^)]*)\)/);
+  if (parenMatch) {
+    const inner = parenMatch[1];
+    const outer = s.replace(/\([^)]*\)/g, ' ');
+    // 괄호 안이 실제 지번(예: "문정로 125(가락동 199)")이고 바깥이 도로명이면
+    // 바깥(도로명)을 버리고 괄호 안(지번)을 사용 — PARCEL 타입 지오코더는
+    // 도로명이 아니라 지번을 기대하므로 반대로 처리하면 실패함.
+    s = (looksLikeParcel(inner) && !looksLikeParcel(outer)) ? inner : outer;
+  }
+  s = s.replace(/,.*$/, '');                  // 쉼표 이후(복수 지번 표기 등) 제거
   s = s.replace(/외\s*\d+\s*필지/g, ' ');       // "외 214필지" 제거
   s = s.replace(/(일대|일원)\s*$/g, ' ');       // 꼬리 표현 제거
   s = s.replace(/\s+/g, ' ').trim();
   if (district && !s.includes(district)) s = `${district} ${s}`;
   return `서울특별시 ${s}`.replace(/\s+/g, ' ').trim();
+}
+
+// 정확한 지번으로 실패하면(재개발구역 특성상 지번이 이미 통합/변경된 경우가 많음)
+// 지번을 떼고 "구 동" 단위로 재시도 — 정확도는 떨어지지만 구 전체 무작위
+// 지터보다는 훨씬 실제 위치에 가까움.
+function toDongOnly(cleanedAddress) {
+  return cleanedAddress.replace(/\s*\d[\d-]*\s*(번지)?\s*$/, '').trim();
 }
 
 async function geocodeAddress(address) {
@@ -480,21 +504,28 @@ async function geocodeProjects(projects) {
   }
   const targets = projects.filter(p => p.geo_source !== 'vworld' && p.addr);
   console.log(`[GEOCODE] VWorld 지오코딩 대상 ${targets.length}건 (이미 확보된 ${projects.length - targets.length}건 제외)`);
-  let success = 0, fail = 0;
+  let success = 0, dongOnly = 0, fail = 0;
   for (const p of targets) {
     const addr = cleanAddress(p.addr, p.district);
-    const coord = await geocodeAddress(addr);
+    let coord = await geocodeAddress(addr);
+    let precise = true;
+    if (!coord) {
+      // 정확한 지번으로 실패 — 재개발구역 특성상 지번이 이미 통합/변경된 경우가 많아
+      // "구 동" 단위로 재시도 (지터보다는 훨씬 정확)
+      coord = await geocodeAddress(toDongOnly(addr));
+      precise = false;
+    }
     if (coord) {
       p.lat = coord.lat;
       p.lng = coord.lng;
-      p.geo_source = 'vworld';
-      success++;
+      p.geo_source = precise ? 'vworld' : 'vworld_dong';
+      if (precise) success++; else dongOnly++;
     } else {
       fail++;
     }
     await new Promise(r => setTimeout(r, 150));
   }
-  console.log(`[GEOCODE] 성공 ${success}건, 실패(구 중심좌표 지터 유지) ${fail}건`);
+  console.log(`[GEOCODE] 지번 성공 ${success}건, 동 단위 성공 ${dongOnly}건, 실패(구 중심좌표 지터 유지) ${fail}건`);
 }
 
 // ── 서울 데이터 수집 ─────────────────────────────────────────────────────────
