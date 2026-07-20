@@ -196,6 +196,19 @@ textarea.form-control{resize:vertical;min-height:70px}
         <div class="form-group"><label class="form-label">예상 소개 수수료(원)</label><input class="form-control" id="leadFee" type="number" placeholder="500000"></div>
       </div>
       <div class="form-group"><label class="form-label">출처 링크(구청 공고 등)</label><input class="form-control" id="leadSourceUrl" placeholder="https://..."></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">공식 검증상태</label>
+          <select class="form-control" id="leadVerification">
+            <option value="unverified">미확인</option>
+            <option value="violation_confirmed">위반 확인됨</option>
+            <option value="cleared">해제 확인됨(시정완료)</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">&nbsp;</label>
+          <button type="button" class="btn btn-outline" style="width:100%" onclick="openBuildingRegisterCheck()">🏢 건축물대장 확인</button>
+          <div class="form-hint">정부24에서 무료로 열람 — 위반건축물 여부가 표제부에 표시됩니다</div>
+        </div>
+      </div>
       <div class="form-group"><label class="form-label">메모</label><textarea class="form-control" id="leadNotes" placeholder="소유주 연락 상황, 특이사항 등"></textarea></div>
     </div>
     <div class="modal-ft"><button class="btn btn-outline" onclick="closeModal('leadModal')">취소</button><button class="btn btn-primary" onclick="saveLead()">저장</button></div>
@@ -320,6 +333,22 @@ function statusBadge(s) {
   const [cls,lbl] = STATUS_MAP[s]||['badge-gray',s];
   return `<span class="badge ${cls}">${lbl}</span>`;
 }
+const VERIFICATION_MAP = {
+  unverified:          ['badge-gray',  '미확인'],
+  violation_confirmed: ['badge-red',   '위반확인됨'],
+  cleared:             ['badge-green', '해제확인됨'],
+};
+function verificationBadge(s) {
+  const [cls,lbl] = VERIFICATION_MAP[s||'unverified']||['badge-gray','미확인'];
+  return `<span class="badge ${cls}">${lbl}</span>`;
+}
+function openBuildingRegisterCheck() {
+  const address = $v('leadAddress');
+  const district = $v('leadDistrict');
+  if (!address) { alert('주소를 먼저 입력해주세요'); return; }
+  const q = [district, address, '건축물대장 열람'].filter(Boolean).join(' ');
+  window.open(`https://search.naver.com/search.naver?query=${encodeURIComponent(q)}`, '_blank', 'noopener');
+}
 function architectName(id) {
   const a = architects.find(a=>a.id===id);
   return a ? a.name + (a.company?` <span style="color:var(--muted);font-size:12px">${a.company}</span>`:'') : '<span style="color:var(--muted)">미배정</span>';
@@ -418,6 +447,7 @@ function renderLeads() {
       <td>${l.address||'-'}<div style="font-size:11.5px;color:var(--muted)">${l.violation_type||''}${l.detected_date?' · '+l.detected_date:''}</div></td>
       <td>${l.district||'-'}</td>
       <td>${statusBadge(l.status)}</td>
+      <td>${verificationBadge(l.verification_status)}${l.verified_at?`<div style="font-size:11px;color:var(--muted)">${l.verified_at}</div>`:''}</td>
       <td>${architectName(l.architect_id)}</td>
       <td>${fmtW(l.referral_fee)}</td>
       <td>${l.source_url?`<a href="${l.source_url}" target="_blank" rel="noopener">🔗 링크</a>`:'-'}</td>
@@ -425,7 +455,7 @@ function renderLeads() {
         <button class="btn-ghost" onclick="openLeadModal('${l.id}')">✏️</button>
         <button class="btn-ghost" onclick="deleteLead('${l.id}')">🗑️</button>
       </td>
-    </tr>`).join('') : `<tr><td colspan="7"><div class="empty-state"><div class="e-icon">🏚️</div>등록된 리드가 없습니다. '+ 리드 추가'로 시작하세요.</div></td></tr>`;
+    </tr>`).join('') : `<tr><td colspan="8"><div class="empty-state"><div class="e-icon">🏚️</div>등록된 리드가 없습니다. '+ 리드 추가'로 시작하세요.</div></td></tr>`;
 
   return `
     <div class="card">
@@ -442,7 +472,7 @@ function renderLeads() {
       </div>
       <div class="tbl-wrap">
         <table>
-          <thead><tr><th>주소 / 유형</th><th>구/시</th><th>상태</th><th>담당 건축사</th><th>예상 수수료</th><th>출처</th><th></th></tr></thead>
+          <thead><tr><th>주소 / 유형</th><th>구/시</th><th>상태</th><th>검증상태</th><th>담당 건축사</th><th>예상 수수료</th><th>출처</th><th></th></tr></thead>
           <tbody>${rowsHtml}</tbody>
         </table>
       </div>
@@ -459,6 +489,7 @@ function openLeadModal(id) {
   document.getElementById('leadStatus').value = l?.status||'new';
   document.getElementById('leadFee').value = l?.referral_fee||'';
   document.getElementById('leadSourceUrl').value = l?.source_url||'';
+  document.getElementById('leadVerification').value = l?.verification_status||'unverified';
   document.getElementById('leadNotes').value = l?.notes||'';
 
   const sel = document.getElementById('leadArchitectId');
@@ -471,6 +502,8 @@ function saveLead() {
   if (!address) { alert('주소를 입력해주세요'); return; }
   const id = document.getElementById('leadId').value || uid();
   const existing = leads.find(l=>l.id===id);
+  const verificationStatus = document.getElementById('leadVerification').value;
+  const verificationChanged = verificationStatus !== (existing?.verification_status || 'unverified');
   const data = {
     id, address, district: $v('leadDistrict'),
     violation_type: document.getElementById('leadType').value,
@@ -479,6 +512,8 @@ function saveLead() {
     architect_id: document.getElementById('leadArchitectId').value || null,
     referral_fee: parseInt($v('leadFee'))||0,
     source_url: $v('leadSourceUrl'),
+    verification_status: verificationStatus,
+    verified_at: verificationStatus === 'unverified' ? null : (verificationChanged ? today() : (existing?.verified_at || today())),
     notes: $v('leadNotes'),
     created_at: existing?.created_at || new Date().toISOString()
   };
@@ -644,8 +679,13 @@ create table viol_leads (
   status text default 'new',
   referral_fee int default 0,
   source_url text, notes text,
+  verification_status text default 'unverified',
+  verified_at date,
   created_at timestamptz default now()
-);</div>
+);
+-- 기존 테이블에 리드 검증 컬럼만 추가하려면:
+alter table viol_leads add column if not exists verification_status text default 'unverified';
+alter table viol_leads add column if not exists verified_at date;</div>
         <button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="copySQL()">📋 SQL 복사</button>
         <div class="form-hint" style="margin-top:8px">기존 cm_clients/cm_sessions 테이블과 동일하게 RLS + anon 정책을 적용하세요.</div>
       </div>
@@ -673,7 +713,7 @@ function saveSupabaseSettings() {
   if (cfg.supabaseUrl && cfg.supabaseKey) initSupabase();
 }
 function copySQL() {
-  const sql = `create table viol_architects (id uuid default gen_random_uuid() primary key, name text not null, company text, specialty text, phone text, email text, fee_rate numeric, notes text, created_at timestamptz default now());\ncreate table viol_leads (id uuid default gen_random_uuid() primary key, architect_id uuid references viol_architects(id), address text not null, district text, violation_type text, detected_date date, status text default 'new', referral_fee int default 0, source_url text, notes text, created_at timestamptz default now());`;
+  const sql = `create table viol_architects (id uuid default gen_random_uuid() primary key, name text not null, company text, specialty text, phone text, email text, fee_rate numeric, notes text, created_at timestamptz default now());\ncreate table viol_leads (id uuid default gen_random_uuid() primary key, architect_id uuid references viol_architects(id), address text not null, district text, violation_type text, detected_date date, status text default 'new', referral_fee int default 0, source_url text, notes text, verification_status text default 'unverified', verified_at date, created_at timestamptz default now());\nalter table viol_leads add column if not exists verification_status text default 'unverified';\nalter table viol_leads add column if not exists verified_at date;`;
   navigator.clipboard.writeText(sql).then(()=>alert('SQL이 복사됐습니다!'));
 }
 function openDistrictSearch() {
