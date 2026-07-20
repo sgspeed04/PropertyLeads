@@ -32,13 +32,13 @@
 - 대시보드: 구/시별 리드 분포, 확정·예상 소개 수수료 합계
 - 구/시 입력 시 해당 지역 위반건축물 공고 검색 바로가기 (전국 통합 오픈API 미공개 — 수기 등록 방식)
 - Supabase 크로스 디바이스 동기화
-- **자동수집 공고 탭**: 강남·광진·송파·성동·용산·강동 6개 구청 공시송달/고시공고 게시판 스크래핑 결과(`data/violations_notices.json`)를 보여주고, 바로 리드로 등록하거나 숨길 수 있음
+- **자동수집 공고 탭**: 강남·광진·송파·성동·용산 5개 구청 공시송달/고시공고 게시판 스크래핑 결과(`data/violations_notices.json`)를 보여주고, 바로 리드로 등록하거나 숨길 수 있음
   - `scripts/fetch-violations.js`가 `.github/workflows/update-violations.yml`을 통해 매일 00:30 KST 자동 실행
   - 위반건축물 관련 키워드(철거명령/이행강제금/무단증축 등)로 제목을 필터링 — 게시판들이 다른 기관 공고도 섞어 올리기 때문
   - 과거 아카이브 백필은 게시글 번호 차이가 너무 커서 비현실적 — 매일 신규 공고만 수집하는 용도
   - 매칭된 공고는 상세 페이지까지 들어가 본문에서 주소·담당부서·연락처를 정규식으로 추출(`address`/`contact_dept`/`contact_phone`), 실패 시 `detail_snippet`에 본문 일부를 남겨 수동 확인 가능
-  - 강동구는 목록이 자바스크립트로 렌더링되는 방식(CSR)이라 해당 구만 Playwright headless 브라우저로 렌더링 후 파싱(`board.renderJs=true`) — 다른 5개 구는 계속 가벼운 HTTP 요청 방식 사용
-  - 다른 구/시로 확장하려면 `scripts/fetch-violations.js`의 `BOARDS` 배열에 게시판 URL 추가 (자바스크립트 렌더링이 필요하면 `renderJs: true` 지정)
+  - 강동구는 보류 — newportal CSR 렌더링(Playwright까지 시도), eminwon 파라미터 추측, 서울 열린데이터광장 OA-12606(2021년에 멈춘 무관한 데이터) 세 가지 방법 모두 실패. 다른 구에서 진짜 CSR 사이트를 만나면 git 이력의 Playwright 렌더링 패턴(`fetchRenderedPage`) 참고
+  - 다른 구/시로 확장하려면 `scripts/fetch-violations.js`의 `BOARDS` 배열에 게시판 URL 추가
 
 ## redevelopment.html 주요 기능
 - 수도권(서울·경기) 재개발·재건축 구역을 지도에 표시, 뉴타운/대형 재건축 포함

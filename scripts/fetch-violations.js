@@ -1,5 +1,5 @@
 /**
- * 위반건축물 공시송달 공고 자동 수집 스크립트 (강남·광진·송파·성동·용산·강동구)
+ * 위반건축물 공시송달 공고 자동 수집 스크립트 (강남·광진·송파·성동·용산 5개 구)
  *
  * ── 배경 ──────────────────────────────────────────────────────────────────
  *  위반건축물은 서울시/경기도 재개발 데이터(fetch-redevelopment.js)와 달리
@@ -14,11 +14,12 @@
  *  잡아내는" 용도로 설계했다 — 과거 이력 백필용이 아니다.
  *
  *  실전 실행으로 상세페이지 스크래핑(주소·담당부서·연락처 추출)까지 검증
- *  완료. 강동구만 목록이 자바스크립트로 렌더링되는 방식(CSR)이라 단순
- *  HTTP 요청으로는 목록 자체를 못 읽어와, 해당 구만 Playwright headless
- *  브라우저로 렌더링한 뒤 같은 파싱 로직을 태운다(board.renderJs=true).
- *  다른 5개 구는 계속 가벼운 fetch 방식을 쓴다 — 강동구 하나 때문에 전체
- *  파이프라인을 무겁게 만들지 않기 위함.
+ *  완료. 강동구는 세 가지 방법(newportal CSR 렌더링, eminwon 파라미터 추측,
+ *  서울 열린데이터광장 OA-12606)을 모두 시도했으나 실패해 보류했다 —
+ *  headless 브라우저까지 써도 실제 게시글 목록이 안 나왔고(URL 추측 자체가
+ *  틀렸을 가능성), eminwon 시스템은 거의 빈 응답, OA-12606은 관련 없는
+ *  데이터(2021년에 멈춘 일반 소식 게시판)였다. 다른 구청에서 나중에 진짜
+ *  CSR 사이트를 만나면 이 커밋 이력의 Playwright 렌더링 패턴을 참고할 것.
  * ─────────────────────────────────────────────────────────────────────────
  */
 
@@ -63,15 +64,6 @@ const BOARDS = [
     // 고시공고 게시판 — 실전 검증 완료
     district: '용산구',
     listUrl: 'https://www.yongsan.go.kr/portal/bbs/B0000168/list.do?menuNo=200846',
-    pageParam: 'pageIndex',
-  },
-  {
-    // newportal의 "주택도시개발공지"(b_111)는 자바스크립트 렌더링이라 포기했으나,
-    // 실제 고시공고는 별도 시스템인 eminwon(새올전자민원, 전국 다수 지자체가 쓰는
-    // 표준 NTIS 플랫폼)에 있는 것으로 확인됨 — 이쪽은 구식 JSP라 서버 렌더링일
-    // 가능성이 높아 renderJs 없이 먼저 시도
-    district: '강동구',
-    listUrl: 'https://eminwon.gangdong.go.kr/emwp/gov/mogaha/ntis/web/ofr/action/OfrAction.do?jndinm=OfrNotAncmtEJB&context=NTIS&method=selectOfrNotAncmt&methodnm=selectOfrNotAncmtList&not_ancmt_se_code=01,02,04&homepage_pbs_yn=Y&subCheck=Y&ofr_pageSize=10&Key=B_Subject&countYn=Y&list_gubun=N&initValue=Y',
     pageParam: 'pageIndex',
   },
 ];
@@ -119,40 +111,6 @@ async function fetchPage(url, attempt = 1) {
     console.warn(`    요청 실패(${attempt}/${FETCH_RETRIES}, ${e.message}) — ${delay}ms 후 재시도: ${url}`);
     await new Promise(r => setTimeout(r, delay));
     return fetchPage(url, attempt + 1);
-  }
-}
-
-// ── 자바스크립트로 목록을 그리는 사이트(강동구)용 headless 브라우저 렌더링 ──
-// 브라우저 인스턴스는 한 번만 띄워서 여러 페이지 요청에 재사용한다(구동 비용이 크므로).
-let browserPromise = null;
-function getBrowser() {
-  if (!browserPromise) {
-    const { chromium } = require('playwright');
-    browserPromise = chromium.launch({ headless: true });
-  }
-  return browserPromise;
-}
-async function closeBrowser() {
-  if (browserPromise) { const b = await browserPromise; await b.close(); browserPromise = null; }
-}
-async function fetchRenderedPage(url, attempt = 1) {
-  let page;
-  try {
-    const browser = await getBrowser();
-    page = await browser.newPage({
-      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
-    });
-    await page.goto(url, { waitUntil: 'networkidle', timeout: FETCH_TIMEOUT_MS });
-    await page.waitForTimeout(1000); // 네트워크idle 이후에도 늦게 그려지는 목록 대비
-    return await page.content();
-  } catch (e) {
-    if (attempt >= FETCH_RETRIES) throw e;
-    const delay = attempt * 3000;
-    console.warn(`    렌더링 실패(${attempt}/${FETCH_RETRIES}, ${e.message}) — ${delay}ms 후 재시도: ${url}`);
-    await new Promise(r => setTimeout(r, delay));
-    return fetchRenderedPage(url, attempt + 1);
-  } finally {
-    if (page) await page.close();
   }
 }
 
@@ -222,7 +180,7 @@ async function fetchBoard(board) {
     const url = `${board.listUrl}${board.listUrl.includes('?') ? '&' : '?'}${board.pageParam}=${page}`;
     let html;
     try {
-      html = board.renderJs ? await fetchRenderedPage(url) : await fetchPage(url);
+      html = await fetchPage(url);
     } catch (e) {
       console.warn(`  [${board.district}] 페이지 ${page} 요청 실패: ${e.message}`);
       break;
@@ -298,9 +256,9 @@ const NOISE_SELECTOR = [
   '[id*="gnb" i]', '[id*="lnb" i]', '[id*="header" i]', '[id*="footer" i]',
 ].join(',');
 
-async function fetchDetail(url, renderJs) {
+async function fetchDetail(url) {
   try {
-    const html = renderJs ? await fetchRenderedPage(url) : await fetchPage(url);
+    const html = await fetchPage(url);
     const $ = cheerio.load(html);
 
     // "본문 바로가기" 접근성 스킵링크가 있으면 그 타겟이 실제 콘텐츠 루트인 경우가 많다 —
@@ -370,14 +328,11 @@ async function main() {
       contact_dept: already.contact_dept, detail_snippet: already.detail_snippet,
     }); continue; }
     console.log(`  [상세] ${n.district} — ${n.title}`);
-    const board = BOARDS.find(b => b.district === n.district);
-    const detail = await fetchDetail(n.url, board && board.renderJs);
+    const detail = await fetchDetail(n.url);
     Object.assign(n, detail);
     console.log(`    주소: ${detail.address || '(추출 실패)'} / 담당부서: ${detail.contact_dept || '-'} / 연락처: ${detail.contact_phone || '-'}`);
     await new Promise(r => setTimeout(r, 300));
   }
-
-  await closeBrowser();
 
   // 기존 공고와 URL 기준 병합 (중복 제거, 최신 수집 결과 우선)
   const byUrl = new Map(existing.notices.map(n => [n.url, n]));
@@ -388,4 +343,4 @@ async function main() {
   console.log(`[DONE] 위반건축물 관련 공고 누계 ${merged.notices.length}건 저장 완료 (이번 실행 신규 매칭 ${matched.length}건)`);
 }
 
-main().catch(async e => { console.error('오류:', e); await closeBrowser(); process.exit(1); });
+main().catch(e => { console.error('오류:', e); process.exit(1); });

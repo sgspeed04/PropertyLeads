@@ -602,7 +602,7 @@ function renderNotices() {
         <button class="btn btn-primary btn-sm" onclick="convertNoticeToLead('${n.id}')">+ 리드로 등록</button>
         <button class="btn-ghost" onclick="dismissNotice('${n.id}')" title="숨기기">🗑️</button>
       </td>
-    </tr>`).join('') : `<tr><td colspan="7"><div class="empty-state"><div class="e-icon">🤖</div>자동수집된 위반건축물 공고가 없습니다.<br><span style="font-size:12px">6개 구청 게시판을 매일 확인해 새 공고가 있으면 여기 표시됩니다.</span></div></td></tr>`;
+    </tr>`).join('') : `<tr><td colspan="7"><div class="empty-state"><div class="e-icon">🤖</div>자동수집된 위반건축물 공고가 없습니다.<br><span style="font-size:12px">5개 구청 게시판을 매일 확인해 새 공고가 있으면 여기 표시됩니다.</span></div></td></tr>`;
 
   return `
     <div class="card">
