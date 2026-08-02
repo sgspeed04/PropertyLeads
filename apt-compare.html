@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아파트 입지 비교</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+:root {
+  --primary: #2563eb; --primary-dark: #1d4ed8; --success: #16a34a;
+  --warning: #d97706; --danger: #dc2626; --purple: #7c3aed;
+  --bg: #f8fafc; --card: #ffffff; --border: #e2e8f0;
+  --text: #0f172a; --muted: #64748b; --sidebar: #0f172a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.app{display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{width:220px;background:var(--sidebar);color:#fff;display:flex;flex-direction:column;position:fixed;height:100vh;z-index:200;transition:transform .3s}
+.sidebar-logo{padding:22px 18px 18px;border-bottom:1px solid #1e293b}
+.sidebar-logo h1{font-size:17px;font-weight:700;letter-spacing:-.3px}
+.sidebar-logo p{font-size:11px;color:#64748b;margin-top:3px}
+.sidebar-nav{flex:1;padding:12px 0;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:11px;padding:11px 18px;cursor:pointer;color:#94a3b8;font-size:13.5px;font-weight:500;border-left:3px solid transparent;transition:all .15s}
+.nav-item:hover{background:#1e293b;color:#fff}
+.nav-item.active{background:#1e293b;color:#fff;border-left-color:var(--primary)}
+.nav-icon{font-size:16px;width:18px;text-align:center}
+.sidebar-footer{padding:14px 18px;border-top:1px solid #1e293b}
+.sync-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#64748b;margin-right:6px}
+.sync-dot.ok{background:#22c55e} .sync-dot.err{background:#ef4444} .sync-dot.ing{background:#f59e0b;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sync-label{font-size:11px;color:#64748b}
+
+/* MAIN */
+.main{margin-left:220px;flex:1;display:flex;flex-direction:column}
+.topbar{background:#fff;border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar h2{font-size:19px;font-weight:700}
+.topbar-right{display:flex;gap:10px;align-items:center}
+.hamburger{display:none;background:none;border:none;cursor:pointer;font-size:20px;padding:4px}
+.content{padding:28px;flex:1}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px}
+.stat-label{font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:500}
+.stat-value{font-size:22px;font-weight:800}
+.stat-sub{font-size:12px;color:var(--muted);margin-top:4px}
+.stat.c1 .stat-value{color:var(--primary)} .stat.c2 .stat-value{color:var(--success)}
+.stat.c3 .stat-value{color:var(--warning)} .stat.c4 .stat-value{color:var(--purple)}
+
+/* CARDS */
+.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:18px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.card-title{font-size:15px;font-weight:700}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+
+/* BUTTONS */
+.btn{padding:8px 15px;border-radius:8px;border:none;cursor:pointer;font-size:13.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px;transition:all .15s;text-decoration:none}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark)}
+.btn-outline{background:#fff;color:var(--text);border:1px solid var(--border)}.btn-outline:hover{background:var(--bg)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-success{background:var(--success);color:#fff}
+.btn-sm{padding:5px 10px;font-size:12px;border-radius:6px}
+.btn-ghost{background:none;border:none;cursor:pointer;color:var(--muted);padding:4px 8px;border-radius:6px;font-size:13px;transition:all .15s}.btn-ghost:hover{background:var(--bg);color:var(--text)}
+.btn.active{background:var(--primary);color:#fff}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;padding:10px 14px;font-size:11.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:13px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#f8fafc}
+tr.top-pick td{background:#fffbeb}
+.actions-cell{display:flex;gap:4px;align-items:center}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:100px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.badge-blue{background:#dbeafe;color:#1d4ed8} .badge-green{background:#dcfce7;color:#15803d}
+.badge-yellow{background:#fef3c7;color:#92400e} .badge-purple{background:#ede9fe;color:#6d28d9}
+.badge-red{background:#fee2e2;color:#b91c1c} .badge-gray{background:#f1f5f9;color:#475569}
+.badge-orange{background:#fff7ed;color:#c2410c}
+.rank-badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-size:12px;font-weight:800;background:var(--bg);color:var(--muted)}
+.rank-badge.r1{background:#fef3c7;color:#92400e} .rank-badge.r2{background:#f1f5f9;color:#475569} .rank-badge.r3{background:#fff7ed;color:#c2410c}
+
+/* SCORE CELLS (heatmap) */
+.score-cell{display:inline-flex;align-items:center;justify-content:center;min-width:34px;padding:4px 8px;border-radius:6px;font-weight:700;font-size:12.5px}
+
+/* SEARCH & FILTER */
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.search-wrap{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--border);border-radius:8px;padding:8px 12px}
+.search-wrap input{border:none;outline:none;font-size:13.5px;width:180px;background:transparent}
+select.filter-select{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13.5px;background:#fff;cursor:pointer;outline:none}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;align-items:center;justify-content:center}
+.overlay.show{display:flex}
+.modal{background:#fff;border-radius:16px;width:600px;max-width:96vw;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-hd{padding:22px 22px 0;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:1;border-bottom:1px solid var(--border);padding-bottom:14px}
+.modal-hd h3{font-size:17px;font-weight:700}
+.modal-body{padding:20px 22px}
+.modal-ft{padding:0 22px 20px;display:flex;gap:10px;justify-content:flex-end}
+.close-btn{background:none;border:none;cursor:pointer;font-size:22px;color:var(--muted);padding:2px 6px}
+
+/* FORMS */
+.form-group{margin-bottom:15px}
+.form-label{display:block;font-size:13px;font-weight:600;margin-bottom:5px}
+.form-control{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13.5px;outline:none;transition:border-color .15s;background:#fff}
+.form-control:focus{border-color:var(--primary)}
+textarea.form-control{resize:vertical;min-height:60px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.form-hint{font-size:11.5px;color:var(--muted);margin-top:4px}
+.required{color:var(--danger)}
+.code-block{background:#0f172a;color:#e2e8f0;font-family:ui-monospace,monospace;font-size:11.5px;padding:14px;border-radius:8px;overflow-x:auto;white-space:pre;line-height:1.6}
+.empty-state{text-align:center;padding:48px 20px;color:var(--muted)}
+.empty-state .e-icon{font-size:36px;margin-bottom:10px}
+
+/* SCORE INPUT ROW (apartment modal) */
+.score-input-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.score-input-row label{width:78px;font-size:13px;font-weight:600;flex-shrink:0}
+.score-input-row input[type=range]{flex:1}
+.score-input-row .score-num{width:26px;text-align:center;font-weight:700;font-size:13px}
+
+/* WEIGHT SLIDERS */
+.weight-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.weight-row label{width:70px;font-size:13px;font-weight:600;flex-shrink:0}
+.weight-row input[type=range]{flex:1}
+.weight-row .weight-pct{width:44px;text-align:right;font-weight:700;font-size:13px;font-variant-numeric:tabular-nums}
+
+/* PICK CARD */
+.pick-card{background:linear-gradient(135deg,#fffbeb,#fff);border:1px solid #fde68a;border-radius:12px;padding:20px;margin-bottom:18px}
+.pick-card .pick-title{font-size:12px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}
+.pick-card .pick-name{font-size:20px;font-weight:800;margin-bottom:4px}
+.pick-card .pick-score{font-size:14px;color:var(--muted)}
+.pick-card .pick-reason{font-size:13px;color:var(--text);margin-top:8px;line-height:1.5}
+
+/* MAP */
+#aptMap{width:100%;height:520px;border-radius:12px;border:1px solid var(--border)}
+
+@media (max-width:900px) {
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.show{transform:translateX(0)}
+  .main{margin-left:0}
+  .hamburger{display:block}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .grid2{grid-template-columns:1fr}
+  .form-row,.form-row3{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <h1>🏢 아파트 입지 비교</h1>
+      <p>실거주 · 투자 목적별 비교</p>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-item" data-view="dashboard" onclick="navigate('dashboard')"><span class="nav-icon">📊</span>대시보드</div>
+      <div class="nav-item" data-view="apartments" onclick="navigate('apartments')"><span class="nav-icon">🏠</span>아파트 관리</div>
+      <div class="nav-item" data-view="compare" onclick="navigate('compare')"><span class="nav-icon">⚖️</span>비교·추천</div>
+      <div class="nav-item" data-view="map" onclick="navigate('map')"><span class="nav-icon">🗺️</span>지도</div>
+      <div class="nav-item" data-view="settings" onclick="navigate('settings')"><span class="nav-icon">⚙️</span>설정</div>
+    </div>
+    <div class="sidebar-footer">
+      <span class="sync-dot" id="syncDot"></span><span class="sync-label" id="syncLabel">로컬 저장</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="hamburger" onclick="document.getElementById('sidebar').classList.toggle('show')">☰</button>
+        <h2 id="pageTitle">대시보드</h2>
+      </div>
+      <div class="topbar-right" id="topbarActions"></div>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+
+<!-- 아파트 모달 -->
+<div class="overlay" id="aptModal">
+  <div class="modal">
+    <div class="modal-hd"><h3 id="aptModalTitle">아파트 추가</h3><button class="close-btn" onclick="closeModal('aptModal')">×</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="aptId">
+      <div class="form-group"><label class="form-label">아파트명 <span class="required">*</span></label><input class="form-control" id="aptName" placeholder="예: 래미안OO"></div>
+      <div class="form-group"><label class="form-label">주소 <span class="required">*</span></label>
+        <div style="display:flex;gap:8px">
+          <input class="form-control" id="aptAddress" placeholder="예: 서울시 강남구 역삼동 123-45 또는 도로명주소">
+          <button type="button" class="btn btn-outline btn-sm" style="white-space:nowrap" onclick="geocodeApt()">📍 좌표 변환</button>
+        </div>
+        <div class="form-hint" id="geoStatus">주소 입력 후 '좌표 변환'을 누르면 지도 좌표를 자동으로 채웁니다 (VWorld 키를 설정에서 먼저 등록하세요)</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">구</label><input class="form-control" id="aptDistrict" placeholder="예: 강남구"></div>
+        <div class="form-group"><label class="form-label">동</label><input class="form-control" id="aptDong" placeholder="예: 역삼동"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">위도(lat)</label><input class="form-control" id="aptLat" type="number" step="any" placeholder="자동 또는 수동 입력"></div>
+        <div class="form-group"><label class="form-label">경도(lng)</label><input class="form-control" id="aptLng" type="number" step="any" placeholder="자동 또는 수동 입력"></div>
+      </div>
+
+      <div style="margin:18px 0 6px;font-size:13px;font-weight:700">5개 지표 점수 (1~10점)</div>
+      <div class="score-input-row"><label>🚇 교통</label><input type="range" min="1" max="10" value="5" id="scoreTransit" oninput="document.getElementById('scoreTransitNum').textContent=this.value"><span class="score-num" id="scoreTransitNum">5</span></div>
+      <div class="score-input-row"><label>🛒 인프라</label><input type="range" min="1" max="10" value="5" id="scoreInfra" oninput="document.getElementById('scoreInfraNum').textContent=this.value"><span class="score-num" id="scoreInfraNum">5</span></div>
+      <div class="score-input-row"><label>🌳 녹지</label><input type="range" min="1" max="10" value="5" id="scoreGreen" oninput="document.getElementById('scoreGreenNum').textContent=this.value"><span class="score-num" id="scoreGreenNum">5</span></div>
+      <div class="score-input-row"><label>🏫 학군</label><input type="range" min="1" max="10" value="5" id="scoreSchool" oninput="document.getElementById('scoreSchoolNum').textContent=this.value"><span class="score-num" id="scoreSchoolNum">5</span></div>
+      <div class="score-input-row"><label>📈 미래가치</label><input type="range" min="1" max="10" value="5" id="scoreFuture" oninput="document.getElementById('scoreFutureNum').textContent=this.value"><span class="score-num" id="scoreFutureNum">5</span></div>
+
+      <div class="form-group" style="margin-top:14px"><label class="form-label">핵심 특징 메모</label><textarea class="form-control" id="aptMemo" placeholder="예: 신축 대단지, 초등학교 도보 3분, OO역 개통 예정"></textarea></div>
+    </div>
+    <div class="modal-ft"><button class="btn btn-outline" onclick="closeModal('aptModal')">취소</button><button class="btn btn-primary" onclick="saveApt()">저장</button></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+'use strict';
+
+// ─── STATE ───────────────────────────────────────────────────
+const D_KEY = 'apt_data', S_KEY = 'apt_settings', W_KEY = 'apt_weights';
+let apartments = [];
+let cfg = {
+  supabaseUrl: 'https://fbctahxjzwwzuscjvaxg.supabase.co',
+  supabaseKey: 'sb_publishable_xNUx8DMdQvTgulv4MbOmyQ_8CW9HnQ-',
+  vworldKey: '',
+};
+let sb = null, syncStatus = 'local', currentView = 'dashboard';
+let aptSearchQ = '';
+let weights = { transit: 25, infra: 20, green: 15, school: 20, future: 20 };
+let activePreset = '균등';
+let map = null, mapMarkers = [];
+
+const PRESETS = {
+  '균등':   { transit: 25, infra: 20, green: 15, school: 20, future: 20 },
+  '실거주': { transit: 15, infra: 20, green: 20, school: 35, future: 10 },
+  '투자':   { transit: 25, infra: 15, green: 10, school: 10, future: 40 },
+};
+
+// ─── STORAGE ─────────────────────────────────────────────────
+function load() {
+  try {
+    const d = JSON.parse(localStorage.getItem(D_KEY) || '{}');
+    apartments = d.apartments || [];
+    const s = JSON.parse(localStorage.getItem(S_KEY) || '{}');
+    cfg = {...cfg, ...s};
+    const w = JSON.parse(localStorage.getItem(W_KEY) || '{}');
+    if (w.weights) { weights = w.weights; activePreset = w.preset || '커스텀'; }
+  } catch(e) {}
+}
+function save() {
+  localStorage.setItem(D_KEY, JSON.stringify({apartments}));
+  localStorage.setItem(S_KEY, JSON.stringify(cfg));
+  if (sb) syncSupabase();
+}
+function saveWeights() {
+  localStorage.setItem(W_KEY, JSON.stringify({weights, preset: activePreset}));
+}
+
+// ─── SUPABASE ────────────────────────────────────────────────
+async function initSupabase() {
+  if (!cfg.supabaseUrl || !cfg.supabaseKey) return;
+  try {
+    sb = supabase.createClient(cfg.supabaseUrl, cfg.supabaseKey);
+    await pullFromSupabase();
+    setSyncStatus('ok');
+  } catch(e) { setSyncStatus('err'); }
+}
+async function pullFromSupabase() {
+  if (!sb) return;
+  try {
+    setSyncStatus('ing');
+    const r = await sb.from('apt_units').select('*').order('created_at', {ascending:false});
+    if (!r.error) apartments = (r.data||[]).map(rowToApt);
+    localStorage.setItem(D_KEY, JSON.stringify({apartments}));
+    setSyncStatus('ok');
+    render();
+  } catch(e) { setSyncStatus('err'); }
+}
+function aptToRow(a) {
+  return {
+    id: a.id, name: a.name, address: a.address, district: a.district, dong: a.dong,
+    lat: a.lat, lng: a.lng, geo_source: a.geo_source,
+    score_transit: a.scores.transit, score_infra: a.scores.infra, score_green: a.scores.green,
+    score_school: a.scores.school, score_future: a.scores.future,
+    memo: a.memo, created_at: a.created_at
+  };
+}
+function rowToApt(r) {
+  return {
+    id: r.id, name: r.name, address: r.address, district: r.district, dong: r.dong,
+    lat: r.lat, lng: r.lng, geo_source: r.geo_source,
+    scores: { transit: r.score_transit||5, infra: r.score_infra||5, green: r.score_green||5, school: r.score_school||5, future: r.score_future||5 },
+    memo: r.memo, created_at: r.created_at
+  };
+}
+async function syncSupabase() {
+  if (!sb) return;
+  setSyncStatus('ing');
+  try {
+    await sb.from('apt_units').upsert(apartments.map(aptToRow));
+    setSyncStatus('ok');
+  } catch(e) { setSyncStatus('err'); }
+}
+function setSyncStatus(s) {
+  syncStatus = s;
+  const dot = document.getElementById('syncDot');
+  const lbl = document.getElementById('syncLabel');
+  if (!dot) return;
+  dot.className = 'sync-dot' + (s==='ok'?' ok':s==='err'?' err':s==='ing'?' ing':'');
+  lbl.textContent = s==='ok'?'Supabase 동기화':s==='err'?'동기화 오류':s==='ing'?'동기화 중...':'로컬 저장';
+}
+
+// ─── UTILS ───────────────────────────────────────────────────
+const uid = () => crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36)+Math.random().toString(36).slice(2);
+const $v = id => document.getElementById(id).value.trim();
+
+function scoreColor(score) {
+  if (score >= 8) return {bg:'#dcfce7', fg:'#15803d'};
+  if (score >= 5) return {bg:'#fef3c7', fg:'#92400e'};
+  return {bg:'#fee2e2', fg:'#b91c1c'};
+}
+function scoreCell(score) {
+  const c = scoreColor(score);
+  return `<span class="score-cell" style="background:${c.bg};color:${c.fg}">${score}</span>`;
+}
+
+// ─── SCORING ─────────────────────────────────────────────────
+function weightedScore(apt, w) {
+  const sum = (w.transit+w.infra+w.green+w.school+w.future) || 1;
+  const raw = apt.scores.transit*w.transit + apt.scores.infra*w.infra + apt.scores.green*w.green
+            + apt.scores.school*w.school + apt.scores.future*w.future;
+  return raw / sum;
+}
+function rankedApartments() {
+  return [...apartments]
+    .map(a => ({ apt: a, score: weightedScore(a, weights) }))
+    .sort((a,b) => b.score - a.score);
+}
+function topReasonMetric(a) {
+  const labels = { transit:'🚇 교통', infra:'🛒 인프라', green:'🌳 녹지', school:'🏫 학군', future:'📈 미래가치' };
+  const weighted = Object.entries(a.scores).map(([k,v]) => [k, v*(weights[k]||0)]);
+  weighted.sort((x,y) => y[1]-x[1]);
+  return labels[weighted[0][0]];
+}
+
+// ─── NAVIGATION ──────────────────────────────────────────────
+function navigate(view) {
+  currentView = view;
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active', el.dataset.view===view));
+  document.getElementById('sidebar').classList.remove('show');
+  const titles = {dashboard:'대시보드', apartments:'아파트 관리', compare:'비교·추천', map:'지도', settings:'설정'};
+  document.getElementById('pageTitle').textContent = titles[view]||'';
+  render();
+}
+
+function render() {
+  const actions = document.getElementById('topbarActions');
+  if (currentView === 'apartments') actions.innerHTML = `<button class="btn btn-primary" onclick="openAptModal()">+ 아파트 추가</button>`;
+  else actions.innerHTML = '';
+
+  const content = document.getElementById('content');
+  if (currentView === 'dashboard') content.innerHTML = renderDashboard();
+  else if (currentView === 'apartments') content.innerHTML = renderApartments();
+  else if (currentView === 'compare') content.innerHTML = renderCompare();
+  else if (currentView === 'map') { content.innerHTML = renderMapView(); setTimeout(initOrUpdateMap, 0); }
+  else if (currentView === 'settings') content.innerHTML = renderSettings();
+
+  if (currentView === 'compare') attachWeightSliderEvents();
+}
+
+// ─── DASHBOARD ───────────────────────────────────────────────
+function renderDashboard() {
+  const ranked = rankedApartments();
+  const top = ranked[0];
+  const districts = new Set(apartments.map(a=>a.district).filter(Boolean));
+
+  const topListHtml = ranked.slice(0,5).map((r,i) => `
+    <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:center">
+      <span class="rank-badge ${i===0?'r1':i===1?'r2':i===2?'r3':''}">${i+1}</span>
+      <div style="flex:1">
+        <div style="font-size:13.5px;font-weight:600">${r.apt.name}</div>
+        <div style="font-size:12px;color:var(--muted)">${r.apt.district||''} ${r.apt.dong||''}</div>
+      </div>
+      <div style="font-weight:800;color:var(--primary)">${r.score.toFixed(1)}점</div>
+    </div>`).join('') || `<div class="empty-state" style="padding:20px"><div class="e-icon">🏢</div>등록된 아파트가 없습니다</div>`;
+
+  return `
+    <div class="stats-grid">
+      <div class="stat c1"><div class="stat-label">등록 아파트</div><div class="stat-value">${apartments.length}</div><div class="stat-sub">${districts.size}개 구</div></div>
+      <div class="stat c2"><div class="stat-label">현재 프로파일</div><div class="stat-value">${activePreset}</div><div class="stat-sub">비교·추천에서 변경</div></div>
+      <div class="stat c3"><div class="stat-label">원픽 아파트</div><div class="stat-value" style="font-size:17px">${top?top.apt.name:'-'}</div><div class="stat-sub">${top?top.score.toFixed(1)+'점':'데이터 없음'}</div></div>
+      <div class="stat c4"><div class="stat-label">좌표 확보</div><div class="stat-value">${apartments.filter(a=>a.lat&&a.lng).length}/${apartments.length}</div><div class="stat-sub">지도 표시 가능 수</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">현재 프로파일(${activePreset}) 기준 상위 5개</span></div>
+      ${topListHtml}
+    </div>`;
+}
+
+// ─── APARTMENTS ──────────────────────────────────────────────
+function filteredApts() {
+  const q = aptSearchQ.toLowerCase();
+  return apartments.filter(a => !q || (a.name||'').toLowerCase().includes(q) || (a.address||'').toLowerCase().includes(q));
+}
+function renderApartments() {
+  const rows = filteredApts();
+  const rowsHtml = rows.length ? rows.map(a => `
+    <tr>
+      <td>${a.name}<div style="font-size:11.5px;color:var(--muted)">${a.address||''}</div></td>
+      <td>${a.district||'-'} ${a.dong||''}</td>
+      <td>${scoreCell(a.scores.transit)} ${scoreCell(a.scores.infra)} ${scoreCell(a.scores.green)} ${scoreCell(a.scores.school)} ${scoreCell(a.scores.future)}</td>
+      <td>${a.lat&&a.lng?`<span class="badge badge-green">📍 확보</span>`:`<span class="badge badge-gray">미확보</span>`}</td>
+      <td style="max-width:200px;font-size:12.5px;color:var(--muted)">${a.memo||'-'}</td>
+      <td class="actions-cell">
+        <button class="btn-ghost" onclick="openAptModal('${a.id}')">✏️</button>
+        <button class="btn-ghost" onclick="deleteApt('${a.id}')">🗑️</button>
+      </td>
+    </tr>`).join('') : `<tr><td colspan="6"><div class="empty-state"><div class="e-icon">🏢</div>등록된 아파트가 없습니다. '+ 아파트 추가'로 시작하세요.</div></td></tr>`;
+
+  return `
+    <div class="card">
+      <div class="toolbar">
+        <div class="search-wrap">🔍<input placeholder="아파트명·주소 검색" value="${aptSearchQ}" oninput="aptSearchQ=this.value;render()"></div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>아파트명 / 주소</th><th>구/동</th><th>🚇교통 🛒인프라 🌳녹지 🏫학군 📈미래가치</th><th>좌표</th><th>메모</th><th></th></tr></thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+function openAptModal(id) {
+  const a = id ? apartments.find(a=>a.id===id) : null;
+  document.getElementById('aptModalTitle').textContent = a ? '아파트 수정' : '아파트 추가';
+  document.getElementById('aptId').value = a?.id||'';
+  document.getElementById('aptName').value = a?.name||'';
+  document.getElementById('aptAddress').value = a?.address||'';
+  document.getElementById('aptDistrict').value = a?.district||'';
+  document.getElementById('aptDong').value = a?.dong||'';
+  document.getElementById('aptLat').value = a?.lat ?? '';
+  document.getElementById('aptLng').value = a?.lng ?? '';
+  document.getElementById('geoStatus').textContent = a?.geo_source==='vworld' ? '✅ VWorld로 좌표 확보됨' : "주소 입력 후 '좌표 변환'을 누르면 지도 좌표를 자동으로 채웁니다 (VWorld 키를 설정에서 먼저 등록하세요)";
+
+  const scores = a?.scores || { transit:5, infra:5, green:5, school:5, future:5 };
+  ['transit','infra','green','school','future'].forEach(k => {
+    const cap = k.charAt(0).toUpperCase()+k.slice(1);
+    document.getElementById('score'+cap).value = scores[k];
+    document.getElementById('score'+cap+'Num').textContent = scores[k];
+  });
+  document.getElementById('aptMemo').value = a?.memo||'';
+
+  openModal('aptModal');
+}
+async function geocodeApt() {
+  const address = $v('aptAddress');
+  if (!address) { alert('주소를 먼저 입력해주세요'); return; }
+  if (!cfg.vworldKey) { alert("VWorld 인증키가 설정되지 않았습니다. '설정' 탭에서 먼저 등록해주세요."); return; }
+  const statusEl = document.getElementById('geoStatus');
+  statusEl.textContent = '좌표 변환 중...';
+  const r1 = await geocodeJSONP(address, cfg.vworldKey, 'ROAD');
+  const r = r1.coord ? r1 : await geocodeJSONP(address, cfg.vworldKey, 'PARCEL');
+  if (r.coord) {
+    document.getElementById('aptLat').value = r.coord.lat;
+    document.getElementById('aptLng').value = r.coord.lng;
+    statusEl.textContent = '✅ 좌표 변환 성공';
+  } else {
+    statusEl.textContent = '❌ 변환 실패: ' + (r.error||'알 수 없는 오류') + ' — 좌표를 직접 입력해도 됩니다';
+  }
+}
+// VWorld는 브라우저 fetch()의 CORS는 막지만 <script> 태그 JSONP(callback 파라미터)는 허용함
+// (redevelopment.html/geocode-vworld-v2.html에서 확인된 우회 방식과 동일)
+let jsonpSeq = 0;
+function geocodeJSONP(address, key, type) {
+  return new Promise(resolve => {
+    jsonpSeq++;
+    const callbackName = 'vwCb' + jsonpSeq + '_' + Date.now();
+    const script = document.createElement('script');
+    let done = false;
+    const timer = setTimeout(() => finish({coord:null, error:'JSONP 타임아웃'}), 12000);
+    function finish(result) {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      delete window[callbackName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      resolve(result);
+    }
+    window[callbackName] = json => {
+      const point = json && json.response && json.response.result && json.response.result.point;
+      if (json && json.response && json.response.status === 'OK' && point) {
+        finish({coord:{lat:parseFloat(point.y), lng:parseFloat(point.x)}, error:null});
+      } else {
+        const errText = json && json.response && json.response.error && json.response.error.text;
+        finish({coord:null, error: errText || ('API status: '+(json&&json.response&&json.response.status))});
+      }
+    };
+    const url = 'https://api.vworld.kr/req/address?service=address&request=getCoord&version=2.0&crs=epsg:4326&address='
+      + encodeURIComponent(address) + '&format=json&type=' + type + '&key=' + encodeURIComponent(key) + '&callback=' + callbackName;
+    script.src = url;
+    script.onerror = () => finish({coord:null, error:'JSONP 스크립트 로드 실패'});
+    document.head.appendChild(script);
+  });
+}
+function saveApt() {
+  const name = $v('aptName');
+  const address = $v('aptAddress');
+  if (!name || !address) { alert('아파트명과 주소를 입력해주세요'); return; }
+  const id = document.getElementById('aptId').value || uid();
+  const existing = apartments.find(a=>a.id===id);
+  const lat = parseFloat($v('aptLat'));
+  const lng = parseFloat($v('aptLng'));
+  const data = {
+    id, name, address, district: $v('aptDistrict'), dong: $v('aptDong'),
+    lat: isNaN(lat)?null:lat, lng: isNaN(lng)?null:lng,
+    geo_source: (!isNaN(lat) && !isNaN(lng)) ? (existing?.geo_source || 'manual') : null,
+    scores: {
+      transit: parseInt(document.getElementById('scoreTransit').value),
+      infra: parseInt(document.getElementById('scoreInfra').value),
+      green: parseInt(document.getElementById('scoreGreen').value),
+      school: parseInt(document.getElementById('scoreSchool').value),
+      future: parseInt(document.getElementById('scoreFuture').value),
+    },
+    memo: $v('aptMemo'),
+    created_at: existing?.created_at || new Date().toISOString()
+  };
+  if (existing) Object.assign(existing, data);
+  else apartments.push(data);
+  save(); closeModal('aptModal'); render();
+}
+function deleteApt(id) {
+  if (!confirm('이 아파트를 삭제할까요?')) return;
+  apartments = apartments.filter(a=>a.id!==id);
+  save(); render();
+}
+
+// ─── COMPARE (핵심: 가중치 + 랭킹 + 원픽) ────────────────────
+function renderCompare() {
+  const ranked = rankedApartments();
+  const top = ranked[0];
+
+  const weightRows = [
+    ['transit', '🚇 교통'], ['infra', '🛒 인프라'], ['green', '🌳 녹지'],
+    ['school', '🏫 학군'], ['future', '📈 미래가치']
+  ].map(([k,label]) => `
+    <div class="weight-row">
+      <label>${label}</label>
+      <input type="range" min="0" max="100" value="${weights[k]}" class="w-slider" data-key="${k}">
+      <span class="weight-pct" id="wpct-${k}">${weights[k]}%</span>
+    </div>`).join('');
+
+  const pickHtml = top ? `
+    <div class="pick-card">
+      <div class="pick-title">⭐ ${activePreset} 프로파일 원픽</div>
+      <div class="pick-name">${top.apt.name}</div>
+      <div class="pick-score">총점 ${top.score.toFixed(1)} / 10</div>
+      <div class="pick-reason">가장 크게 기여한 지표: ${topReasonMetric(top.apt)} · ${top.apt.memo||'메모 없음'}</div>
+    </div>` : `<div class="empty-state"><div class="e-icon">⚖️</div>비교할 아파트를 먼저 등록해주세요</div>`;
+
+  const rowsHtml = ranked.length ? ranked.map((r,i) => `
+    <tr class="${i===0?'top-pick':''}">
+      <td><span class="rank-badge ${i===0?'r1':i===1?'r2':i===2?'r3':''}">${i+1}</span></td>
+      <td>${r.apt.name}<div style="font-size:11.5px;color:var(--muted)">${r.apt.district||''} ${r.apt.dong||''}</div></td>
+      <td>${scoreCell(r.apt.scores.transit)}</td>
+      <td>${scoreCell(r.apt.scores.infra)}</td>
+      <td>${scoreCell(r.apt.scores.green)}</td>
+      <td>${scoreCell(r.apt.scores.school)}</td>
+      <td>${scoreCell(r.apt.scores.future)}</td>
+      <td style="font-weight:800;color:var(--primary)">${r.score.toFixed(1)}</td>
+      <td style="max-width:180px;font-size:12.5px;color:var(--muted)">${r.apt.memo||'-'}</td>
+    </tr>`).join('') : '';
+
+  return `
+    ${pickHtml}
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">가중치 설정</span>
+        <div style="display:flex;gap:8px">
+          ${Object.keys(PRESETS).map(p => `<button class="btn btn-outline btn-sm ${activePreset===p?'active':''}" onclick="applyPreset('${p}')">${p}</button>`).join('')}
+        </div>
+      </div>
+      ${weightRows}
+      <div class="form-hint">슬라이더 합이 100%가 아니어도 자동으로 비율 계산합니다. 직접 조절하면 프로파일이 '커스텀'으로 바뀝니다.</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><span class="card-title">비교 매트릭스 (${ranked.length}개 아파트)</span></div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>순위</th><th>아파트</th><th>🚇교통</th><th>🛒인프라</th><th>🌳녹지</th><th>🏫학군</th><th>📈미래가치</th><th>총점</th><th>메모</th></tr></thead>
+          <tbody>${rowsHtml || `<tr><td colspan="9"><div class="empty-state"><div class="e-icon">⚖️</div>등록된 아파트가 없습니다.</div></td></tr>`}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+function attachWeightSliderEvents() {
+  document.querySelectorAll('.w-slider').forEach(sl => {
+    sl.addEventListener('input', () => {
+      const k = sl.dataset.key;
+      weights[k] = parseInt(sl.value);
+      document.getElementById('wpct-'+k).textContent = sl.value + '%';
+      activePreset = '커스텀';
+      saveWeights();
+      render();
+    });
+  });
+}
+function applyPreset(name) {
+  weights = {...PRESETS[name]};
+  activePreset = name;
+  saveWeights();
+  render();
+}
+
+// ─── MAP ─────────────────────────────────────────────────────
+function renderMapView() {
+  return `
+    <div class="card">
+      <div class="card-header"><span class="card-title">등록 아파트 지도 (${activePreset} 프로파일 순위 기준 색상)</span></div>
+      <div id="aptMap"></div>
+      <div class="form-hint" style="margin-top:10px">🟡 1위 · ⚪ 2~3위 · 🔵 나머지 · 좌표가 없는 아파트는 표시되지 않습니다. '아파트 관리'에서 주소로 좌표를 먼저 확보하세요.</div>
+    </div>`;
+}
+function initOrUpdateMap() {
+  const el = document.getElementById('aptMap');
+  if (!el) return;
+  if (!map) {
+    map = L.map('aptMap').setView([37.5665, 126.9780], 11);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'© OpenStreetMap', maxZoom:18 }).addTo(map);
+  } else {
+    map.invalidateSize();
+  }
+  mapMarkers.forEach(m => m.remove());
+  mapMarkers = [];
+  const ranked = rankedApartments();
+  const withCoords = ranked.filter(r => r.apt.lat && r.apt.lng);
+  withCoords.forEach(r => {
+    const rank = ranked.indexOf(r);
+    const color = rank===0 ? '#d97706' : rank<3 ? '#64748b' : '#2563eb';
+    const marker = L.circleMarker([r.apt.lat, r.apt.lng], {
+      radius: rank===0 ? 11 : 8, color, fillColor: color, fillOpacity: 0.85, weight: 2
+    });
+    marker.bindTooltip(`<b>${r.apt.name}</b><br>${rank+1}위 · ${r.score.toFixed(1)}점`, {direction:'top', offset:[0,-6]});
+    marker.addTo(map);
+    mapMarkers.push(marker);
+  });
+  if (withCoords.length) {
+    map.fitBounds(withCoords.map(r => [r.apt.lat, r.apt.lng]), {padding:[40,40], maxZoom:15});
+  }
+}
+
+// ─── SETTINGS ────────────────────────────────────────────────
+function renderSettings() {
+  return `
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px">VWorld 좌표 변환 키</div>
+      <div class="form-group"><label class="form-label">VWorld 인증키</label><input class="form-control" id="cfgVworldKey" value="${cfg.vworldKey}" placeholder="예: 2FD6D861-803B-332D-BCB3-F1C6620D20B1" type="password"></div>
+      <button class="btn btn-primary btn-sm" onclick="saveVworldKey()">저장</button>
+      <div class="form-hint" style="margin-top:8px">VWorld 개발자센터에서 발급받은 인증키입니다. 이 브라우저에만 저장되며(localStorage), '아파트 관리'에서 주소를 좌표로 변환할 때 사용됩니다.</div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px">Supabase 동기화</div>
+      <div class="form-group"><label class="form-label">Supabase URL</label><input class="form-control" id="cfgSbUrl" value="${cfg.supabaseUrl}" placeholder="https://xxx.supabase.co"></div>
+      <div class="form-group"><label class="form-label">Supabase Anon Key</label><input class="form-control" id="cfgSbKey" value="${cfg.supabaseKey}" placeholder="eyJ..." type="password"></div>
+      <button class="btn btn-primary btn-sm" onclick="saveSupabaseSettings()">저장 및 연결</button>
+      <span class="sync-label" id="settingsSyncLabel" style="margin-left:10px">${syncStatus==='ok'?'✅ 연결됨':syncStatus==='err'?'❌ 오류':'로컬 모드'}</span>
+      <div style="margin-top:16px">
+        <div style="font-size:12px;font-weight:600;margin-bottom:6px;color:var(--muted)">Supabase에서 실행할 SQL (테이블 생성):</div>
+        <div class="code-block">create table apt_units (
+  id uuid default gen_random_uuid() primary key,
+  name text not null,
+  address text, district text, dong text,
+  lat double precision, lng double precision, geo_source text,
+  score_transit int default 5, score_infra int default 5, score_green int default 5,
+  score_school int default 5, score_future int default 5,
+  memo text,
+  created_at timestamptz default now()
+);</div>
+        <button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="copySQL()">📋 SQL 복사</button>
+        <div class="form-hint" style="margin-top:8px">기존 viol_leads/cm_clients 테이블과 동일하게 RLS + anon 정책을 적용하세요.</div>
+      </div>
+    </div>`;
+}
+function saveVworldKey() {
+  cfg.vworldKey = document.getElementById('cfgVworldKey').value.trim();
+  save();
+  alert('저장되었습니다.');
+}
+function saveSupabaseSettings() {
+  cfg.supabaseUrl = document.getElementById('cfgSbUrl').value.trim();
+  cfg.supabaseKey = document.getElementById('cfgSbKey').value.trim();
+  save();
+  if (cfg.supabaseUrl && cfg.supabaseKey) initSupabase();
+}
+function copySQL() {
+  const sql = `create table apt_units (id uuid default gen_random_uuid() primary key, name text not null, address text, district text, dong text, lat double precision, lng double precision, geo_source text, score_transit int default 5, score_infra int default 5, score_green int default 5, score_school int default 5, score_future int default 5, memo text, created_at timestamptz default now());`;
+  navigator.clipboard.writeText(sql).then(()=>alert('SQL이 복사됐습니다!'));
+}
+
+// ─── MODAL HELPERS ───────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.overlay').forEach(ov => ov.addEventListener('click', e => { if (e.target===ov) ov.classList.remove('show'); }));
+
+// ─── INIT ────────────────────────────────────────────────────
+load();
+navigate('dashboard');
+if (cfg.supabaseUrl && cfg.supabaseKey) initSupabase();
+</script>
+</body>
+</html>
